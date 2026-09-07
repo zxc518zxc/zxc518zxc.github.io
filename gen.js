@@ -204,6 +204,17 @@ function skillFx(v) {
   return t;
 }
 
+let AREA = { zones: [], items: [] };
+// 🏪 商店真正販售的清單(wikidump 從 ShopLists/ShopDefaultList 匯出)。
+// 🔴 gamedata 的 p 是**基準價**,不等於「商店有賣」——613 件裡商店只賣 107 件,
+//    其餘的 p 只用來算賣店回收價(p×0.3)。先前一律標「商店價」會害玩家跑去商店找不到。
+let SHOP_SELL = new Set();
+try {
+  const dump = JSON.parse(fs.readFileSync(path.join(OUT, "mastery.json"), "utf8"));
+  AREA = dump.areaDrops || AREA;
+  SHOP_SELL = new Set(dump.shopSell || []);
+} catch (e) { }
+
 // ---- 資料萃取 ----
 const TYPE_NAME = { wpn: "武器", arm: "防具", acc: "飾品", pot: "藥水", misc: "道具", material: "材料", skillbk: "技能書", etc: "其他" };
 const ELE_NAME = { fire: "火", water: "水", wind: "風", earth: "地", none: "無", "": "無" };
@@ -213,7 +224,7 @@ const items = Object.entries(GD.items || {}).filter(([id, v]) => !hiddenItem(id,
   d: v.d || "", legend: v.gachaWeight === 1,
   dmg: v.dmgS ? `${v.dmgS}/${v.dmgL || v.dmgS}` : "", ac: v.ac || 0, safe: v.safe ?? "",
   slot: SLOT_N[v.slot] || "", req: reqStr(v.req), wcat: v.wcat || "",
-  p: v.p || 0, sell: Math.floor((v.p || 0) * 3 / 10),
+  p: v.p || 0, sell: Math.floor((v.p || 0) * 3 / 10), buy: SHOP_SELL.has(id),
   fx: itemFx(v),
   src: [],
 })).sort((a, b) => a.n.localeCompare(b.n, "zh-Hant"));
@@ -236,8 +247,6 @@ for (const [mobN, ids] of Object.entries(dropsByMobName)) {
 
 // 🗺 地區採集(afk/sim.go 的 areaBonusMaps/areaBonusItems,經 wikidump 匯出):
 //    在這些頻道打**任何**怪都可能掉這幾種素材 —— 元素石那類材料查不到「哪隻怪掉」就是因為它走這條。
-let AREA = { zones: [], items: [] };
-try { AREA = (JSON.parse(fs.readFileSync(path.join(OUT, "mastery.json"), "utf8")).areaDrops) || AREA; } catch (e) { }
 const areaZoneNames = AREA.zones.map(z => zoneName[z]).filter(Boolean);
 for (const i of items) {
   i.src = [...(srcByItem[i.id] || [])].slice(0, 8);
@@ -441,7 +450,7 @@ fs.writeFileSync(path.join(OUT, "items.html"), page("道具圖鑑", "item", `
 ${chips(["武器", "防具", "飾品", "藥水", "道具", "材料", "技能書"].map(t => [items.filter(i => i.t === t).length, t]))}
 <div class="bar"><input id="q" placeholder="🔍 搜道具名稱"></div>
 <div class="chips" id="tchips"></div>
-<div class="wrap"><table><thead><tr><th>道具</th><th>類型</th><th>部位/類別</th><th>職業</th><th>傷害</th><th>防禦</th><th>安定</th><th>商店價</th><th>效果與說明</th></tr></thead><tbody id="tb"></tbody></table></div>`,
+<div class="wrap"><table><thead><tr><th>道具</th><th>類型</th><th>部位/類別</th><th>職業</th><th>傷害</th><th>防禦</th><th>安定</th><th>價格</th><th>效果與說明</th></tr></thead><tbody id="tb"></tbody></table></div>`,
 `<script src="data.js"></script><script>
 const $=id=>document.getElementById(id);
 ${ESC}
@@ -459,7 +468,7 @@ return "<tr><td class='nm'"+(i.legend?" style='color:#ffd700'":"")+">"+(i.legend
 "<td class='num'>"+i.t+"</td><td class='num'>"+esc(i.slot||i.wcat||"—")+"</td><td class='num'>"+esc(i.req||"—")+"</td>"+
 "<td class='num'>"+(i.dmg||"—")+"</td><td class='num'>"+(i.ac||"—")+"</td>"+
 "<td class='num'>"+((i.safe!==""&&(i.t==="武器"||i.t==="防具"))?"+"+i.safe:"—")+"</td>"+
-"<td class='num'>"+(i.p?i.p.toLocaleString()+"<div style='color:#6b5f4c;font-size:11px'>賣店 "+i.sell.toLocaleString()+"</div>":"—")+"</td>"+
+"<td class='num'>"+(i.p?((i.buy?"<div style='color:#7bd14a'>商店賣 "+i.p.toLocaleString()+"</div>":"")+"<div style='color:#b6a684'>賣店回收 "+i.sell.toLocaleString()+"</div>"):"—")+"</td>"+
 "<td>"+(fx||desc||src||area?fx+desc+src+area:"<span style='color:#6b5f4c'>—</span>")+"</td></tr>";}).join("")||"<tr><td colspan=9 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script>`));
