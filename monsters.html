@@ -1,10 +1,36 @@
 <!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>怪物掉落圖鑑 - 阿肥放置天堂 資料站</title><style>
+<title>怪物掉落圖鑑 - 阿肥放置天地 資料站</title><style>
 *{box-sizing:border-box}body{background:#1a140c;color:#e8dcc8;font-family:"Microsoft JhengHei",sans-serif;margin:0;padding:0}
-header{background:#241b0f;border-bottom:2px solid #f5c451;padding:14px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-header h1{color:#f5c451;font-size:20px;margin:0}
-nav a{color:#cbbb9b;text-decoration:none;margin-right:14px;font-size:15px;white-space:nowrap;display:inline-block;line-height:1.9}nav a:hover,nav a.on{color:#f5c451}
+/* ── 頁首與導覽列 ──
+   14 個功能鍵,所以做成膠囊按鈕 + 圖示;捲動時固定在頂端(查資料時不用捲回去換頁)。
+   窄螢幕自動縮小,不做橫向捲動(會藏住後面的鍵)。 */
+header{background:linear-gradient(180deg,#2c2114 0%,#20180d 100%);
+  border-bottom:1px solid #3f331d;box-shadow:0 3px 14px rgba(0,0,0,.45);
+  padding:12px 18px 0;position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+header h1{color:#f5c451;font-size:20px;margin:0;letter-spacing:.5px;
+  text-shadow:0 0 18px rgba(245,196,81,.35)}
+.brand .sub{color:#8a7d63;font-size:12px;letter-spacing:2px}
+nav{display:flex;flex-wrap:wrap;gap:6px;padding-bottom:11px}
+nav a{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:9px;
+  color:#c9b995;text-decoration:none;font-size:14px;white-space:nowrap;line-height:1.2;
+  border:1px solid transparent;background:rgba(255,255,255,.03);
+  transition:background .18s,color .18s,border-color .18s,transform .18s,box-shadow .18s}
+nav a .i{font-size:15px;line-height:1}
+nav a:hover{background:rgba(245,196,81,.11);color:#f5c451;
+  border-color:rgba(245,196,81,.38);transform:translateY(-1px)}
+nav a.on{background:linear-gradient(180deg,#f5c451 0%,#dfa72c 100%);color:#241b0f;
+  font-weight:700;border-color:#f5c451;box-shadow:0 2px 10px rgba(245,196,81,.32)}
+nav a.on .i{filter:saturate(.85)}
+@media(max-width:640px){
+  header{padding:10px 12px 0}
+  header h1{font-size:17px}
+  .brand .sub{display:none}
+  nav{gap:5px;padding-bottom:9px}
+  nav a{padding:6px 9px;font-size:13px;gap:4px}
+  nav a .i{font-size:14px}
+}
 main{max-width:1000px;margin:0 auto;padding:16px}
 input,select{background:#2a2014;border:1px solid #5a4a26;color:#e8dcc8;padding:9px 12px;border-radius:8px;font-size:15px}
 input{width:100%}
@@ -40,6 +66,7 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 .tag{display:inline-block;background:#2a2014;border:1px solid #3a2f1c;border-radius:6px;padding:1px 7px;margin:2px 3px 0 0;font-size:12px;color:#cbbb9b;white-space:nowrap}
 .tag.lg{color:#ffd700;border-color:#6b5a20}
 .tag.zn{color:#7bd14a;border-color:#2f4a24}
+.tag.wb{color:#f5a97f;border-color:#6b3f28;background:rgba(245,169,127,.08)}
 .wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .hint{color:#8f8067;font-size:12px;margin:-6px 0 12px}
 .mcard{background:#241b0f;border:1px solid #3a2f1c;border-radius:12px;padding:14px 16px;margin-bottom:14px}
@@ -47,29 +74,30 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 .mcard .sub{color:#b6a684;font-size:14px;line-height:1.75}
 .mcard table{margin-top:6px}
 </style></head><body>
-<header><h1>🏰 阿肥放置天堂</h1><nav>
-<a href="index.html" class="">首頁</a>
-<a href="monsters.html" class="on">怪物掉落圖鑑</a>
-<a href="items.html" class="">道具圖鑑</a>
-<a href="skills.html" class="">技能介紹</a>
-<a href="zones.html" class="">獵場列表</a>
-<a href="worldboss.html" class="">世界王</a>
-<a href="npc.html" class="">NPC 一覽</a>
-<a href="mastery.html" class="">精通升級數據</a>
-<a href="sets.html" class="">套裝效果</a>
-<a href="enhance.html" class="">強化機率</a>
-<a href="affix.html" class="">詞條大全</a>
-<a href="poly.html" class="">變身型態</a>
-<a href="guide.html" class="">新手指南</a>
-<a href="changelog.html" class="">版本更新</a>
+<header>
+<div class="brand"><h1>🏰 阿肥放置天地</h1><span class="sub">玩家資料站</span></div>
+<nav><a href="index.html" class=""><span class="i">🏠</span>首頁</a>
+<a href="monsters.html" class="on"><span class="i">👹</span>怪物掉落圖鑑</a>
+<a href="items.html" class=""><span class="i">⚔️</span>道具圖鑑</a>
+<a href="skills.html" class=""><span class="i">✨</span>技能介紹</a>
+<a href="zones.html" class=""><span class="i">🗺️</span>獵場列表</a>
+<a href="worldboss.html" class=""><span class="i">🐉</span>世界王</a>
+<a href="npc.html" class=""><span class="i">🏘️</span>NPC 一覽</a>
+<a href="mastery.html" class=""><span class="i">🎓</span>精通升級數據</a>
+<a href="sets.html" class=""><span class="i">🛡️</span>套裝效果</a>
+<a href="enhance.html" class=""><span class="i">⚒️</span>強化機率</a>
+<a href="affix.html" class=""><span class="i">🌑</span>詞條大全</a>
+<a href="poly.html" class=""><span class="i">💪</span>變身型態</a>
+<a href="guide.html" class=""><span class="i">🌱</span>新手指南</a>
+<a href="changelog.html" class=""><span class="i">📢</span>版本更新</a>
 </nav></header><main>
-<div class="stats"><div class="stat-chip"><b>173</b>怪物</div><div class="stat-chip"><b>173</b>有掉落</div><div class="stat-chip"><b>14</b>世界王</div></div>
+<div class="stats"><div class="stat-chip"><b>169</b>怪物</div><div class="stat-chip"><b>169</b>有掉落</div><div class="stat-chip"><b>14</b>世界王</div></div>
 <div class="bar"><input id="q" placeholder="🔍 搜怪物名,或輸入「道具名」找會掉它的怪"></div>
 <div class="hint">例:搜「銀長劍」→ 列出所有會掉它的怪物。</div>
 <div class="chips" id="lvchips"></div>
 <div class="wrap"><table><thead><tr><th>怪物</th><th>Lv</th><th>HP</th><th>經驗</th><th>屬性</th><th>出沒地點</th><th>掉落</th></tr></thead><tbody id="tb"></tbody></table></div></main>
 <footer>資料自動同步自遊戲檔 · 產生於 2026-09-07</footer>
-<script src="data.js?v=cc9a69d6"></script><script>
+<script src="data.js?v=2c33db37"></script><script>
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
 const LV=[["all","全部"],["1-20","1~20"],["21-40","21~40"],["41-60","41~60"],["61+","61+"]];let lv="all";
@@ -79,7 +107,7 @@ function inLv(m){if(lv==="all")return true;if(lv==="61+")return m.lv>=61;const p
 function render(){const q=$("q").value.trim().toLowerCase();
 const list=WIKI.mobs.filter(m=>inLv(m)&&(!q||m.n.toLowerCase().includes(q)||m.drops.some(d=>d.n.toLowerCase().includes(q))));
 $("tb").innerHTML=list.map(m=>"<tr><td class='nm'>"+esc(m.n)+"</td><td class='num'>"+m.lv+"</td><td class='num'>"+m.hp.toLocaleString()+"</td><td class='num'>"+m.exp.toLocaleString()+"</td><td class='num'>"+m.e+"</td>"+
-"<td>"+(m.zones.length?m.zones.map(z=>"<span class='tag zn'>"+esc(z)+"</span>").join(""):"<span class='tag'>世界王房</span>")+"</td>"+
+"<td>"+(m.wbOnly?"<span class='tag wb'>🐉 世界王房限定</span>":(m.zones.length?m.zones.map(z=>"<span class='tag zn'>"+esc(z)+"</span>").join(""):"<span class='tag'>—</span>"))+"</td>"+
 "<td>"+(m.drops.length?m.drops.map(d=>"<span class='tag"+(d.legend?" lg":"")+"'>"+(d.legend?"★":"")+esc(d.n)+"</span>").join(""):"<span style='color:#6b5f4c'>—</span>")+"</td></tr>").join("")||"<tr><td colspan=7 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script></body></html>

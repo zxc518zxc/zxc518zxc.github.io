@@ -1,4 +1,4 @@
-// gen.js — 阿肥放置天堂 玩家資料站產生器
+// gen.js — 阿肥放置天地 玩家資料站產生器
 // 用法:node gen.js(讀 ../go端專案/gamedata.json → 生成各頁 + data.js + 圖示同步)
 //
 // 🔴 兩條鐵律
@@ -67,14 +67,34 @@ const zoneName = {}, zoneCat = {};
 for (const [cat, arr] of Object.entries(GD.mapCategories || {}))
   for (const z of arr || []) { zoneName[z.v] = z.t; zoneCat[z.v] = ZONE_CAT[cat] || cat; }
 
+// 🔴 世界王本尊怪 —— **一定要從獵場怪物池濾掉**。
+//
+// gamedata 的 `maps` 裡確實列著這些王(資料庫有),但伺服器啟動時
+// `cmd/goline/main.go` 會呼叫 `afk.RemoveBossMobs(wbSet)` 把牠們從所有頻道池移除
+// (對齊 server.js:6869-6879)——**王只從世界王入口進,永遠不會在一般獵場出生**。
+//
+// ⚠ 這個坑踩過兩次(見 .ai/歷程.md 2026-09-04):
+//   ① 過濾不在 `afk.SpawnMonster` 裡,而在**呼叫端之前**,只看引擎層會得到錯的結論。
+//   ② 判「玩家會不會遇到某隻怪」**不能只看 gamedata.maps**,必須把 RemoveBossMobs 算進去。
+// 實測:螞蟻洞窟2樓跑 5 萬次出怪,0 隻巨蟻女皇。
+const WB_MOB_KEYS = new Set();
+for (const v of Object.values(GD.worldBosses || {})) {
+  if (v.mob) WB_MOB_KEYS.add(v.mob);
+  for (const mb of (v.members || [])) if (mb.mob) WB_MOB_KEYS.add(mb.mob);
+}
+const WB_MOB_NAMES = new Set([...WB_MOB_KEYS].map(k => GD.mobs?.[k]?.n).filter(Boolean));
+
 // 頻道 → 怪(mob key);同時建反查 怪名 → 出沒頻道名
+// ⚠ 兩邊都要套 WB_MOB_KEYS 過濾,否則獵場會列出不會出的王、王也會被誤標出沒地點。
 const zoneMobs = {}, mobZones = {};
 for (const [z, keys] of Object.entries(GD.maps || {})) {
   if (hiddenZone(z) || zoneCat[z] === "村莊" || !Array.isArray(keys)) continue;
   const nm = zoneName[z];
   if (!nm) continue; // 不在分類表 = 內部/未啟用頻道,不列
-  zoneMobs[z] = keys;
-  for (const k of keys) {
+  const real = keys.filter(k => !WB_MOB_KEYS.has(k)); // ← RemoveBossMobs 的同一套過濾
+  if (real.length === 0) continue;                    // 整區只有王 → 遊戲裡該頻道直接下架
+  zoneMobs[z] = real;
+  for (const k of real) {
     const mn = GD.mobs?.[k]?.n;
     if (!mn) continue;
     (mobZones[mn] ||= new Set()).add(nm);
@@ -287,6 +307,8 @@ const worldbosses = Object.entries(GD.worldBosses || {}).map(([id, v]) => {
 const mobs = Object.entries(GD.mobs || {}).map(([key, v]) => ({
   key, n: v.n || key, lv: v.lv || 0, hp: v.hp || 0, exp: v.exp || 0,
   e: ELE_NAME[v.e] || "無", race: v.race || "", boss: !!v.boss,
+  // 🔴 世界王本尊怪永遠不會在一般獵場出生(RemoveBossMobs),出沒地點一律標「世界王房」
+  wbOnly: WB_MOB_NAMES.has(v.n || key),
   zones: [...(mobZones[v.n] || [])],
   drops: (dropsByMobName[v.n] || []).map(id => ({ id, n: itemName(id), legend: GD.items?.[id]?.gachaWeight === 1 })),
 })).sort((a, b) => a.lv - b.lv || a.n.localeCompare(b.n, "zh-Hant"));
@@ -340,9 +362,35 @@ const DATA_V = require("crypto").createHash("sha1").update(dataJs).digest("hex")
 // ---- 共用外框 ----
 const CSS = `
 *{box-sizing:border-box}body{background:#1a140c;color:#e8dcc8;font-family:"Microsoft JhengHei",sans-serif;margin:0;padding:0}
-header{background:#241b0f;border-bottom:2px solid #f5c451;padding:14px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-header h1{color:#f5c451;font-size:20px;margin:0}
-nav a{color:#cbbb9b;text-decoration:none;margin-right:14px;font-size:15px;white-space:nowrap;display:inline-block;line-height:1.9}nav a:hover,nav a.on{color:#f5c451}
+/* ── 頁首與導覽列 ──
+   14 個功能鍵,所以做成膠囊按鈕 + 圖示;捲動時固定在頂端(查資料時不用捲回去換頁)。
+   窄螢幕自動縮小,不做橫向捲動(會藏住後面的鍵)。 */
+header{background:linear-gradient(180deg,#2c2114 0%,#20180d 100%);
+  border-bottom:1px solid #3f331d;box-shadow:0 3px 14px rgba(0,0,0,.45);
+  padding:12px 18px 0;position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+header h1{color:#f5c451;font-size:20px;margin:0;letter-spacing:.5px;
+  text-shadow:0 0 18px rgba(245,196,81,.35)}
+.brand .sub{color:#8a7d63;font-size:12px;letter-spacing:2px}
+nav{display:flex;flex-wrap:wrap;gap:6px;padding-bottom:11px}
+nav a{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:9px;
+  color:#c9b995;text-decoration:none;font-size:14px;white-space:nowrap;line-height:1.2;
+  border:1px solid transparent;background:rgba(255,255,255,.03);
+  transition:background .18s,color .18s,border-color .18s,transform .18s,box-shadow .18s}
+nav a .i{font-size:15px;line-height:1}
+nav a:hover{background:rgba(245,196,81,.11);color:#f5c451;
+  border-color:rgba(245,196,81,.38);transform:translateY(-1px)}
+nav a.on{background:linear-gradient(180deg,#f5c451 0%,#dfa72c 100%);color:#241b0f;
+  font-weight:700;border-color:#f5c451;box-shadow:0 2px 10px rgba(245,196,81,.32)}
+nav a.on .i{filter:saturate(.85)}
+@media(max-width:640px){
+  header{padding:10px 12px 0}
+  header h1{font-size:17px}
+  .brand .sub{display:none}
+  nav{gap:5px;padding-bottom:9px}
+  nav a{padding:6px 9px;font-size:13px;gap:4px}
+  nav a .i{font-size:14px}
+}
 main{max-width:1000px;margin:0 auto;padding:16px}
 input,select{background:#2a2014;border:1px solid #5a4a26;color:#e8dcc8;padding:9px 12px;border-radius:8px;font-size:15px}
 input{width:100%}
@@ -378,6 +426,7 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 .tag{display:inline-block;background:#2a2014;border:1px solid #3a2f1c;border-radius:6px;padding:1px 7px;margin:2px 3px 0 0;font-size:12px;color:#cbbb9b;white-space:nowrap}
 .tag.lg{color:#ffd700;border-color:#6b5a20}
 .tag.zn{color:#7bd14a;border-color:#2f4a24}
+.tag.wb{color:#f5a97f;border-color:#6b3f28;background:rgba(245,169,127,.08)}
 .wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .hint{color:#8f8067;font-size:12px;margin:-6px 0 12px}
 .mcard{background:#241b0f;border:1px solid #3a2f1c;border-radius:12px;padding:14px 16px;margin-bottom:14px}
@@ -385,24 +434,31 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 .mcard .sub{color:#b6a684;font-size:14px;line-height:1.75}
 .mcard table{margin-top:6px}
 `;
+// 導覽列:[網址, active 鍵, 圖示, 名稱]。圖示與首頁磁磚同一套,順序=功能重要度。
+const NAV = [
+  ["index.html", "index", "🏠", "首頁"],
+  ["monsters.html", "mob", "👹", "怪物掉落圖鑑"],
+  ["items.html", "item", "⚔️", "道具圖鑑"],
+  ["skills.html", "skill", "✨", "技能介紹"],
+  ["zones.html", "zone", "🗺️", "獵場列表"],
+  ["worldboss.html", "wb", "🐉", "世界王"],
+  ["npc.html", "npc", "🏘️", "NPC 一覽"],
+  ["mastery.html", "mastery", "🎓", "精通升級數據"],
+  ["sets.html", "set", "🛡️", "套裝效果"],
+  ["enhance.html", "enh", "⚒️", "強化機率"],
+  ["affix.html", "affix", "🌑", "詞條大全"],
+  ["poly.html", "poly", "💪", "變身型態"],
+  ["guide.html", "guide", "🌱", "新手指南"],
+  ["changelog.html", "log", "📢", "版本更新"],
+];
+
 const page = (title, active, body, extra = "") => `<!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${title} - 阿肥放置天堂 資料站</title><style>${CSS}</style></head><body>
-<header><h1>🏰 阿肥放置天堂</h1><nav>
-<a href="index.html" class="${active === "index" ? "on" : ""}">首頁</a>
-<a href="monsters.html" class="${active === "mob" ? "on" : ""}">怪物掉落圖鑑</a>
-<a href="items.html" class="${active === "item" ? "on" : ""}">道具圖鑑</a>
-<a href="skills.html" class="${active === "skill" ? "on" : ""}">技能介紹</a>
-<a href="zones.html" class="${active === "zone" ? "on" : ""}">獵場列表</a>
-<a href="worldboss.html" class="${active === "wb" ? "on" : ""}">世界王</a>
-<a href="npc.html" class="${active === "npc" ? "on" : ""}">NPC 一覽</a>
-<a href="mastery.html" class="${active === "mastery" ? "on" : ""}">精通升級數據</a>
-<a href="sets.html" class="${active === "set" ? "on" : ""}">套裝效果</a>
-<a href="enhance.html" class="${active === "enh" ? "on" : ""}">強化機率</a>
-<a href="affix.html" class="${active === "affix" ? "on" : ""}">詞條大全</a>
-<a href="poly.html" class="${active === "poly" ? "on" : ""}">變身型態</a>
-<a href="guide.html" class="${active === "guide" ? "on" : ""}">新手指南</a>
-<a href="changelog.html" class="${active === "log" ? "on" : ""}">版本更新</a>
+<title>${title} - 阿肥放置天地 資料站</title><style>${CSS}</style></head><body>
+<header>
+<div class="brand"><h1>🏰 阿肥放置天地</h1><span class="sub">玩家資料站</span></div>
+<nav>${NAV.map(([href, key, icon, label]) =>
+  `<a href="${href}" class="${active === key ? "on" : ""}"><span class="i">${icon}</span>${label}</a>`).join("\n")}
 </nav></header><main>${body}</main>
 <footer>資料自動同步自遊戲檔 · 產生於 ${new Date().toISOString().slice(0, 10)}</footer>
 ${extra.split("data.js").join("data.js?v=" + DATA_V)}</body></html>`;
@@ -449,7 +505,7 @@ function inLv(m){if(lv==="all")return true;if(lv==="61+")return m.lv>=61;const p
 function render(){const q=$("q").value.trim().toLowerCase();
 const list=WIKI.mobs.filter(m=>inLv(m)&&(!q||m.n.toLowerCase().includes(q)||m.drops.some(d=>d.n.toLowerCase().includes(q))));
 $("tb").innerHTML=list.map(m=>"<tr><td class='nm'>"+esc(m.n)+"</td><td class='num'>"+m.lv+"</td><td class='num'>"+m.hp.toLocaleString()+"</td><td class='num'>"+m.exp.toLocaleString()+"</td><td class='num'>"+m.e+"</td>"+
-"<td>"+(m.zones.length?m.zones.map(z=>"<span class='tag zn'>"+esc(z)+"</span>").join(""):"<span class='tag'>世界王房</span>")+"</td>"+
+"<td>"+(m.wbOnly?"<span class='tag wb'>🐉 世界王房限定</span>":(m.zones.length?m.zones.map(z=>"<span class='tag zn'>"+esc(z)+"</span>").join(""):"<span class='tag'>—</span>"))+"</td>"+
 "<td>"+(m.drops.length?m.drops.map(d=>"<span class='tag"+(d.legend?" lg":"")+"'>"+(d.legend?"★":"")+esc(d.n)+"</span>").join(""):"<span style='color:#6b5f4c'>—</span>")+"</td></tr>").join("")||"<tr><td colspan=7 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script>`));
