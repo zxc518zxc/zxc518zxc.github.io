@@ -113,6 +113,18 @@ function itemFx(v) {
   if (v.immStone) t.push("免疫石化");
   if (v.immPoison) t.push("免疫中毒");
   if (v.weightCap) t.push("負重上限 +" + v.weightCap);
+  if (v.extraMpPerEn) t.push("每強化 +1:額外MP +" + v.extraMpPerEn);      // derived.go: ExtraMp += wEn * ExtraMpPerEn
+  if (v.meleeHitPerEn) t.push("每強化 +1:近距離命中 +" + v.meleeHitPerEn); // derived.go: MeleeHit += wEn * MeleeHitPerEn
+  if (v.mrPerEn) t.push("每強化 +1:魔防 +" + v.mrPerEn);
+  if (v.rangedHit) t.push("遠距離命中 +" + v.rangedHit);
+  if (v.pierceChance) t.push("貫穿機率 " + v.pierceChance + "%");
+  if (v.mpROverSafe) t.push("超過安定值後 MP恢復 +" + v.mpROverSafe);
+  if (v.petHit) t.push("寵物命中 +" + v.petHit);
+  if (v.petDmg) t.push("寵物傷害 +" + v.petDmg);
+  if (v.rapidfire) t.push("連射");
+  if (v.alwaysHit) t.push("必定命中");
+  if (v.allowEnh0) t.push("安定值 0 仍可強化");
+  if (v.isArrow) t.push("箭矢");
   if (v.eff && EFF_N[v.eff]) t.push(EFF_N[v.eff] + (v.effPct ? "(" + v.effPct + "%)" : ""));
   if (v.sk || (v.grantSkills && v.grantSkills.length)) t.push("裝備時授予額外技能");
   if (v.spd && v.spd !== 1) t.push(v.spd < 1 ? "攻擊速度快" : "攻擊速度慢");
@@ -137,8 +149,12 @@ const items = Object.entries(GD.items || {}).filter(([id, v]) => !hiddenItem(id,
   slot: SLOT_N[v.slot] || "", req: reqStr(v.req), wcat: v.wcat || "",
   p: v.p || 0, sell: Math.floor((v.p || 0) * 3 / 10),
   fx: itemFx(v),
+  src: [],
 })).sort((a, b) => a.n.localeCompare(b.n, "zh-Hant"));
 const itemOk = new Set(items.map(i => i.id));
+// 🔎 道具 → 會掉它的怪(反查)。材料類沒有數值也沒說明,玩家真正想知道的是「哪裡拿」。
+//    ⚠ 只放**名字**,不放機率(鐵律①)。
+const srcByItem = {};
 
 // 掉落:只列「誰掉什麼」,**不輸出機率**(鐵律①)
 const dropsByMobName = {};
@@ -148,6 +164,19 @@ for (const [mobN, rows] of Object.entries(GD.mobDrops || {})) {
   dropsByMobName[mobN] = [...set];
 }
 const itemName = id => (GD.items?.[id]?.n) || id;
+for (const [mobN, ids] of Object.entries(dropsByMobName)) {
+  for (const id of ids) (srcByItem[id] ||= new Set()).add(mobN);
+}
+
+// 🗺 地區採集(afk/sim.go 的 areaBonusMaps/areaBonusItems,經 wikidump 匯出):
+//    在這些頻道打**任何**怪都可能掉這幾種素材 —— 元素石那類材料查不到「哪隻怪掉」就是因為它走這條。
+let AREA = { zones: [], items: [] };
+try { AREA = (JSON.parse(fs.readFileSync(path.join(OUT, "mastery.json"), "utf8")).areaDrops) || AREA; } catch (e) { }
+const areaZoneNames = AREA.zones.map(z => zoneName[z]).filter(Boolean);
+for (const i of items) {
+  i.src = [...(srcByItem[i.id] || [])].slice(0, 8);
+  if (AREA.items.includes(i.id) && areaZoneNames.length) i.area = areaZoneNames;
+}
 
 // 🐉 世界王(受 WB_MAX_LV 管制,與遊戲的 wbmax 一致)
 const wbSet = new Set();
@@ -195,6 +224,8 @@ const zones = Object.entries(zoneMobs).map(([z, keys]) => {
   return { id: z, n: zoneName[z], cat: zoneCat[z] || "野外", mobs: ms,
     lvMin: lvs.length ? Math.min(...lvs) : 0, lvMax: lvs.length ? Math.max(...lvs) : 0 };
 }).filter(z => z.mobs.length > 0).sort((a, b) => a.lvMin - b.lvMin || a.n.localeCompare(b.n, "zh-Hant"));
+// 標出「地區採集」頻道(在這裡打任何怪都可能掉那幾種素材)
+for (const z of zones) if (AREA.zones.includes(z.id)) z.area = AREA.items.map(itemName);
 
 // 🏘 NPC 一覽
 const NPC_TYPE = { shop: "商店", craft: "製作", skill: "技能", warehouse: "倉庫", exchange: "兌換",
@@ -217,8 +248,13 @@ const skills = Object.entries(GD.skills || {}).map(([id, v]) => ({
   k: v.reqK || 0, m: v.reqM || 0, e: v.reqE || 0,
 })).sort((a, b) => (a.tier - b.tier) || a.n.localeCompare(b.n, "zh-Hant"));
 
-fs.writeFileSync(path.join(OUT, "data.js"), "const WIKI=" + JSON.stringify(
-  { items, mobs: mobList, skills, zones, worldbosses, towns, sets }) + ";");
+const dataJs = "const WIKI=" + JSON.stringify({ items, mobs: mobList, skills, zones, worldbosses, towns, sets }) + ";";
+fs.writeFileSync(path.join(OUT, "data.js"), dataJs);
+// 🔴 快取破壞(2026-09-07 踩到):GitHub Pages 會把 data.js 快取住 ——
+//    改版後玩家拿到**新的 HTML 但舊的 data.js**,新欄位全部讀不到值、整排顯示「—」,
+//    看起來就像「資料沒補上」(麥哥就是這樣回報的)。加內容雜湊當版本號,
+//    內容一變網址就變,瀏覽器一定重抓。同遊戲本體 goline-adapter.js 的 ?v= 做法。
+const DATA_V = require("crypto").createHash("sha1").update(dataJs).digest("hex").slice(0, 8);
 
 // ---- 共用外框 ----
 const CSS = `
@@ -285,7 +321,7 @@ const page = (title, active, body, extra = "") => `<!DOCTYPE html>
 <a href="changelog.html" class="${active === "log" ? "on" : ""}">版本更新</a>
 </nav></header><main>${body}</main>
 <footer>資料自動同步自遊戲檔 · 產生於 ${new Date().toISOString().slice(0, 10)}</footer>
-${extra}</body></html>`;
+${extra.split("data.js").join("data.js?v=" + DATA_V)}</body></html>`;
 
 
 // ================= 頁面(2026-09-07 起:純文字表格,無圖片) =================
@@ -344,16 +380,18 @@ const TS=["全部","武器","防具","飾品","藥水","道具","材料","技能
 $("tchips").innerHTML=TS.map(t=>'<span class="chip'+(t==="全部"?" on":"")+'" data-t="'+t+'">'+t+'</span>').join("");
 document.querySelectorAll("#tchips .chip").forEach(c=>c.onclick=()=>{document.querySelectorAll("#tchips .chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");tf=c.dataset.t;render();});
 function render(){const q=$("q").value.trim().toLowerCase();
-const list=WIKI.items.filter(i=>(tf==="全部"||i.t===tf)&&(!q||i.n.toLowerCase().includes(q)||(i.d||"").toLowerCase().includes(q)||(i.fx||[]).some(x=>x.toLowerCase().includes(q))));
+const list=WIKI.items.filter(i=>(tf==="全部"||i.t===tf)&&(!q||i.n.toLowerCase().includes(q)||(i.d||"").toLowerCase().includes(q)||(i.fx||[]).some(x=>x.toLowerCase().includes(q))||(i.src||[]).some(x=>x.toLowerCase().includes(q))));
 $("tb").innerHTML=list.map(i=>{
 const fx=(i.fx||[]).map(x=>"<span class='tag'>"+esc(x)+"</span>").join("");
 const desc=i.d?"<div style='color:#b6a684;font-size:13px;margin-top:3px'>"+i.d+"</div>":"";
+const src=(i.src&&i.src.length)?"<div style='margin-top:3px;font-size:12px;color:#7bd14a'>📍 掉落:"+i.src.map(x=>esc(x)).join("、")+(i.src.length>=8?" …等":"")+"</div>":"";
+const area=(i.area&&i.area.length)?"<div style='margin-top:3px;font-size:12px;color:#7bd14a'>⛏ 採集地區:"+i.area.map(x=>esc(x)).join("、")+"(在這些地方打任何怪都可能掉)</div>":"";
 return "<tr><td class='nm'"+(i.legend?" style='color:#ffd700'":"")+">"+(i.legend?"★":"")+esc(i.n)+"</td>"+
 "<td class='num'>"+i.t+"</td><td class='num'>"+esc(i.slot||i.wcat||"—")+"</td><td class='num'>"+esc(i.req||"—")+"</td>"+
 "<td class='num'>"+(i.dmg||"—")+"</td><td class='num'>"+(i.ac||"—")+"</td>"+
 "<td class='num'>"+((i.safe!==""&&(i.t==="武器"||i.t==="防具"))?"+"+i.safe:"—")+"</td>"+
 "<td class='num'>"+(i.p?i.p.toLocaleString()+"<div style='color:#6b5f4c;font-size:11px'>賣店 "+i.sell.toLocaleString()+"</div>":"—")+"</td>"+
-"<td>"+(fx||desc?fx+desc:"<span style='color:#6b5f4c'>—</span>")+"</td></tr>";}).join("")||"<tr><td colspan=9 style='color:#8f8067'>查無符合</td></tr>";}
+"<td>"+(fx||desc||src||area?fx+desc+src+area:"<span style='color:#6b5f4c'>—</span>")+"</td></tr>";}).join("")||"<tr><td colspan=9 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script>`));
 
@@ -386,7 +424,7 @@ $("cchips").innerHTML=CS.map(t=>'<span class="chip'+(t==="全部"?" on":"")+'" d
 document.querySelectorAll("#cchips .chip").forEach(c=>c.onclick=()=>{document.querySelectorAll("#cchips .chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");cf=c.dataset.t;render();});
 function render(){const q=$("q").value.trim().toLowerCase();
 const list=WIKI.zones.filter(z=>(cf==="全部"||z.cat===cf)&&(!q||z.n.toLowerCase().includes(q)||z.mobs.some(m=>m.toLowerCase().includes(q))));
-$("tb").innerHTML=list.map(z=>"<tr><td class='nm'>"+esc(z.n)+"</td><td class='num'>"+z.cat+"</td><td class='num'>"+(z.lvMin?"Lv"+z.lvMin+"~"+z.lvMax:"—")+"</td><td>"+z.mobs.map(m=>"<span class='tag'>"+esc(m)+"</span>").join("")+"</td></tr>").join("")||"<tr><td colspan=4 style='color:#8f8067'>查無符合</td></tr>";}
+$("tb").innerHTML=list.map(z=>"<tr><td class='nm'>"+esc(z.n)+(z.area?"<div style='font-weight:normal;color:#7bd14a;font-size:12px'>⛏ 採集:"+z.area.map(x=>esc(x)).join("、")+"</div>":"")+"</td><td class='num'>"+z.cat+"</td><td class='num'>"+(z.lvMin?"Lv"+z.lvMin+"~"+z.lvMax:"—")+"</td><td>"+z.mobs.map(m=>"<span class='tag'>"+esc(m)+"</span>").join("")+"</td></tr>").join("")||"<tr><td colspan=4 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script>`));
 
@@ -444,7 +482,7 @@ $("q").oninput=render;render();
 // 由 `cd engine && go run ./cmd/wikidump > ../玩家資料站/mastery.json` 匯出。
 // 🔴 **調過精通數值就要重跑那支再重生資料站**,否則玩家看到舊數字。
 let MASTERY = [];
-try { MASTERY = JSON.parse(fs.readFileSync(path.join(OUT, "mastery.json"), "utf8")); }
+try { MASTERY = JSON.parse(fs.readFileSync(path.join(OUT, "mastery.json"), "utf8")).mastery || []; }
 catch (e) { console.warn("⚠ 找不到 mastery.json → 跳過「精通升級數據」頁。請先跑:cd engine && go run ./cmd/wikidump > ../玩家資料站/mastery.json"); }
 
 if (MASTERY.length) {

@@ -65,7 +65,7 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 <div class="chips" id="cchips"></div>
 <div class="wrap"><table><thead><tr><th>獵場</th><th>類型</th><th>怪物等級</th><th>出沒怪物</th></tr></thead><tbody id="tb"></tbody></table></div></main>
 <footer>資料自動同步自遊戲檔 · 產生於 2026-09-07</footer>
-<script src="data.js"></script><script>
+<script src="data.js?v=67dad5af"></script><script>
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
 const CS=["全部","野外","地監","特殊"];let cf="全部";
@@ -73,6 +73,6 @@ $("cchips").innerHTML=CS.map(t=>'<span class="chip'+(t==="全部"?" on":"")+'" d
 document.querySelectorAll("#cchips .chip").forEach(c=>c.onclick=()=>{document.querySelectorAll("#cchips .chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");cf=c.dataset.t;render();});
 function render(){const q=$("q").value.trim().toLowerCase();
 const list=WIKI.zones.filter(z=>(cf==="全部"||z.cat===cf)&&(!q||z.n.toLowerCase().includes(q)||z.mobs.some(m=>m.toLowerCase().includes(q))));
-$("tb").innerHTML=list.map(z=>"<tr><td class='nm'>"+esc(z.n)+"</td><td class='num'>"+z.cat+"</td><td class='num'>"+(z.lvMin?"Lv"+z.lvMin+"~"+z.lvMax:"—")+"</td><td>"+z.mobs.map(m=>"<span class='tag'>"+esc(m)+"</span>").join("")+"</td></tr>").join("")||"<tr><td colspan=4 style='color:#8f8067'>查無符合</td></tr>";}
+$("tb").innerHTML=list.map(z=>"<tr><td class='nm'>"+esc(z.n)+(z.area?"<div style='font-weight:normal;color:#7bd14a;font-size:12px'>⛏ 採集:"+z.area.map(x=>esc(x)).join("、")+"</div>":"")+"</td><td class='num'>"+z.cat+"</td><td class='num'>"+(z.lvMin?"Lv"+z.lvMin+"~"+z.lvMax:"—")+"</td><td>"+z.mobs.map(m=>"<span class='tag'>"+esc(m)+"</span>").join("")+"</td></tr>").join("")||"<tr><td colspan=4 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script></body></html>
