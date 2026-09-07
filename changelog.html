@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>獵場列表 - 阿肥放置天堂 資料站</title><style>
+<title>版本更新 - 阿肥放置天堂 資料站</title><style>
 *{box-sizing:border-box}body{background:#1a140c;color:#e8dcc8;font-family:"Microsoft JhengHei",sans-serif;margin:0;padding:0}
 header{background:#241b0f;border-bottom:2px solid #f5c451;padding:14px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
 header h1{color:#f5c451;font-size:20px;margin:0}
@@ -52,27 +52,34 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 <a href="monsters.html" class="">怪物掉落圖鑑</a>
 <a href="items.html" class="">道具圖鑑</a>
 <a href="skills.html" class="">技能介紹</a>
-<a href="zones.html" class="on">獵場列表</a>
+<a href="zones.html" class="">獵場列表</a>
 <a href="worldboss.html" class="">世界王</a>
 <a href="npc.html" class="">NPC 一覽</a>
 <a href="mastery.html" class="">精通升級數據</a>
 <a href="sets.html" class="">套裝效果</a>
 <a href="guide.html" class="">新手指南</a>
-<a href="changelog.html" class="">版本更新</a>
+<a href="changelog.html" class="on">版本更新</a>
 </nav></header><main>
-<div class="stats"><div class="stat-chip"><b>64</b>獵場</div><div class="stat-chip"><b>21</b>野外</div><div class="stat-chip"><b>40</b>地監</div></div>
-<div class="bar"><input id="q" placeholder="🔍 搜獵場名,或輸入「怪物名」找牠出沒的獵場"></div>
-<div class="chips" id="cchips"></div>
-<div class="wrap"><table><thead><tr><th>獵場</th><th>類型</th><th>怪物等級</th><th>出沒怪物</th></tr></thead><tbody id="tb"></tbody></table></div></main>
+<div class="hint">遊戲的新增、調整與修復紀錄(由新到舊)。</div>
+<div class="mcard">
+    <div class="ttl">2026-09-06<span class="tag" style="margin-left:8px">8 項</span></div>
+    <div style="padding:7px 0;border-bottom:1px solid #2a2014">
+      <span class="tag" style="color:#7bd14a">新增</span> <b style="color:#e8dcc8">精通洗鍊卡</b>
+      <div class="sub" style="margin-top:3px">精通的能力(命中／傷害／平衡)選錯不再永久鎖死,可用洗鍊卡重選。等級、經驗與已投入的材料完全不受影響。商城以藍鑽販售。</div></div><div style="padding:7px 0;border-bottom:1px solid #2a2014">
+      <span class="tag" style="color:#7bd14a">新增</span> <b style="color:#e8dcc8">精通轉換卡</b>
+      <div class="sub" style="margin-top:3px">妖精限定:「願風神護佑你(遠程)」與「火之意志(近戰)」可整組互換。改用弓或改用刀不必重練。⚠ 是互換不是搬移,原本那邊會變成對方的等級。</div></div><div style="padding:7px 0;border-bottom:1px solid #2a2014">
+      <span class="tag" style="color:#5b9bff">調整</span> <b style="color:#e8dcc8">火之意志 突破材料</b>
+      <div class="sub" style="margin-top:3px">Lv0→4 各階材料數量調整為 ×2(Lv4→5 不變),與願風神的投入成本拉平。</div></div><div style="padding:7px 0;border-bottom:1px solid #2a2014">
+      <span class="tag" style="color:#5b9bff">調整</span> <b style="color:#e8dcc8">血盟 擴充任務需求下修</b>
+      <div class="sub" style="margin-top:3px">魔法書(衝擊之暈)1000→500、魔法書(召喚術)與萬能藥 100→50、+9 純白武器各 20→10。</div></div><div style="padding:7px 0;border-bottom:1px solid #2a2014">
+      <span class="tag" style="color:#7bd14a">新增</span> <b style="color:#e8dcc8">血盟 捐獻記名</b>
+      <div class="sub" style="margin-top:3px">貢獻分頁現在也會顯示「搜索狀」與「任務道具」的累計捐獻量 —— 過去只有投資金幣看得到,天天捐搜索狀維持光環的人反而被標成未貢獻。</div></div><div style="padding:7px 0;border-bottom:1px solid #2a2014">
+      <span class="tag" style="color:#f5c451">修復</span> <b style="color:#e8dcc8">斷線後被踢回登入頁</b>
+      <div class="sub" style="margin-top:3px">短暫斷線(一分鐘內)會自動重連回原本的畫面,不再直接跳回輸入密碼。</div></div><div style="padding:7px 0;border-bottom:1px solid #2a2014">
+      <span class="tag" style="color:#f5c451">修復</span> <b style="color:#e8dcc8">音效造成的畫面卡頓</b>
+      <div class="sub" style="margin-top:3px">改寫音效播放方式,切換分頁與戰鬥時不再頓一下。</div></div><div style="padding:7px 0;border-bottom:1px solid #2a2014">
+      <span class="tag" style="color:#5b9bff">調整</span> <b style="color:#e8dcc8">部分怪物掉落調整</b>
+      <div class="sub" style="margin-top:3px">施法卷軸等產出做了平衡調整。</div></div>
+  </div></main>
 <footer>資料自動同步自遊戲檔 · 產生於 2026-09-07</footer>
-<script src="data.js"></script><script>
-const $=id=>document.getElementById(id);
-const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
-const CS=["全部","野外","地監","特殊"];let cf="全部";
-$("cchips").innerHTML=CS.map(t=>'<span class="chip'+(t==="全部"?" on":"")+'" data-t="'+t+'">'+t+'</span>').join("");
-document.querySelectorAll("#cchips .chip").forEach(c=>c.onclick=()=>{document.querySelectorAll("#cchips .chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");cf=c.dataset.t;render();});
-function render(){const q=$("q").value.trim().toLowerCase();
-const list=WIKI.zones.filter(z=>(cf==="全部"||z.cat===cf)&&(!q||z.n.toLowerCase().includes(q)||z.mobs.some(m=>m.toLowerCase().includes(q))));
-$("tb").innerHTML=list.map(z=>"<tr><td class='nm'>"+esc(z.n)+"</td><td class='num'>"+z.cat+"</td><td class='num'>"+(z.lvMin?"Lv"+z.lvMin+"~"+z.lvMax:"—")+"</td><td>"+z.mobs.map(m=>"<span class='tag'>"+esc(m)+"</span>").join("")+"</td></tr>").join("")||"<tr><td colspan=4 style='color:#8f8067'>查無符合</td></tr>";}
-$("q").oninput=render;render();
-</script></body></html>
+</body></html>

@@ -216,6 +216,10 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 .tag.zn{color:#7bd14a;border-color:#2f4a24}
 .wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .hint{color:#8f8067;font-size:12px;margin:-6px 0 12px}
+.mcard{background:#241b0f;border:1px solid #3a2f1c;border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.mcard .ttl{color:#f5c451;font-size:17px;font-weight:bold;margin-bottom:2px}
+.mcard .sub{color:#b6a684;font-size:14px;line-height:1.75}
+.mcard table{margin-top:6px}
 `;
 const page = (title, active, body, extra = "") => `<!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -228,7 +232,10 @@ const page = (title, active, body, extra = "") => `<!DOCTYPE html>
 <a href="zones.html" class="${active === "zone" ? "on" : ""}">獵場列表</a>
 <a href="worldboss.html" class="${active === "wb" ? "on" : ""}">世界王</a>
 <a href="npc.html" class="${active === "npc" ? "on" : ""}">NPC 一覽</a>
+<a href="mastery.html" class="${active === "mastery" ? "on" : ""}">精通升級數據</a>
 <a href="sets.html" class="${active === "set" ? "on" : ""}">套裝效果</a>
+<a href="guide.html" class="${active === "guide" ? "on" : ""}">新手指南</a>
+<a href="changelog.html" class="${active === "log" ? "on" : ""}">版本更新</a>
 </nav></header><main>${body}</main>
 <footer>資料自動同步自遊戲檔 · 產生於 ${new Date().toISOString().slice(0, 10)}</footer>
 ${extra}</body></html>`;
@@ -249,7 +256,10 @@ ${chips([[mobList.length, "怪物"], [items.length, "道具"], [skills.length, "
 <a class="tile" href="zones.html"><div class="em">🗺️</div><div class="tt">獵場列表</div><div class="dd">幾等該去哪練・怪在哪出沒</div></a>
 <a class="tile" href="worldboss.html"><div class="em">🐉</div><div class="tt">世界王</div><div class="dd">入場等級・重生間隔・掉落</div></a>
 <a class="tile" href="npc.html"><div class="em">🏘️</div><div class="tt">NPC 一覽</div><div class="dd">誰在哪個村莊・提供什麼服務</div></a>
+<a class="tile" href="guide.html"><div class="em">🌱</div><div class="tt">新手指南</div><div class="dd">第一次玩看這裡</div></a>
+<a class="tile" href="mastery.html"><div class="em">🎓</div><div class="tt">精通升級數據</div><div class="dd">升到滿級要什麼材料</div></a>
 <a class="tile" href="sets.html"><div class="em">🛡️</div><div class="tt">套裝效果</div><div class="dd">湊齊有什麼加成</div></a>
+<a class="tile" href="changelog.html"><div class="em">📢</div><div class="tt">版本更新</div><div class="dd">最近改了什麼</div></a>
 </div>`));
 
 // ---- 怪物掉落 ----
@@ -373,5 +383,139 @@ $("tb").innerHTML=list.map(s=>"<tr><td class='nm'>"+esc(s.n)+"</td><td class='nu
 $("q").oninput=render;render();
 </script>`));
 
+
+// ================= 🎓 精通升級數據 =================
+// 資料來自 Go 的精通表(engine/afk/mastery.go + stage3.go),
+// 由 `cd engine && go run ./cmd/wikidump > ../玩家資料站/mastery.json` 匯出。
+// 🔴 **調過精通數值就要重跑那支再重生資料站**,否則玩家看到舊數字。
+let MASTERY = [];
+try { MASTERY = JSON.parse(fs.readFileSync(path.join(OUT, "mastery.json"), "utf8")); }
+catch (e) { console.warn("⚠ 找不到 mastery.json → 跳過「精通升級數據」頁。請先跑:cd engine && go run ./cmd/wikidump > ../玩家資料站/mastery.json"); }
+
+if (MASTERY.length) {
+  const ABIL_N = { hit: "命中", dmg: "傷害", balance: "平衡(命中+傷害)" };
+  const matStr = m => {
+    const nm = m.item === "(綁定武器)" ? "綁定武器" : itemName(m.item);
+    return (m.en >= 0 ? "+" + m.en + " " : "") + nm + " ×" + m.n;
+  };
+  const secs = MASTERY.map(ms => {
+    const rows = ms.levels.map(l => {
+      const need = [];
+      if (l.exp) need.push("經驗 " + l.exp.toLocaleString());
+      if (l.feed) need.push("捐獻 " + itemName(l.feed));
+      if (l.gold) need.push("金幣 " + (l.gold / 10000).toLocaleString() + " 萬");
+      const mats = (l.mats || []).map(matStr).join("、");
+      return `<tr><td class="nm">Lv${l.from} → Lv${l.to}</td><td>${need.join("・") || "—"}</td><td>${mats || "—"}</td><td>${l.zone ? (zoneName[l.zone] || l.zone) : (l.note || "—")}</td></tr>`;
+    }).join("");
+    const ab = ms.abilities ? `<div style="margin-top:10px"><div style="color:#f5c451;font-size:14px;margin-bottom:4px">三選一能力${ms.abilNote ? ` <span style="color:#8f8067;font-size:12px;font-weight:normal">${ms.abilNote}</span>` : ""}</div>
+      <div class="wrap"><table><thead><tr><th>能力</th>${[1, 2, 3, 4, 5].map(i => `<th>Lv${i}</th>`).join("")}</tr></thead><tbody>
+      ${Object.entries(ms.abilities).map(([k, v]) => `<tr><td class="nm">${ABIL_N[k] || k}</td>${[1, 2, 3, 4, 5].map(i => `<td class="num">+${v[i] ?? 0}</td>`).join("")}</tr>`).join("")}
+      </tbody></table></div></div>` : "";
+    return `<div class="mcard" data-cls="${ms.cls || "全職業"}" data-n="${ms.name}">
+      <div class="ttl">${ms.name} <span class="tag">${ms.cls || "全職業"}</span> <span class="tag">上限 Lv${ms.cap}</span></div>
+      <div class="sub" style="margin:4px 0 8px">${ms.desc}</div>
+      ${ms.auraCost ? `<div class="hint">💡 光環費用:${ms.auraCost}</div>` : ""}
+      <div class="wrap"><table><thead><tr><th>升級</th><th>所需累積</th><th>突破材料</th><th>指定狩獵區／備註</th></tr></thead><tbody>${rows}</tbody></table></div>
+      ${ab}</div>`;
+  }).join("");
+
+  fs.writeFileSync(path.join(OUT, "mastery.html"), page("精通升級數據", "mastery", `
+${chips([[MASTERY.length, "種精通"]])}
+<div class="hint">各精通升到滿級需要什麼。光環要另外花金幣啟用,且大多在突破後歸零、需重新啟用。</div>
+<div class="bar"><input id="q" placeholder="🔍 搜精通名 或 職業(例:妖精)"></div>
+<div id="list">${secs}</div>`,
+  `<script>
+const $=id=>document.getElementById(id);
+const cards=[...document.querySelectorAll(".mcard")];
+$("q").oninput=()=>{const q=$("q").value.trim().toLowerCase();
+cards.forEach(c=>{const hit=!q||c.dataset.n.toLowerCase().includes(q)||c.dataset.cls.toLowerCase().includes(q);c.style.display=hit?"":"none";});};
+</script>`));
+}
+
+// ================= 📢 版本更新 =================
+let CHANGES = [];
+try { CHANGES = JSON.parse(fs.readFileSync(path.join(OUT, "changelog.json"), "utf8")); } catch (e) { }
+{
+  const TCOL = { "新增": "#7bd14a", "調整": "#5b9bff", "修復": "#f5c451" };
+  const body = CHANGES.map(d => `<div class="mcard">
+    <div class="ttl">${d.date}<span class="tag" style="margin-left:8px">${d.items.length} 項</span></div>
+    ${d.items.map(i => `<div style="padding:7px 0;border-bottom:1px solid #2a2014">
+      <span class="tag" style="color:${TCOL[i.t] || "#cbbb9b"}">${i.t}</span> <b style="color:#e8dcc8">${i.n}</b>
+      ${i.d ? `<div class="sub" style="margin-top:3px">${i.d}</div>` : ""}</div>`).join("")}
+  </div>`).join("") || '<div class="hint">尚無更新紀錄。</div>';
+  fs.writeFileSync(path.join(OUT, "changelog.html"), page("版本更新", "log", `
+<div class="hint">遊戲的新增、調整與修復紀錄(由新到舊)。</div>
+${body}`));
+}
+
+// ================= 🌱 新手指南(手寫文案;不隨 gamedata 變動) =================
+// ⚠ 這頁**不是自動生成**,遊戲規則改了要回來手動更新。
+//    刻意只寫「不太會變」的東西(職業特性、流程、名詞解釋),避開會頻繁調整的數值。
+fs.writeFileSync(path.join(OUT, "guide.html"), page("新手指南", "guide", `
+<div class="hint">第一次玩?這頁從頭帶你一遍。看不懂的名詞下面都有解釋。</div>
+
+<div class="mcard"><div class="ttl">① 這是什麼遊戲</div>
+<div class="sub">天堂懷舊風的<b>放置型</b>遊戲。選好獵場掛著,角色會自動打怪、自動撿裝備、自動升級 ——
+<b>關掉網頁也會繼續打</b>。你要做的是:決定去哪練、把裝備養起來、有空來收成果。</div></div>
+
+<div class="mcard"><div class="ttl">② 選職業</div>
+<div class="wrap"><table><thead><tr><th>職業</th><th>特色</th><th>適合誰</th></tr></thead><tbody>
+<tr><td class="nm">騎士</td><td>血厚、近戰、耐打。裝備需求最直覺,練起來最穩。</td><td><b>第一次玩就選這個</b></td></tr>
+<tr><td class="nm">法師</td><td>魔法攻擊、範圍傷害,可以召喚寵物幫忙打。</td><td>喜歡一次清一片</td></tr>
+<tr><td class="nm">妖精</td><td>可遠可近:拿弓走遠程,拿刀走近戰。變化最多。</td><td>喜歡研究搭配</td></tr>
+<tr><td class="nm">黑暗妖精</td><td>妖精的暗黑版,走爆發與特殊機制。</td><td>玩過一輪再嘗試</td></tr>
+</tbody></table></div>
+<div class="hint">💡 一個帳號可以開多個角色,不用怕選錯。</div></div>
+
+<div class="mcard"><div class="ttl">③ 開場十分鐘該做什麼</div>
+<div class="sub">
+<b>1.</b> 建好角色後直接進「狩獵場 → 野外 → 新兵修練場」開始掛。<br>
+<b>2.</b> 打一陣子後開背包,把撿到的<b>武器和防具穿起來</b>(數值比較高的就換)。<br>
+<b>3.</b> 等級上去後回獵場列表,換到<b>建議等級接近你等級</b>的地方 —— 打太弱的怪經驗少,打太強的打不動。<br>
+<b>4.</b> 用不到的裝備可以賣掉換金幣,或放到交易所賣給其他玩家。
+</div>
+<div class="hint">💡 <a href="zones.html" style="color:#f5c451">獵場列表</a>可以查每個獵場的怪物等級。</div></div>
+
+<div class="mcard"><div class="ttl">④ 強化裝備(最重要的成長)</div>
+<div class="sub">
+撿到的<b>對武器施法的卷軸</b>／<b>對盔甲施法的卷軸</b>可以用來強化裝備,每成功一次 +1。<br><br>
+🔴 <b>「安定值」是關鍵</b>:每件裝備都有一個安定值。<b>強化到安定值以內一定成功</b>,
+超過之後就有機率<b>失敗並毀掉裝備</b>。武器多半是 6、防具多半是 4。<br><br>
+所以新手的安全做法是:<b>先強化到安定值就停</b>,想衝更高再拿不心疼的裝備試。
+</div>
+<div class="hint">💡 <a href="items.html" style="color:#f5c451">道具圖鑑</a>每件裝備都有標安定值。祝福過的卷軸成功率更好。</div></div>
+
+<div class="mcard"><div class="ttl">⑤ 名詞解釋</div>
+<div class="wrap"><table><thead><tr><th>名詞</th><th>意思</th></tr></thead><tbody>
+<tr><td class="nm">安定值</td><td>強化到這個數字以內不會失敗,超過才有風險。</td></tr>
+<tr><td class="nm">精通</td><td>長期養成系統。投入材料升級,開啟「光環」後才會生效,光環要花金幣維持。</td></tr>
+<tr><td class="nm">光環</td><td>精通的效果開關。花金幣買時數,<b>突破後會歸零要重開</b>。</td></tr>
+<tr><td class="nm">世界王</td><td>定時重生的大王,大家一起打,參戰有機會拿到專屬掉落。</td></tr>
+<tr><td class="nm">血盟</td><td>玩家公會。全盟共享經驗與金幣加成,但要靠成員捐獻維持。</td></tr>
+<tr><td class="nm">交易所</td><td>玩家之間買賣裝備的地方。上架要付售價 1% 的手續費。</td></tr>
+<tr><td class="nm">★ 傳說</td><td>本站標示 ★ 的是傳說級道具,極為稀有。</td></tr>
+</tbody></table></div></div>
+
+<div class="mcard"><div class="ttl">⑥ 常見問題</div>
+<div class="sub">
+<b>Q:關掉網頁角色還會打嗎?</b><br>會。這是放置遊戲,離線也持續累積。<br><br>
+<b>Q:練到一半該換獵場嗎?</b><br>會的。怪物給的經驗跟等級差有關,建議等級接近你的獵場效率最好。<br><br>
+<b>Q:裝備強化失敗會怎樣?</b><br>超過安定值失敗會<b>毀掉那件裝備</b>。所以貴重裝備別硬衝。<br><br>
+<b>Q:精通要不要練?</b><br>那是中後期的長期投資,前期先把等級跟裝備顧好。<br><br>
+<b>Q:為什麼我的精通加成沒生效?</b><br>光環沒開,或是突破後歸零了。要花金幣重新啟用。<br><br>
+<b>Q:怎麼知道某個道具哪裡打?</b><br>到<a href="monsters.html" style="color:#f5c451">怪物掉落圖鑑</a>直接搜道具名,會列出所有掉它的怪和出沒地點。
+</div></div>
+
+<div class="mcard"><div class="ttl">⑦ 接下來看哪裡</div>
+<div class="sub">
+<a href="zones.html" style="color:#f5c451">獵場列表</a> — 幾等該去哪練<br>
+<a href="monsters.html" style="color:#f5c451">怪物掉落圖鑑</a> — 想要的道具哪裡打<br>
+<a href="items.html" style="color:#f5c451">道具圖鑑</a> — 裝備數值與安定值<br>
+<a href="mastery.html" style="color:#f5c451">精通升級數據</a> — 中後期的養成目標<br>
+<a href="npc.html" style="color:#f5c451">NPC 一覽</a> — 誰在哪個村莊、能做什麼
+</div></div>
+`));
+
 console.log("OK(純文字表格): 怪 " + mobList.length + " / 道具 " + items.length + " / 技能 " + skills.length +
-  " / 獵場 " + zones.length + " / 世界王 " + worldbosses.length + " / 村莊 " + towns.length + " / 套裝 " + sets.length);
+  " / 獵場 " + zones.length + " / 世界王 " + worldbosses.length + " / 村莊 " + towns.length + " / 套裝 " + sets.length +
+  " / 精通 " + MASTERY.length + " / 更新日誌 " + CHANGES.reduce((s, d) => s + d.items.length, 0) + " 項");
