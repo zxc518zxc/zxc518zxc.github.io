@@ -92,12 +92,20 @@ const SLOT_N = { helm: "頭盔", armor: "盔甲", tshirt: "內衣", cloak: "斗�
 const REQ_N = { all: "全職業", knight: "騎士", mage: "法師", elf: "妖精", dark: "黑暗妖精" };
 const reqStr = r => !r || r === "all" ? "全職業" : r.split(",").map(x => REQ_N[x.trim()] || x).join("／");
 // 武器特殊效果(對照 engine 內的 eff 分支;只列玩家打得到、意義明確的)
+// ✅ 已確認**程式碼裡真的有實作**的武器效果(逐一 grep engine/ 驗過)
 const EFF_N = {
-  cleave: "橫掃:攻擊波及場上其他敵人", crush: "重擊", pierce: "貫穿",
-  doublehit: "雙擊:機率追加一次攻擊", clawmark: "爪痕:機率造成武器最大傷害",
-  mp_drain: "吸取魔力", moonburst: "月光爆裂", magicstrike: "魔法打擊",
-  phantom_arrow: "幻影箭", firearrow: "火焰箭", rapidfire: "連射",
+  doublehit: "雙擊:機率追加一次攻擊", // afk/darkelf.go:53
+  clawmark: "爪痕:機率造成武器最大傷害", // afk/darkelf.go:33
+  mp_drain: "吸取魔力",                  // engine/combat.go:247
+  moonburst: "月光爆裂",                 // afk/bosstick.go:210 / sim.go:1270
+  phantom_arrow: "幻影箭",               // afk/sim.go:873 / derived.go:669
+  firearrow: "火焰箭",                   // afk/bosstick.go:238 / sim.go:1315
 };
+// 🔴 **未實作,刻意不顯示**(2026-09-07 麥哥發現、逐一 grep 確認零引用):
+//   cleave 橫掃 / crush 重擊 / pierce 貫穿 / magicstrike 魔法打擊 / rapidfire 連射
+//   欄位 pierceChance、dragonStrike 同樣零引用。共 27 把武器掛著這些沒作用的標記。
+//   ⚠ 這些字有些**也寫在道具說明(d)裡**(例:屠龍劍「龍的一擊」),那段遊戲內也看得到 ——
+//     那是遊戲端要處理的,不是資料站能解決的。
 const num = (v, s) => (v ? [s.replace("N", (v > 0 ? "+" : "") + v)] : []);
 function itemFx(v) {
   const t = [];
@@ -117,11 +125,10 @@ function itemFx(v) {
   if (v.meleeHitPerEn) t.push("每強化 +1:近距離命中 +" + v.meleeHitPerEn); // derived.go: MeleeHit += wEn * MeleeHitPerEn
   if (v.mrPerEn) t.push("每強化 +1:魔防 +" + v.mrPerEn);
   if (v.rangedHit) t.push("遠距離命中 +" + v.rangedHit);
-  if (v.pierceChance) t.push("貫穿機率 " + v.pierceChance + "%");
+  // pierceChance / rapidfire:未實作,不顯示(見上方說明)
   if (v.mpROverSafe) t.push("超過安定值後 MP恢復 +" + v.mpROverSafe);
   if (v.petHit) t.push("寵物命中 +" + v.petHit);
   if (v.petDmg) t.push("寵物傷害 +" + v.petDmg);
-  if (v.rapidfire) t.push("連射");
   if (v.alwaysHit) t.push("必定命中");
   if (v.allowEnh0) t.push("安定值 0 仍可強化");
   if (v.isArrow) t.push("箭矢");
@@ -317,6 +324,7 @@ const page = (title, active, body, extra = "") => `<!DOCTYPE html>
 <a href="npc.html" class="${active === "npc" ? "on" : ""}">NPC 一覽</a>
 <a href="mastery.html" class="${active === "mastery" ? "on" : ""}">精通升級數據</a>
 <a href="sets.html" class="${active === "set" ? "on" : ""}">套裝效果</a>
+<a href="affix.html" class="${active === "affix" ? "on" : ""}">暗黑詞條</a>
 <a href="guide.html" class="${active === "guide" ? "on" : ""}">新手指南</a>
 <a href="changelog.html" class="${active === "log" ? "on" : ""}">版本更新</a>
 </nav></header><main>${body}</main>
@@ -342,6 +350,7 @@ ${chips([[mobList.length, "怪物"], [items.length, "道具"], [skills.length, "
 <a class="tile" href="guide.html"><div class="em">🌱</div><div class="tt">新手指南</div><div class="dd">第一次玩看這裡</div></a>
 <a class="tile" href="mastery.html"><div class="em">🎓</div><div class="tt">精通升級數據</div><div class="dd">升到滿級要什麼材料</div></a>
 <a class="tile" href="sets.html"><div class="em">🛡️</div><div class="tt">套裝效果</div><div class="dd">湊齊有什麼加成</div></a>
+<a class="tile" href="affix.html"><div class="em">🌑</div><div class="tt">暗黑詞條</div><div class="dd">掉落隨機附帶的額外能力</div></a>
 <a class="tile" href="changelog.html"><div class="em">📢</div><div class="tt">版本更新</div><div class="dd">最近改了什麼</div></a>
 </div>`));
 
@@ -539,6 +548,54 @@ try { CHANGES = JSON.parse(fs.readFileSync(path.join(OUT, "changelog.json"), "ut
   fs.writeFileSync(path.join(OUT, "changelog.html"), page("版本更新", "log", `
 <div class="hint">遊戲的新增、調整與修復紀錄(由新到舊)。</div>
 ${body}`));
+}
+
+// ================= 🌑 暗黑詞條 =================
+let AFFIX = [];
+try { AFFIX = JSON.parse(fs.readFileSync(path.join(OUT, "mastery.json"), "utf8")).affixes || []; } catch (e) { }
+if (AFFIX.length) {
+  const TIER = [["灰", "普通", "#cbbb9b"], ["藍", "稀有", "#5b9bff"], ["暗金", "傳說", "#f5c451"]];
+  const pct = v => (Math.round(v * 10000) / 100) + "%";
+  const band = b => b.lo === b.hi ? ("+" + b.lo) : ("+" + b.lo + " ~ +" + b.hi);
+  const secs = AFFIX.map(a => {
+    const nm = itemName(a.item);
+    // 「抽到 1 條且為暗金」= 1 條的機率 × 暗金的機率
+    const oneGold = a.countProb[1] * a.colorProb[2];
+    const twoGold = a.countProb[2] * a.colorProb[2] * a.colorProb[2];
+    return `<div class="mcard">
+      <div class="ttl">${nm}</div>
+      <div class="sub" style="margin:4px 0 10px">共 <b>${a.pool.length}</b> 種詞條。掉落時先決定「帶幾條」,再決定每一條的品階,最後在該品階的區間內隨機取值。</div>
+
+      <div style="color:#f5c451;font-size:14px;margin:10px 0 4px">① 帶幾條詞條</div>
+      <div class="wrap"><table><thead><tr><th>詞條數量</th><th>機率</th><th>說明</th></tr></thead><tbody>
+        <tr><td class="nm">0 條</td><td class="num">${pct(a.countProb[0])}</td><td>白板(沒有任何暗黑詞條)</td></tr>
+        <tr><td class="nm">1 條</td><td class="num">${pct(a.countProb[1])}</td><td>單詞條</td></tr>
+        <tr><td class="nm">2 條</td><td class="num" style="color:#7bd14a">${pct(a.countProb[2])}</td><td>雙詞條(兩條必為<b>不同</b>詞條)</td></tr>
+      </tbody></table></div>
+      <div class="hint">也就是說,撿到<b>帶詞條</b>的機率 ${pct(a.countProb[1] + a.countProb[2])},其中雙詞條只有 ${pct(a.countProb[2])}。</div>
+
+      <div style="color:#f5c451;font-size:14px;margin:14px 0 4px">② 每一條的品階(顏色越亮越強)</div>
+      <div class="wrap"><table><thead><tr><th>品階</th><th>機率</th><th>強度</th></tr></thead><tbody>
+        ${TIER.map((t, i) => `<tr><td class="nm" style="color:${t[2]}">${t[0]}　${t[1]}</td><td class="num">${pct(a.colorProb[i])}</td><td>${["數值最低", "中等", "該詞條最高值"][i]}</td></tr>`).join("")}
+      </tbody></table></div>
+      <div class="hint">一件裝備上的每一條詞條<b>各自獨立</b>決定品階(同一件可能一條灰、一條暗金)。<br>
+      例:抽到「1 條且為暗金」約 <b>${pct(oneGold)}</b>;「雙詞條且兩條都暗金」約 <b>${pct(twoGold)}</b> —— 極其稀有。</div>
+
+      <div style="color:#f5c451;font-size:14px;margin:14px 0 4px">③ 詞條池總表</div>
+      <div class="wrap"><table><thead><tr><th>詞條</th>${TIER.map(t => `<th style="color:${t[2]}">${t[0]}</th>`).join("")}</tr></thead><tbody>
+        ${a.pool.map(d => `<tr><td class="nm">${d.name}</td>${d.bands.map((b, i) => `<td class="num" style="color:${TIER[i][2]}">${band(b)}</td>`).join("")}</tr>`).join("")}
+      </tbody></table></div>
+    </div>`;
+  }).join("");
+
+  fs.writeFileSync(path.join(OUT, "affix.html"), page("暗黑詞條", "affix", `
+<div class="hint">效仿暗黑破壞神的隨機詞條:部分裝備掉落時會<b>額外隨機附帶</b>能力。每件掉落各自獨立擲,同一款裝備每一件都可能不同。</div>
+${secs}
+<div class="mcard"><div class="ttl">注意事項</div><div class="sub">
+・詞條在<b>掉落當下一次擲定</b>,之後<b>不可洗、不可改</b>。<br>
+・帶詞條的裝備<b>每件獨立佔一格</b>,不會和其他同名裝備疊在同一格。<br>
+・詞條效果直接計入你的能力(近傷/命中/HP/MP/防禦等),與強化、屬性、祝福、遠古等其他詞綴<b>可同時存在、分開計算</b>。
+</div></div>`));
 }
 
 // ================= 🌱 新手指南(手寫文案;不隨 gamedata 變動) =================
