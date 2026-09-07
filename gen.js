@@ -785,71 +785,77 @@ ${secs}
 
 // ================= ⚒ 強化機率 =================
 // 🔴 數字全部由 cmd/wikidump 從 engine/afk/enhance.go **實跑匯出**。
-//    社群那份人工抄的有三處錯(絕對強化值 vs 超過安定值次數、安定0武防其實禁強化、
-//    飾品表被寫成武防表),這裡不再人工維護。
+// 【呈現方式】gamedata 實測:武器只有安定 6(114 件)與安定 0(7 件,禁強化);
+//   防具只有安定 4(109)、安定 6(24)、安定 0(13,禁強化)。強化上限 enhMax=12。
+//   ⇒ 不必讓玩家自己換算「超過安定值第幾次」,直接印實際強化值,而且列數剛好對齊。
+//   ⇒ 破壞率「一般卷與祝福卷完全相同」⇒ 兩張表併成一張,少一半視覺量。
 if (WD.enh && WD.enh.length) {
-  const pc = v => {
-    const r = Math.round(v * 100) / 100;
-    return (r === 0 ? "0" : String(r)) + "%";
-  };
-  const tblOf = (slot, kind) => (WD.enh.find(t => t.slot === slot && t.kind === kind) || null);
-  const rows = t => t.steps.map(st => `<tr><td class="nm">第 ${st.off + 1} 次</td>
-      <td class="num" style="color:#6ee7b7">${pc(st.succ)}</td>
-      <td class="num" style="color:#93c5fd">${pc(st.stay)}</td>
-      <td class="num" style="color:#fca5a5">${pc(st.destroy)}</td></tr>`).join("");
-  const card = (slot, note) => {
-    const n = tblOf(slot, "一般卷軸"), b = tblOf(slot, "祝福卷軸");
-    const one = (t, ttl) => t ? `<div style="flex:1;min-width:280px">
-      <div style="color:#f5c451;font-size:14px;margin:10px 0 4px">${ttl}</div>
-      <div class="wrap"><table><thead><tr><th>超過安定值第幾次</th><th>成功</th><th>維持</th><th>破壞</th></tr></thead>
-      <tbody>${rows(t)}</tbody></table></div>
-      <div class="sub" style="margin-top:6px">${t.note}</div></div>` : "";
-    return `<div class="mcard"><div class="ttl">${slot}</div>
-      <div class="sub">${note}</div>
-      <div style="display:flex;gap:18px;flex-wrap:wrap">${one(n, "一般卷軸")}${one(b, "祝福卷軸")}</div></div>`;
-  };
-  const jump = (WD.blessJump || []).map(j => {
-    const t = j.text.replace("+1 ～ +1", "+1");
-    return `<tr><td class="nm">+${j.from} ～ +${j.to}</td><td class="num" style="color:#6ee7b7">${t}</td></tr>`;
-  }).join("");
+  const CAP = 12;
+  const pc = v => { const r = Math.round(v * 100) / 100; return (r === 0 ? "0" : String(r)) + "%"; };
+  const T = (slot, kind) => (WD.enh.find(t => t.slot === slot && t.kind === kind) || { steps: [] });
+  // 一格:成功率(大)+ 維持(小字)。維持 0 就不寫,免得洗版。
+  const cellOf = st => `<b style="color:#6ee7b7">${pc(st.succ)}</b>` +
+    (st.stay > 0 ? `<div style="font-size:12px;color:#8a7f6a">維持 ${pc(st.stay)}</div>` : "");
+  const lv = (safe, off) => (safe + off >= CAP) ? "—" : `+${safe + off} → +${safe + off + 1}`;
+
+  const wn = T("武器", "一般卷軸").steps, wb = T("武器", "祝福卷軸").steps;
+  const wpnRows = wn.map((st, i) => lv(6, i) === "—" ? "" : `<tr><td class="nm">${lv(6, i)}</td>
+    <td>${cellOf(st)}</td><td>${cellOf(wb[i] || st)}</td>
+    <td style="color:#fca5a5">${pc(st.destroy)}</td></tr>`).join("");
+
+  const an = T("防具", "一般卷軸").steps, ab = T("防具", "祝福卷軸").steps;
+  const armRows = an.map((st, i) => `<tr><td class="nm">${lv(4, i)}</td><td class="nm">${lv(6, i)}</td>
+    <td>${cellOf(st)}</td><td>${cellOf(ab[i] || st)}</td>
+    <td style="color:#fca5a5">${pc(st.destroy)}</td></tr>`).join("");
+
+  const acc = T("飾品", "一般卷軸").steps;
+  const accRows = acc.map(st => `<tr><td class="nm">+${st.off} → +${st.off + 1}</td>
+    <td><b style="color:#6ee7b7">${pc(st.succ)}</b></td>
+    <td style="color:#fca5a5">${pc(st.destroy)}</td></tr>`).join("");
+
+  const jump = (WD.blessJump || []).map(j =>
+    `<tr><td class="nm">+${j.from} ～ +${j.to}</td><td class="num" style="color:#6ee7b7">${j.text.replace("+1 ～ +1", "+1")}</td></tr>`).join("");
 
   fs.writeFileSync(path.join(OUT, "enhance.html"), page("強化機率", "enh", `
-<div class="hint">以下是<b>實際程式使用的數字</b>,直接從伺服器程式匯出,不是推測值。
-<b>「安定值」以內 100% 成功</b>,不會失敗也不會消失;超過安定值才開始賭。</div>
+<div class="hint">下面是<b>實際程式使用的數字</b>,直接從伺服器匯出。
+<b>沒列到的強化值 = 100% 成功</b>(安定值以內不會失敗、不會消失),表格從開始要賭的那一階列起。</div>
 
-<div class="mcard"><div class="ttl">先看懂這三件事</div><div class="sub">
-① <b>表格看的是「超過安定值第幾次」,不是強化到 +幾</b>。<br>
-　舉例:安定值 6 的武士刀,+6→+7 就是「第 1 次」;安定值 4 的防具,+4→+5 才是「第 1 次」。
-　所以<b>安定值不同的裝備,同樣 +8 難度完全不一樣</b>。<br>
-② <b>維持</b> = 強化值不動,但裝備<b>不會消失</b>,卷軸照樣消耗。<b>破壞</b> = 裝備直接沒了。<br>
-③ <b>安定值 0 的武器與防具禁止強化</b>(系統會直接擋下)。飾品沒有安定值,從 +0 就要賭。
-</div></div>
+<div class="mcard"><div class="ttl">武器</div>
+<div class="sub">遊戲裡的武器<b>安定值一律是 6</b>,所以 +6 以內免費,<b>+6 之後才開始賭</b>。</div>
+<div class="wrap"><table><thead><tr><th>強化</th><th>一般卷軸</th><th>祝福卷軸</th><th>破壞</th></tr></thead>
+<tbody>${wpnRows}</tbody></table></div>
+<div class="sub" style="margin-top:8px">👉 <b>+9 是一道牆</b>:+9 之前每次都有三分之一機會,+9 往上成功率剩不到 1%。
+但從 +9 開始出現「<b>維持</b>」——失敗時有三成機率只是原地不動,<b>裝備不會消失</b>。</div></div>
 
-${card("武器", "武器的安定值多半是 6。前三次都是 33.33%,第 4 次起成功率斷崖式下跌,但多了「維持」保護。")}
-${card("防具", "防具的安定值因裝備而異(道具圖鑑每件都有標)。前五次沒有「維持」,失敗就是破壞。")}
+<div class="mcard"><div class="ttl">防具</div>
+<div class="sub">防具的安定值有 <b>4</b> 和 <b>6</b> 兩種(道具圖鑑每件都有標)。兩者用<b>同一組機率</b>,
+只是起跑點不同 —— 所以<b>安定值 6 的防具,等於難度整整少了兩階</b>。</div>
+<div class="wrap"><table><thead><tr><th>安定值 4 的防具</th><th>安定值 6 的防具</th><th>一般卷軸</th><th>祝福卷軸</th><th>破壞</th></tr></thead>
+<tbody>${armRows}</tbody></table></div>
+<div class="sub" style="margin-top:8px">👉 防具<b>前五階沒有「維持」</b>,失敗就是破壞。「—」表示已經到強化上限 +12。</div></div>
 
 <div class="mcard"><div class="ttl">飾品(戒指・項鍊・腰帶)</div>
-<div class="sub">飾品<b>沒有安定值</b>,從 +0 就開始賭,而且<b>失敗一律破壞,沒有「維持」</b>。</div>
-<div class="wrap"><table><thead><tr><th>目前強化值</th><th>成功</th><th>破壞</th></tr></thead><tbody>
-${(tblOf("飾品", "一般卷軸") || { steps: [] }).steps.map(st => `<tr><td class="nm">+${st.off} → +${st.off + 1}</td>
-  <td class="num" style="color:#6ee7b7">${pc(st.succ)}</td><td class="num" style="color:#fca5a5">${pc(st.destroy)}</td></tr>`).join("")}
-</tbody></table></div>
-<div class="sub" style="margin-top:6px">${(tblOf("飾品", "一般卷軸") || {}).note || ""}</div></div>
+<div class="sub">飾品<b>沒有安定值</b>,從 +0 就要賭,而且<b>失敗一律破壞,沒有「維持」</b>。</div>
+<div class="wrap"><table><thead><tr><th>強化</th><th>成功</th><th>破壞</th></tr></thead><tbody>${accRows}</tbody></table></div>
+<div class="sub" style="margin-top:8px">+3 以上一律 20%。</div></div>
 
-<div class="mcard"><div class="ttl">祝福卷軸為什麼值得</div>
-<div class="sub">祝福卷軸<b>破壞率跟一般卷完全一樣</b>,但成功率高得多,而且<b>成功時會一次跳好幾級</b>。<br>
-以武器過安定第 4 次為例:一般卷成功 <b style="color:#6ee7b7">0.9%</b>、祝福卷 <b style="color:#6ee7b7">3.33%</b> —— 差 <b>3.7 倍</b>。</div>
-<div style="color:#f5c451;font-size:14px;margin:10px 0 4px">祝福卷成功時的跳級量(武器・防具)</div>
-<div class="wrap"><table><thead><tr><th>強化前</th><th>一次會 +幾</th></tr></thead><tbody>${jump}</tbody></table></div>
+<div class="mcard"><div class="ttl">祝福卷軸值不值得?值得</div>
+<div class="sub">祝福卷軸的<b>破壞率跟一般卷一模一樣</b>(上面每張表的「破壞」欄兩種卷共用),
+但<b>成功率高很多</b>,而且<b>成功時會一次跳好幾級</b>。<br>
+例:武器 <b>+9→+10</b>,一般卷 <b style="color:#6ee7b7">0.9%</b>、祝福卷 <b style="color:#6ee7b7">3.33%</b> —— 差 <b>3.7 倍</b>,爆的機率卻完全一樣。</div>
+<div style="color:#f5c451;font-size:14px;margin:12px 0 4px">祝福卷成功時一次 +幾(武器・防具)</div>
+<div class="wrap"><table><thead><tr><th>強化前</th><th>一次 +幾</th></tr></thead><tbody>${jump}</tbody></table></div>
 <div class="sub" style="margin-top:6px">飾品用祝福卷成功時 <b>+1 ～ +3</b>。</div></div>
 
-<div class="mcard"><div class="ttl">其他要知道的</div><div class="sub">
+<div class="mcard"><div class="ttl">還有這些要知道</div><div class="sub">
+・<b>安定值 0 的武器與防具禁止強化</b>,系統會直接擋下。<br>
 ・<b>鎖定(🔓)中的裝備無法強化</b>,要先解鎖。<br>
-・持有<b>必成卷軸</b>時,只有在「已經超過安定值」的那一下才會被消耗,安全區內不會浪費。<br>
-・<b>一鍵安全強化</b>只會把裝備推到安定值為止,完全不進賭局,不會破壞。<br>
-・部分活動裝備有<b>自己的固定成功率</b>,不走上面的表(而且不吃祝福卷跳級)。
+・<b>一鍵安全強化</b>只把裝備推到安定值為止,完全不進賭局,<b>不會破壞</b>。<br>
+・持有<b>必成卷軸</b>時,只有在「已經超過安定值」的那一下才會消耗,安全區內不會浪費。<br>
+・少數活動裝備有<b>自己的固定成功率</b>,不走上面的表(也吃不到祝福卷跳級)。
 </div></div>`));
 }
+
 
 // ================= 💪 變身型態 =================
 // 🔴 由 cmd/wikidump 從 engine/afk/stage3.go 的 polyTiers 匯出(46 種,含 polyAbilityTextGo 的文字)。

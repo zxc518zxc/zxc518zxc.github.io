@@ -63,147 +63,78 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 <a href="guide.html" class="">新手指南</a>
 <a href="changelog.html" class="">版本更新</a>
 </nav></header><main>
-<div class="hint">以下是<b>實際程式使用的數字</b>,直接從伺服器程式匯出,不是推測值。
-<b>「安定值」以內 100% 成功</b>,不會失敗也不會消失;超過安定值才開始賭。</div>
-
-<div class="mcard"><div class="ttl">先看懂這三件事</div><div class="sub">
-① <b>表格看的是「超過安定值第幾次」,不是強化到 +幾</b>。<br>
-　舉例:安定值 6 的武士刀,+6→+7 就是「第 1 次」;安定值 4 的防具,+4→+5 才是「第 1 次」。
-　所以<b>安定值不同的裝備,同樣 +8 難度完全不一樣</b>。<br>
-② <b>維持</b> = 強化值不動,但裝備<b>不會消失</b>,卷軸照樣消耗。<b>破壞</b> = 裝備直接沒了。<br>
-③ <b>安定值 0 的武器與防具禁止強化</b>(系統會直接擋下)。飾品沒有安定值,從 +0 就要賭。
-</div></div>
+<div class="hint">下面是<b>實際程式使用的數字</b>,直接從伺服器匯出。
+<b>沒列到的強化值 = 100% 成功</b>(安定值以內不會失敗、不會消失),表格從開始要賭的那一階列起。</div>
 
 <div class="mcard"><div class="ttl">武器</div>
-      <div class="sub">武器的安定值多半是 6。前三次都是 33.33%,第 4 次起成功率斷崖式下跌,但多了「維持」保護。</div>
-      <div style="display:flex;gap:18px;flex-wrap:wrap"><div style="flex:1;min-width:280px">
-      <div style="color:#f5c451;font-size:14px;margin:10px 0 4px">一般卷軸</div>
-      <div class="wrap"><table><thead><tr><th>超過安定值第幾次</th><th>成功</th><th>維持</th><th>破壞</th></tr></thead>
-      <tbody><tr><td class="nm">第 1 次</td>
-      <td class="num" style="color:#6ee7b7">33.33%</td>
-      <td class="num" style="color:#93c5fd">0%</td>
-      <td class="num" style="color:#fca5a5">66.67%</td></tr><tr><td class="nm">第 2 次</td>
-      <td class="num" style="color:#6ee7b7">33.33%</td>
-      <td class="num" style="color:#93c5fd">0%</td>
-      <td class="num" style="color:#fca5a5">66.67%</td></tr><tr><td class="nm">第 3 次</td>
-      <td class="num" style="color:#6ee7b7">33.33%</td>
-      <td class="num" style="color:#93c5fd">0%</td>
-      <td class="num" style="color:#fca5a5">66.67%</td></tr><tr><td class="nm">第 4 次</td>
-      <td class="num" style="color:#6ee7b7">0.9%</td>
-      <td class="num" style="color:#93c5fd">32.43%</td>
-      <td class="num" style="color:#fca5a5">66.67%</td></tr><tr><td class="nm">第 5 次</td>
-      <td class="num" style="color:#6ee7b7">0.81%</td>
-      <td class="num" style="color:#93c5fd">32.52%</td>
-      <td class="num" style="color:#fca5a5">66.67%</td></tr><tr><td class="nm">第 6 次</td>
-      <td class="num" style="color:#6ee7b7">0.74%</td>
-      <td class="num" style="color:#93c5fd">32.59%</td>
-      <td class="num" style="color:#fca5a5">66.67%</td></tr></tbody></table></div>
-      <div class="sub" style="margin-top:6px">第 6 次以後的機率不再變動，一律套用最後一列。</div></div><div style="flex:1;min-width:280px">
-      <div style="color:#f5c451;font-size:14px;margin:10px 0 4px">祝福卷軸</div>
-      <div class="wrap"><table><thead><tr><th>超過安定值第幾次</th><th>成功</th><th>維持</th><th>破壞</th></tr></thead>
-      <tbody><tr><td class="nm">第 1 次</td>
-      <td class="num" style="color:#6ee7b7">33.33%</td>
-      <td class="num" style="color:#93c5fd">0%</td>
-      <td class="num" style="color:#fca5a5">66.67%</td></tr><tr><td class="nm">第 2 次</td>
-      <td class="num" style="color:#6ee7b7">33.33%</td>
-      <td class="num" style="color:#93c5fd">0%</td>
-      <td class="num" style="color:#fca5a5">66.67%</td></tr><tr><td class="nm">第 3 次</td>
-      <td class="num" style="color:#6ee7b7">33.33%</td>
-      <td class="num" style="color:#93c5fd">0%</td>
-      <td class="num" style="color:#fca5a5">66.67%</td></tr><tr><td class="nm">第 4 次</td>
-      <td class="num" style="color:#6ee7b7">3.33%</td>
-      <td class="num" style="color:#93c5fd">30%</td>
-      <td class="num" style="color:#fca5a5">66.67%</td></tr><tr><td class="nm">第 5 次</td>
-      <td class="num" style="color:#6ee7b7">3.03%</td>
-      <td class="num" style="color:#93c5fd">30.3%</td>
-      <td class="num" style="color:#fca5a5">66.67%</td></tr><tr><td class="nm">第 6 次</td>
-      <td class="num" style="color:#6ee7b7">2.78%</td>
-      <td class="num" style="color:#93c5fd">30.56%</td>
-      <td class="num" style="color:#fca5a5">66.67%</td></tr></tbody></table></div>
-      <div class="sub" style="margin-top:6px">第 6 次以後的機率不再變動，一律套用最後一列。 祝福卷成功時會跳級。</div></div></div></div>
+<div class="sub">遊戲裡的武器<b>安定值一律是 6</b>,所以 +6 以內免費,<b>+6 之後才開始賭</b>。</div>
+<div class="wrap"><table><thead><tr><th>強化</th><th>一般卷軸</th><th>祝福卷軸</th><th>破壞</th></tr></thead>
+<tbody><tr><td class="nm">+6 → +7</td>
+    <td><b style="color:#6ee7b7">33.33%</b></td><td><b style="color:#6ee7b7">33.33%</b></td>
+    <td style="color:#fca5a5">66.67%</td></tr><tr><td class="nm">+7 → +8</td>
+    <td><b style="color:#6ee7b7">33.33%</b></td><td><b style="color:#6ee7b7">33.33%</b></td>
+    <td style="color:#fca5a5">66.67%</td></tr><tr><td class="nm">+8 → +9</td>
+    <td><b style="color:#6ee7b7">33.33%</b></td><td><b style="color:#6ee7b7">33.33%</b></td>
+    <td style="color:#fca5a5">66.67%</td></tr><tr><td class="nm">+9 → +10</td>
+    <td><b style="color:#6ee7b7">0.9%</b><div style="font-size:12px;color:#8a7f6a">維持 32.43%</div></td><td><b style="color:#6ee7b7">3.33%</b><div style="font-size:12px;color:#8a7f6a">維持 30%</div></td>
+    <td style="color:#fca5a5">66.67%</td></tr><tr><td class="nm">+10 → +11</td>
+    <td><b style="color:#6ee7b7">0.81%</b><div style="font-size:12px;color:#8a7f6a">維持 32.52%</div></td><td><b style="color:#6ee7b7">3.03%</b><div style="font-size:12px;color:#8a7f6a">維持 30.3%</div></td>
+    <td style="color:#fca5a5">66.67%</td></tr><tr><td class="nm">+11 → +12</td>
+    <td><b style="color:#6ee7b7">0.74%</b><div style="font-size:12px;color:#8a7f6a">維持 32.59%</div></td><td><b style="color:#6ee7b7">2.78%</b><div style="font-size:12px;color:#8a7f6a">維持 30.56%</div></td>
+    <td style="color:#fca5a5">66.67%</td></tr></tbody></table></div>
+<div class="sub" style="margin-top:8px">👉 <b>+9 是一道牆</b>:+9 之前每次都有三分之一機會,+9 往上成功率剩不到 1%。
+但從 +9 開始出現「<b>維持</b>」——失敗時有三成機率只是原地不動,<b>裝備不會消失</b>。</div></div>
+
 <div class="mcard"><div class="ttl">防具</div>
-      <div class="sub">防具的安定值因裝備而異(道具圖鑑每件都有標)。前五次沒有「維持」,失敗就是破壞。</div>
-      <div style="display:flex;gap:18px;flex-wrap:wrap"><div style="flex:1;min-width:280px">
-      <div style="color:#f5c451;font-size:14px;margin:10px 0 4px">一般卷軸</div>
-      <div class="wrap"><table><thead><tr><th>超過安定值第幾次</th><th>成功</th><th>維持</th><th>破壞</th></tr></thead>
-      <tbody><tr><td class="nm">第 1 次</td>
-      <td class="num" style="color:#6ee7b7">25%</td>
-      <td class="num" style="color:#93c5fd">0%</td>
-      <td class="num" style="color:#fca5a5">75%</td></tr><tr><td class="nm">第 2 次</td>
-      <td class="num" style="color:#6ee7b7">20%</td>
-      <td class="num" style="color:#93c5fd">0%</td>
-      <td class="num" style="color:#fca5a5">80%</td></tr><tr><td class="nm">第 3 次</td>
-      <td class="num" style="color:#6ee7b7">16.67%</td>
-      <td class="num" style="color:#93c5fd">0%</td>
-      <td class="num" style="color:#fca5a5">83.33%</td></tr><tr><td class="nm">第 4 次</td>
-      <td class="num" style="color:#6ee7b7">14.29%</td>
-      <td class="num" style="color:#93c5fd">0%</td>
-      <td class="num" style="color:#fca5a5">85.71%</td></tr><tr><td class="nm">第 5 次</td>
-      <td class="num" style="color:#6ee7b7">12.5%</td>
-      <td class="num" style="color:#93c5fd">0%</td>
-      <td class="num" style="color:#fca5a5">87.5%</td></tr><tr><td class="nm">第 6 次</td>
-      <td class="num" style="color:#6ee7b7">0.3%</td>
-      <td class="num" style="color:#93c5fd">10.81%</td>
-      <td class="num" style="color:#fca5a5">88.89%</td></tr><tr><td class="nm">第 7 次</td>
-      <td class="num" style="color:#6ee7b7">0.24%</td>
-      <td class="num" style="color:#93c5fd">9.76%</td>
-      <td class="num" style="color:#fca5a5">90%</td></tr><tr><td class="nm">第 8 次</td>
-      <td class="num" style="color:#6ee7b7">0.2%</td>
-      <td class="num" style="color:#93c5fd">8.89%</td>
-      <td class="num" style="color:#fca5a5">90.91%</td></tr></tbody></table></div>
-      <div class="sub" style="margin-top:6px">第 8 次以後的機率不再變動，一律套用最後一列。</div></div><div style="flex:1;min-width:280px">
-      <div style="color:#f5c451;font-size:14px;margin:10px 0 4px">祝福卷軸</div>
-      <div class="wrap"><table><thead><tr><th>超過安定值第幾次</th><th>成功</th><th>維持</th><th>破壞</th></tr></thead>
-      <tbody><tr><td class="nm">第 1 次</td>
-      <td class="num" style="color:#6ee7b7">25%</td>
-      <td class="num" style="color:#93c5fd">0%</td>
-      <td class="num" style="color:#fca5a5">75%</td></tr><tr><td class="nm">第 2 次</td>
-      <td class="num" style="color:#6ee7b7">20%</td>
-      <td class="num" style="color:#93c5fd">0%</td>
-      <td class="num" style="color:#fca5a5">80%</td></tr><tr><td class="nm">第 3 次</td>
-      <td class="num" style="color:#6ee7b7">16.67%</td>
-      <td class="num" style="color:#93c5fd">0%</td>
-      <td class="num" style="color:#fca5a5">83.33%</td></tr><tr><td class="nm">第 4 次</td>
-      <td class="num" style="color:#6ee7b7">14.29%</td>
-      <td class="num" style="color:#93c5fd">0%</td>
-      <td class="num" style="color:#fca5a5">85.71%</td></tr><tr><td class="nm">第 5 次</td>
-      <td class="num" style="color:#6ee7b7">12.5%</td>
-      <td class="num" style="color:#93c5fd">0%</td>
-      <td class="num" style="color:#fca5a5">87.5%</td></tr><tr><td class="nm">第 6 次</td>
-      <td class="num" style="color:#6ee7b7">1.11%</td>
-      <td class="num" style="color:#93c5fd">10%</td>
-      <td class="num" style="color:#fca5a5">88.89%</td></tr><tr><td class="nm">第 7 次</td>
-      <td class="num" style="color:#6ee7b7">0.91%</td>
-      <td class="num" style="color:#93c5fd">9.09%</td>
-      <td class="num" style="color:#fca5a5">90%</td></tr><tr><td class="nm">第 8 次</td>
-      <td class="num" style="color:#6ee7b7">0.76%</td>
-      <td class="num" style="color:#93c5fd">8.33%</td>
-      <td class="num" style="color:#fca5a5">90.91%</td></tr></tbody></table></div>
-      <div class="sub" style="margin-top:6px">第 8 次以後的機率不再變動，一律套用最後一列。 祝福卷成功時會跳級。</div></div></div></div>
+<div class="sub">防具的安定值有 <b>4</b> 和 <b>6</b> 兩種(道具圖鑑每件都有標)。兩者用<b>同一組機率</b>,
+只是起跑點不同 —— 所以<b>安定值 6 的防具,等於難度整整少了兩階</b>。</div>
+<div class="wrap"><table><thead><tr><th>安定值 4 的防具</th><th>安定值 6 的防具</th><th>一般卷軸</th><th>祝福卷軸</th><th>破壞</th></tr></thead>
+<tbody><tr><td class="nm">+4 → +5</td><td class="nm">+6 → +7</td>
+    <td><b style="color:#6ee7b7">25%</b></td><td><b style="color:#6ee7b7">25%</b></td>
+    <td style="color:#fca5a5">75%</td></tr><tr><td class="nm">+5 → +6</td><td class="nm">+7 → +8</td>
+    <td><b style="color:#6ee7b7">20%</b></td><td><b style="color:#6ee7b7">20%</b></td>
+    <td style="color:#fca5a5">80%</td></tr><tr><td class="nm">+6 → +7</td><td class="nm">+8 → +9</td>
+    <td><b style="color:#6ee7b7">16.67%</b></td><td><b style="color:#6ee7b7">16.67%</b></td>
+    <td style="color:#fca5a5">83.33%</td></tr><tr><td class="nm">+7 → +8</td><td class="nm">+9 → +10</td>
+    <td><b style="color:#6ee7b7">14.29%</b></td><td><b style="color:#6ee7b7">14.29%</b></td>
+    <td style="color:#fca5a5">85.71%</td></tr><tr><td class="nm">+8 → +9</td><td class="nm">+10 → +11</td>
+    <td><b style="color:#6ee7b7">12.5%</b></td><td><b style="color:#6ee7b7">12.5%</b></td>
+    <td style="color:#fca5a5">87.5%</td></tr><tr><td class="nm">+9 → +10</td><td class="nm">+11 → +12</td>
+    <td><b style="color:#6ee7b7">0.3%</b><div style="font-size:12px;color:#8a7f6a">維持 10.81%</div></td><td><b style="color:#6ee7b7">1.11%</b><div style="font-size:12px;color:#8a7f6a">維持 10%</div></td>
+    <td style="color:#fca5a5">88.89%</td></tr><tr><td class="nm">+10 → +11</td><td class="nm">—</td>
+    <td><b style="color:#6ee7b7">0.24%</b><div style="font-size:12px;color:#8a7f6a">維持 9.76%</div></td><td><b style="color:#6ee7b7">0.91%</b><div style="font-size:12px;color:#8a7f6a">維持 9.09%</div></td>
+    <td style="color:#fca5a5">90%</td></tr><tr><td class="nm">+11 → +12</td><td class="nm">—</td>
+    <td><b style="color:#6ee7b7">0.2%</b><div style="font-size:12px;color:#8a7f6a">維持 8.89%</div></td><td><b style="color:#6ee7b7">0.76%</b><div style="font-size:12px;color:#8a7f6a">維持 8.33%</div></td>
+    <td style="color:#fca5a5">90.91%</td></tr></tbody></table></div>
+<div class="sub" style="margin-top:8px">👉 防具<b>前五階沒有「維持」</b>,失敗就是破壞。「—」表示已經到強化上限 +12。</div></div>
 
 <div class="mcard"><div class="ttl">飾品(戒指・項鍊・腰帶)</div>
-<div class="sub">飾品<b>沒有安定值</b>,從 +0 就開始賭,而且<b>失敗一律破壞,沒有「維持」</b>。</div>
-<div class="wrap"><table><thead><tr><th>目前強化值</th><th>成功</th><th>破壞</th></tr></thead><tbody>
-<tr><td class="nm">+0 → +1</td>
-  <td class="num" style="color:#6ee7b7">50%</td><td class="num" style="color:#fca5a5">50%</td></tr><tr><td class="nm">+1 → +2</td>
-  <td class="num" style="color:#6ee7b7">40%</td><td class="num" style="color:#fca5a5">60%</td></tr><tr><td class="nm">+2 → +3</td>
-  <td class="num" style="color:#6ee7b7">30%</td><td class="num" style="color:#fca5a5">70%</td></tr><tr><td class="nm">+3 → +4</td>
-  <td class="num" style="color:#6ee7b7">20%</td><td class="num" style="color:#fca5a5">80%</td></tr>
-</tbody></table></div>
-<div class="sub" style="margin-top:6px">飾品沒有安定值，從 +0 就開始賭；失敗一律破壞，沒有「維持」。第 3 次以後固定 20%。祝福卷成功時 +1～+3。</div></div>
+<div class="sub">飾品<b>沒有安定值</b>,從 +0 就要賭,而且<b>失敗一律破壞,沒有「維持」</b>。</div>
+<div class="wrap"><table><thead><tr><th>強化</th><th>成功</th><th>破壞</th></tr></thead><tbody><tr><td class="nm">+0 → +1</td>
+    <td><b style="color:#6ee7b7">50%</b></td>
+    <td style="color:#fca5a5">50%</td></tr><tr><td class="nm">+1 → +2</td>
+    <td><b style="color:#6ee7b7">40%</b></td>
+    <td style="color:#fca5a5">60%</td></tr><tr><td class="nm">+2 → +3</td>
+    <td><b style="color:#6ee7b7">30%</b></td>
+    <td style="color:#fca5a5">70%</td></tr><tr><td class="nm">+3 → +4</td>
+    <td><b style="color:#6ee7b7">20%</b></td>
+    <td style="color:#fca5a5">80%</td></tr></tbody></table></div>
+<div class="sub" style="margin-top:8px">+3 以上一律 20%。</div></div>
 
-<div class="mcard"><div class="ttl">祝福卷軸為什麼值得</div>
-<div class="sub">祝福卷軸<b>破壞率跟一般卷完全一樣</b>,但成功率高得多,而且<b>成功時會一次跳好幾級</b>。<br>
-以武器過安定第 4 次為例:一般卷成功 <b style="color:#6ee7b7">0.9%</b>、祝福卷 <b style="color:#6ee7b7">3.33%</b> —— 差 <b>3.7 倍</b>。</div>
-<div style="color:#f5c451;font-size:14px;margin:10px 0 4px">祝福卷成功時的跳級量(武器・防具)</div>
-<div class="wrap"><table><thead><tr><th>強化前</th><th>一次會 +幾</th></tr></thead><tbody><tr><td class="nm">+0 ～ +2</td><td class="num" style="color:#6ee7b7">+1 ～ +3</td></tr><tr><td class="nm">+3 ～ +5</td><td class="num" style="color:#6ee7b7">+1 ～ +2</td></tr><tr><td class="nm">+6 ～ +12</td><td class="num" style="color:#6ee7b7">+1</td></tr></tbody></table></div>
+<div class="mcard"><div class="ttl">祝福卷軸值不值得?值得</div>
+<div class="sub">祝福卷軸的<b>破壞率跟一般卷一模一樣</b>(上面每張表的「破壞」欄兩種卷共用),
+但<b>成功率高很多</b>,而且<b>成功時會一次跳好幾級</b>。<br>
+例:武器 <b>+9→+10</b>,一般卷 <b style="color:#6ee7b7">0.9%</b>、祝福卷 <b style="color:#6ee7b7">3.33%</b> —— 差 <b>3.7 倍</b>,爆的機率卻完全一樣。</div>
+<div style="color:#f5c451;font-size:14px;margin:12px 0 4px">祝福卷成功時一次 +幾(武器・防具)</div>
+<div class="wrap"><table><thead><tr><th>強化前</th><th>一次 +幾</th></tr></thead><tbody><tr><td class="nm">+0 ～ +2</td><td class="num" style="color:#6ee7b7">+1 ～ +3</td></tr><tr><td class="nm">+3 ～ +5</td><td class="num" style="color:#6ee7b7">+1 ～ +2</td></tr><tr><td class="nm">+6 ～ +12</td><td class="num" style="color:#6ee7b7">+1</td></tr></tbody></table></div>
 <div class="sub" style="margin-top:6px">飾品用祝福卷成功時 <b>+1 ～ +3</b>。</div></div>
 
-<div class="mcard"><div class="ttl">其他要知道的</div><div class="sub">
+<div class="mcard"><div class="ttl">還有這些要知道</div><div class="sub">
+・<b>安定值 0 的武器與防具禁止強化</b>,系統會直接擋下。<br>
 ・<b>鎖定(🔓)中的裝備無法強化</b>,要先解鎖。<br>
-・持有<b>必成卷軸</b>時,只有在「已經超過安定值」的那一下才會被消耗,安全區內不會浪費。<br>
-・<b>一鍵安全強化</b>只會把裝備推到安定值為止,完全不進賭局,不會破壞。<br>
-・部分活動裝備有<b>自己的固定成功率</b>,不走上面的表(而且不吃祝福卷跳級)。
+・<b>一鍵安全強化</b>只把裝備推到安定值為止,完全不進賭局,<b>不會破壞</b>。<br>
+・持有<b>必成卷軸</b>時,只有在「已經超過安定值」的那一下才會消耗,安全區內不會浪費。<br>
+・少數活動裝備有<b>自己的固定成功率</b>,不走上面的表(也吃不到祝福卷跳級)。
 </div></div></main>
 <footer>資料自動同步自遊戲檔 · 產生於 2026-09-07</footer>
 </body></html>
