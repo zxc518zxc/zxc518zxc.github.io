@@ -215,6 +215,11 @@ try {
   SHOP_SELL = new Set(dump.shopSell || []);
 } catch (e) { }
 
+// ⚒💪🔮 強化機率 / 變身型態 / 碧恩詞條 —— 全部由 cmd/wikidump 從 Go 程式**實跑**匯出,
+//    不是人工抄的。改了 enhance.go / stage3.go / derived.go 就要重跑 wikidump 再重生。
+let WD = {};
+try { WD = JSON.parse(fs.readFileSync(path.join(OUT, "mastery.json"), "utf8")); } catch (e) { }
+
 // ---- 資料萃取 ----
 const TYPE_NAME = { wpn: "武器", arm: "防具", acc: "飾品", pot: "藥水", misc: "道具", material: "材料", skillbk: "技能書", etc: "其他" };
 const ELE_NAME = { fire: "火", water: "水", wind: "風", earth: "地", none: "無", "": "無" };
@@ -337,7 +342,7 @@ const CSS = `
 *{box-sizing:border-box}body{background:#1a140c;color:#e8dcc8;font-family:"Microsoft JhengHei",sans-serif;margin:0;padding:0}
 header{background:#241b0f;border-bottom:2px solid #f5c451;padding:14px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
 header h1{color:#f5c451;font-size:20px;margin:0}
-nav a{color:#cbbb9b;text-decoration:none;margin-right:14px;font-size:15px}nav a:hover,nav a.on{color:#f5c451}
+nav a{color:#cbbb9b;text-decoration:none;margin-right:14px;font-size:15px;white-space:nowrap;display:inline-block;line-height:1.9}nav a:hover,nav a.on{color:#f5c451}
 main{max-width:1000px;margin:0 auto;padding:16px}
 input,select{background:#2a2014;border:1px solid #5a4a26;color:#e8dcc8;padding:9px 12px;border-radius:8px;font-size:15px}
 input{width:100%}
@@ -393,7 +398,9 @@ const page = (title, active, body, extra = "") => `<!DOCTYPE html>
 <a href="npc.html" class="${active === "npc" ? "on" : ""}">NPC 一覽</a>
 <a href="mastery.html" class="${active === "mastery" ? "on" : ""}">精通升級數據</a>
 <a href="sets.html" class="${active === "set" ? "on" : ""}">套裝效果</a>
-<a href="affix.html" class="${active === "affix" ? "on" : ""}">暗黑詞條</a>
+<a href="enhance.html" class="${active === "enh" ? "on" : ""}">強化機率</a>
+<a href="affix.html" class="${active === "affix" ? "on" : ""}">詞條大全</a>
+<a href="poly.html" class="${active === "poly" ? "on" : ""}">變身型態</a>
 <a href="guide.html" class="${active === "guide" ? "on" : ""}">新手指南</a>
 <a href="changelog.html" class="${active === "log" ? "on" : ""}">版本更新</a>
 </nav></header><main>${body}</main>
@@ -419,7 +426,9 @@ ${chips([[mobList.length, "怪物"], [items.length, "道具"], [skills.length, "
 <a class="tile" href="guide.html"><div class="em">🌱</div><div class="tt">新手指南</div><div class="dd">第一次玩看這裡</div></a>
 <a class="tile" href="mastery.html"><div class="em">🎓</div><div class="tt">精通升級數據</div><div class="dd">升到滿級要什麼材料</div></a>
 <a class="tile" href="sets.html"><div class="em">🛡️</div><div class="tt">套裝效果</div><div class="dd">湊齊有什麼加成</div></a>
-<a class="tile" href="affix.html"><div class="em">🌑</div><div class="tt">暗黑詞條</div><div class="dd">掉落隨機附帶的額外能力</div></a>
+<a class="tile" href="enhance.html"><div class="em">⚒️</div><div class="tt">強化機率</div><div class="dd">成功・維持・破壞的實際數字</div></a>
+<a class="tile" href="affix.html"><div class="em">🌑</div><div class="tt">詞條大全</div><div class="dd">碧恩祝福・遠古・屬性・暗黑詞條</div></a>
+<a class="tile" href="poly.html"><div class="em">💪</div><div class="tt">變身型態</div><div class="dd">46 種變身的加成一次看完</div></a>
 <a class="tile" href="changelog.html"><div class="em">📢</div><div class="tt">版本更新</div><div class="dd">最近改了什麼</div></a>
 </div>`));
 
@@ -661,6 +670,68 @@ try { CHANGES = JSON.parse(fs.readFileSync(path.join(OUT, "changelog.json"), "ut
 ${body}`));
 }
 
+// ================= 🔮 碧恩詞條(祝福/詛咒・遠古・屬性)=================
+// 🔴 效果數值由 cmd/wikidump **實跑 applyBless/applyAnc/attrAffixes** 匯出;
+//    機率對齊 engine/afk/bian.go 的 BianBless 三分支 + engine/affixroll.go。
+//    社群那份人工抄的把「武器的傷害值」誤植成「防具的抗性值」,這裡不再人工維護。
+let BIAN_SEC = "";
+if (WD.bianOdds && WD.bianOdds.length) {
+  const pc = v => (Math.round(v * 100) / 100) + "%";
+  const grp = g => WD.bianOdds.filter(o => o.group === g);
+  const oddRows = g => grp(g).map(o => `<tr><td class="nm">${o.name}</td><td class="num" style="color:#6ee7b7">${pc(o.pct)}</td></tr>`).join("");
+  const effTbl = rows => `<div class="wrap"><table><thead><tr><th>詞條</th><th>武器</th><th>防具</th><th>飾品</th></tr></thead><tbody>
+    ${[...new Set(rows.map(r => r.name))].map(n => {
+      const g = sl => { const r = rows.find(x => x.name === n && x.slot === sl); return (r && r.eff && r.eff.length) ? r.eff.join("<br>") : "—"; };
+      return `<tr><td class="nm">${n}</td><td>${g("武器")}</td><td>${g("防具")}</td><td>${g("飾品")}</td></tr>`;
+    }).join("")}
+  </tbody></table></div>`;
+
+  const attr = WD.attrAffix || [];
+  const TN = { 1: "第一階", 3: "第二階", 5: "第三階" };
+  const attrRows = attr.map(a => `<tr><td class="nm">${a.name}</td><td class="num">${TN[a.tier]}</td>
+    <td class="num" style="color:#6ee7b7">+${a.fix}</td>
+    <td class="num" style="color:#fbbf24">剋「${a.beats}」再 +${a.counter}</td>
+    <td class="num">${a.ele}抗 +${a.res}</td><td class="num">+${a.mr}</td></tr>`).join("");
+
+  BIAN_SEC = `<div class="mcard"><div class="ttl">① 碧恩是誰、怎麼用</div><div class="sub">
+把<b>武器或裝備</b>拿去<b>象牙塔</b>找 NPC <b>碧恩</b>,消耗對應的「賦予祝福卷軸」(武器/防具/飾品三種,別拿錯),
+就會<b>隨機</b>從下面三系抽一個結果掛上去。<br><br>
+🔴 <b>最重要的一件事:重複刷會洗掉</b>。<br>
+　・抽到<b>和身上同一個</b>詞條 → 該詞條<b>直接消失</b>。<br>
+　・抽到<b>同系但不同</b>的詞條 → <b>取代</b>舊的那個。<br>
+　・三系<b>互不影響</b>,可以同時存在(例如同一把武器可以既是「祝福的」又是「永恆」又帶「爆炎」)。<br><br>
+・被<b>詛咒</b>的裝備<b>脫不下來</b>,而且<b>不能再施加祝福</b>,要先用「解除詛咒卷軸」。<br>
+・<b>鎖定中</b>的裝備、<b>寵物裝備</b>不能改詞條。<br>
+・當作材料的<b>卷軸本身不能帶詞條</b>,否則系統不認。
+</div></div>
+
+<div class="mcard"><div class="ttl">② 抽中什麼的機率</div>
+<div class="sub">三系各占 <b>1/3</b>,再從系內細分。以下加總剛好 100%。</div>
+<div style="display:flex;gap:18px;flex-wrap:wrap">
+  <div style="flex:1;min-width:240px"><div style="color:#f5c451;font-size:14px;margin:10px 0 4px">祝福系(合計 33.33%)</div>
+    <div class="wrap"><table><thead><tr><th>結果</th><th>機率</th></tr></thead><tbody>${oddRows("祝福系")}</tbody></table></div></div>
+  <div style="flex:1;min-width:240px"><div style="color:#f5c451;font-size:14px;margin:10px 0 4px">遠古系(合計 33.33%)</div>
+    <div class="wrap"><table><thead><tr><th>結果</th><th>機率</th></tr></thead><tbody>${oddRows("遠古系")}</tbody></table></div></div>
+  <div style="flex:1;min-width:240px"><div style="color:#f5c451;font-size:14px;margin:10px 0 4px">屬性系(合計 33.33%)</div>
+    <div class="wrap"><table><thead><tr><th>結果</th><th>機率</th></tr></thead><tbody>${oddRows("屬性系")}</tbody></table></div></div>
+</div></div>
+
+<div class="mcard"><div class="ttl">③ 祝福的 / 詛咒的 效果</div>
+<div class="sub">同一個位置只會有其中一個。<b>防禦 AC 在遊戲內是數字越低越強</b>,這裡已經換算成白話。</div>
+${effTbl(WD.bless || [])}</div>
+
+<div class="mcard"><div class="ttl">④ 遠古系四變體</div>
+<div class="sub">四種變體強化的方向完全不同,<b>沒有絕對最好的</b>,看你要傷害、命中還是防禦。</div>
+${effTbl(WD.anc || [])}</div>
+
+<div class="mcard"><div class="ttl">⑤ 屬性詞條(含對剋加成)</div>
+<div class="sub">🔴 <b>屬性武器真正的價值在「對剋」</b>:打到被自己剋制的屬性怪時,除了基本固定傷害,<b>還會再加一筆</b>。<br>
+對剋關係:<b>火剋地、水剋火、風剋水、地剋風</b>。防具與飾品則是提供該屬性的抗性與魔防。</div>
+<div class="wrap"><table><thead><tr><th>詞條</th><th>階</th><th>武器固定傷害</th><th>武器對剋加成</th><th>防具/飾品抗性</th><th>防具/飾品魔防</th></tr></thead>
+<tbody>${attrRows}</tbody></table></div>
+<div class="sub" style="margin-top:6px">例:帶「火靈」的武器打<b>地屬性</b>的怪 → 固定傷害 +5,再加對剋 +12,合計每下 <b>+17</b>。打其他屬性只有 +5。</div></div>`;
+}
+
 // ================= 🌑 暗黑詞條 =================
 let AFFIX = [];
 try { AFFIX = JSON.parse(fs.readFileSync(path.join(OUT, "mastery.json"), "utf8")).affixes || []; } catch (e) { }
@@ -699,7 +770,10 @@ if (AFFIX.length) {
     </div>`;
   }).join("");
 
-  fs.writeFileSync(path.join(OUT, "affix.html"), page("暗黑詞條", "affix", `
+  fs.writeFileSync(path.join(OUT, "affix.html"), page("詞條大全", "affix", `
+<div class="hint">這頁包含兩套完全不同的詞條系統:<b>碧恩詞條</b>(自己拿卷軸去刷的)與<b>暗黑詞條</b>(掉落時就決定好的)。</div>
+${BIAN_SEC}
+<div class="hint" style="margin-top:18px">──────── 以下是<b>暗黑詞條</b> ────────</div>
 <div class="hint">效仿暗黑破壞神的隨機詞條:部分裝備掉落時會<b>額外隨機附帶</b>能力。每件掉落各自獨立擲,同一款裝備每一件都可能不同。</div>
 ${secs}
 <div class="mcard"><div class="ttl">注意事項</div><div class="sub">
@@ -709,11 +783,139 @@ ${secs}
 </div></div>`));
 }
 
+// ================= ⚒ 強化機率 =================
+// 🔴 數字全部由 cmd/wikidump 從 engine/afk/enhance.go **實跑匯出**。
+//    社群那份人工抄的有三處錯(絕對強化值 vs 超過安定值次數、安定0武防其實禁強化、
+//    飾品表被寫成武防表),這裡不再人工維護。
+if (WD.enh && WD.enh.length) {
+  const pc = v => {
+    const r = Math.round(v * 100) / 100;
+    return (r === 0 ? "0" : String(r)) + "%";
+  };
+  const tblOf = (slot, kind) => (WD.enh.find(t => t.slot === slot && t.kind === kind) || null);
+  const rows = t => t.steps.map(st => `<tr><td class="nm">第 ${st.off + 1} 次</td>
+      <td class="num" style="color:#6ee7b7">${pc(st.succ)}</td>
+      <td class="num" style="color:#93c5fd">${pc(st.stay)}</td>
+      <td class="num" style="color:#fca5a5">${pc(st.destroy)}</td></tr>`).join("");
+  const card = (slot, note) => {
+    const n = tblOf(slot, "一般卷軸"), b = tblOf(slot, "祝福卷軸");
+    const one = (t, ttl) => t ? `<div style="flex:1;min-width:280px">
+      <div style="color:#f5c451;font-size:14px;margin:10px 0 4px">${ttl}</div>
+      <div class="wrap"><table><thead><tr><th>超過安定值第幾次</th><th>成功</th><th>維持</th><th>破壞</th></tr></thead>
+      <tbody>${rows(t)}</tbody></table></div>
+      <div class="sub" style="margin-top:6px">${t.note}</div></div>` : "";
+    return `<div class="mcard"><div class="ttl">${slot}</div>
+      <div class="sub">${note}</div>
+      <div style="display:flex;gap:18px;flex-wrap:wrap">${one(n, "一般卷軸")}${one(b, "祝福卷軸")}</div></div>`;
+  };
+  const jump = (WD.blessJump || []).map(j => {
+    const t = j.text.replace("+1 ～ +1", "+1");
+    return `<tr><td class="nm">+${j.from} ～ +${j.to}</td><td class="num" style="color:#6ee7b7">${t}</td></tr>`;
+  }).join("");
+
+  fs.writeFileSync(path.join(OUT, "enhance.html"), page("強化機率", "enh", `
+<div class="hint">以下是<b>實際程式使用的數字</b>,直接從伺服器程式匯出,不是推測值。
+<b>「安定值」以內 100% 成功</b>,不會失敗也不會消失;超過安定值才開始賭。</div>
+
+<div class="mcard"><div class="ttl">先看懂這三件事</div><div class="sub">
+① <b>表格看的是「超過安定值第幾次」,不是強化到 +幾</b>。<br>
+　舉例:安定值 6 的武士刀,+6→+7 就是「第 1 次」;安定值 4 的防具,+4→+5 才是「第 1 次」。
+　所以<b>安定值不同的裝備,同樣 +8 難度完全不一樣</b>。<br>
+② <b>維持</b> = 強化值不動,但裝備<b>不會消失</b>,卷軸照樣消耗。<b>破壞</b> = 裝備直接沒了。<br>
+③ <b>安定值 0 的武器與防具禁止強化</b>(系統會直接擋下)。飾品沒有安定值,從 +0 就要賭。
+</div></div>
+
+${card("武器", "武器的安定值多半是 6。前三次都是 33.33%,第 4 次起成功率斷崖式下跌,但多了「維持」保護。")}
+${card("防具", "防具的安定值因裝備而異(道具圖鑑每件都有標)。前五次沒有「維持」,失敗就是破壞。")}
+
+<div class="mcard"><div class="ttl">飾品(戒指・項鍊・腰帶)</div>
+<div class="sub">飾品<b>沒有安定值</b>,從 +0 就開始賭,而且<b>失敗一律破壞,沒有「維持」</b>。</div>
+<div class="wrap"><table><thead><tr><th>目前強化值</th><th>成功</th><th>破壞</th></tr></thead><tbody>
+${(tblOf("飾品", "一般卷軸") || { steps: [] }).steps.map(st => `<tr><td class="nm">+${st.off} → +${st.off + 1}</td>
+  <td class="num" style="color:#6ee7b7">${pc(st.succ)}</td><td class="num" style="color:#fca5a5">${pc(st.destroy)}</td></tr>`).join("")}
+</tbody></table></div>
+<div class="sub" style="margin-top:6px">${(tblOf("飾品", "一般卷軸") || {}).note || ""}</div></div>
+
+<div class="mcard"><div class="ttl">祝福卷軸為什麼值得</div>
+<div class="sub">祝福卷軸<b>破壞率跟一般卷完全一樣</b>,但成功率高得多,而且<b>成功時會一次跳好幾級</b>。<br>
+以武器過安定第 4 次為例:一般卷成功 <b style="color:#6ee7b7">0.9%</b>、祝福卷 <b style="color:#6ee7b7">3.33%</b> —— 差 <b>3.7 倍</b>。</div>
+<div style="color:#f5c451;font-size:14px;margin:10px 0 4px">祝福卷成功時的跳級量(武器・防具)</div>
+<div class="wrap"><table><thead><tr><th>強化前</th><th>一次會 +幾</th></tr></thead><tbody>${jump}</tbody></table></div>
+<div class="sub" style="margin-top:6px">飾品用祝福卷成功時 <b>+1 ～ +3</b>。</div></div>
+
+<div class="mcard"><div class="ttl">其他要知道的</div><div class="sub">
+・<b>鎖定(🔓)中的裝備無法強化</b>,要先解鎖。<br>
+・持有<b>必成卷軸</b>時,只有在「已經超過安定值」的那一下才會被消耗,安全區內不會浪費。<br>
+・<b>一鍵安全強化</b>只會把裝備推到安定值為止,完全不進賭局,不會破壞。<br>
+・部分活動裝備有<b>自己的固定成功率</b>,不走上面的表(而且不吃祝福卷跳級)。
+</div></div>`));
+}
+
+// ================= 💪 變身型態 =================
+// 🔴 由 cmd/wikidump 從 engine/afk/stage3.go 的 polyTiers 匯出(46 種,含 polyAbilityTextGo 的文字)。
+if (WD.poly && WD.poly.length) {
+  // AC 在引擎是「越低越好」,polyAbilityTextGo 直接輸出 AC-1,玩家會誤讀成防禦下降 → 翻成白話。
+  // AC 在引擎是「越低越好」,polyAbilityTextGo 直接輸出 AC-1,玩家會誤讀成防禦下降 → 翻成白話。
+  // ⚠ 刻意不用正則(這份檔案是腳本生成的,反斜線會被吃掉一層)。
+  const POLY_T = [["AC-", "防禦 AC 提升 "], ["AC+", "防禦 AC 下降 "], ["MR+", "魔防 MR+"], ["ER+", "閃避 ER+"]];
+  const polyEff = t => String(t || "—").split("、").map(x => {
+    for (const [k, v] of POLY_T) if (x.indexOf(k) === 0) return v + x.slice(k.length);
+    return x;
+  }).join("、");
+  const secs = WD.poly.map(t => {
+    const lv = t.max >= 9999 ? `Lv ${t.min} 以上` : `Lv ${t.min} ～ ${t.max}`;
+    return `<div class="mcard"><div class="ttl">${lv}<span class="sub" style="margin-left:8px">共 ${t.forms.length} 種</span></div>
+    <div class="wrap"><table><thead><tr><th>型態</th><th>加成</th></tr></thead><tbody>
+    ${t.forms.map(f => `<tr><td class="nm">${f.name}</td><td>${polyEff(f.eff)}</td></tr>`).join("")}
+    </tbody></table></div></div>`;
+  }).join("");
+
+  fs.writeFileSync(path.join(OUT, "poly.html"), page("變身型態", "poly", `
+<div class="hint">使用<b>變形卷軸</b>會依你<b>當下的等級</b>,從該等級的名單中<b>隨機</b>變成一種。
+背包裡帶著<b>變形控制戒指</b>(不用裝備,放背包就生效)就可以<b>指定</b>要變哪一種。</div>
+
+<div class="mcard"><div class="ttl">重點</div><div class="sub">
+・<b>只能變成「你目前等級」那一段的型態</b>。等級跨過門檻後,能變的名單就整個換掉。<br>
+・<b>沒有變形控制戒指 = 隨機</b>,有戒指才能點名。<br>
+・變身效果<b>疊在你原本的能力上</b>,不會取代裝備加成。<br>
+・「攻速」是<b>百分比</b>加成,其餘都是平加。
+</div></div>
+${secs}`));
+}
+
 // ================= 🌱 新手指南(手寫文案;不隨 gamedata 變動) =================
 // ⚠ 這頁**不是自動生成**,遊戲規則改了要回來手動更新。
 //    刻意只寫「不太會變」的東西(職業特性、流程、名詞解釋),避開會頻繁調整的數值。
 fs.writeFileSync(path.join(OUT, "guide.html"), page("新手指南", "guide", `
 <div class="hint">第一次玩?這頁從頭帶你一遍。看不懂的名詞下面都有解釋。</div>
+
+<div class="mcard"><div class="ttl">📱 先把遊戲加到手機桌面(強烈建議)</div>
+<div class="sub">加到桌面之後會像 App 一樣<b>全螢幕、沒有網址列</b>,而且<b>只有這樣才能開啟遊戲內的推播通知</b>。</div>
+
+<div style="color:#f5c451;font-size:14px;margin:12px 0 4px">iPhone / iPad</div>
+<div class="sub">
+① 一定要用<b>內建的 Safari</b> 開遊戲網站(用 Chrome、LINE 內建瀏覽器都<b>不行</b>)<br>
+② 點畫面<b>下方中間的「分享」</b>按鈕(向上箭頭那個)<br>
+③ 往下滑,點<b>「顯示更多」</b><br>
+④ 找到<b>「加入主畫面」</b>,點右上角<b>「加入」</b><br>
+⑤ 回到桌面就會看到 App 圖示,以後從那裡進遊戲
+</div>
+
+<div style="color:#f5c451;font-size:14px;margin:12px 0 4px">Android</div>
+<div class="sub">
+① 用瀏覽器開遊戲網站<br>
+② 點右上角<b>「⋮」</b>選單<br>
+③ 選<b>「安裝應用程式」</b>或<b>「加入主畫面」</b>(不同手機字不一樣)<br>
+④ 之後從桌面圖示啟動,就是全螢幕、沒有網址列
+</div>
+
+<div style="color:#f5c451;font-size:14px;margin:12px 0 4px">🔔 推播通知</div>
+<div class="sub">
+加到桌面之後,<b>從桌面圖示進遊戲</b>才能在遊戲內開啟推播。目前提供兩種:<br>
+・<b>伺服器重啟</b> —— 維護或更新重開時通知你<br>
+・<b>離線掛機中斷</b> —— 掛機被打斷時通知你<br>
+直接在瀏覽器裡開的話,系統不會給推播權限。
+</div></div>
 
 <div class="mcard"><div class="ttl">① 這是什麼遊戲</div>
 <div class="sub">天堂懷舊風的<b>放置型</b>遊戲。選好獵場掛著,角色會自動打怪、自動撿裝備、自動升級 ——

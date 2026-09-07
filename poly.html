@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>變身型態 - 阿肥放置天堂 資料站</title><style>
+*{box-sizing:border-box}body{background:#1a140c;color:#e8dcc8;font-family:"Microsoft JhengHei",sans-serif;margin:0;padding:0}
+header{background:#241b0f;border-bottom:2px solid #f5c451;padding:14px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+header h1{color:#f5c451;font-size:20px;margin:0}
+nav a{color:#cbbb9b;text-decoration:none;margin-right:14px;font-size:15px;white-space:nowrap;display:inline-block;line-height:1.9}nav a:hover,nav a.on{color:#f5c451}
+main{max-width:1000px;margin:0 auto;padding:16px}
+input,select{background:#2a2014;border:1px solid #5a4a26;color:#e8dcc8;padding:9px 12px;border-radius:8px;font-size:15px}
+input{width:100%}
+.bar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{padding:6px 14px;border-radius:16px;border:1px solid #5a4a26;background:#2a2014;color:#cbbb9b;cursor:pointer;font-size:14px}
+.chip.on{background:#f5c451;color:#241b0f;font-weight:bold}
+.card{background:#241b0f;border:1px solid #3a2f1c;border-radius:12px;padding:12px 14px;margin-bottom:10px;display:flex;gap:12px}
+.card img{width:48px;height:48px;object-fit:contain;flex-shrink:0}
+.card .ttl{color:#f5c451;font-size:16px;font-weight:bold}
+.card .sub{color:#b6a684;font-size:13px;margin-top:2px}
+.legend{color:#ffd700}
+.dropchip{display:inline-flex;align-items:center;gap:4px;background:#2a2014;border:1px solid #3a2f1c;border-radius:8px;padding:3px 8px;margin:3px 4px 0 0;font-size:13px;color:#cbbb9b}
+.dropchip img{width:20px;height:20px}
+.stat{color:#8f8067;font-size:13px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:8px 10px;border-bottom:1px solid #3a2f1c;text-align:left}
+th{color:#f5c451;position:sticky;top:0;background:#1a140c}
+footer{text-align:center;color:#6b5f4c;font-size:12px;padding:24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.tile{background:#241b0f;border:1px solid #5a4a26;border-radius:14px;padding:22px;text-align:center;text-decoration:none;display:block}
+.tile:hover{border-color:#f5c451}
+.tile .em{font-size:34px}.tile .tt{color:#f5c451;font-size:18px;font-weight:bold;margin:8px 0 4px}.tile .dd{color:#b6a684;font-size:13px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:10px 0 16px}
+.stat-chip{background:#241b0f;border:1px solid #5a4a26;border-radius:10px;padding:7px 14px;font-size:14px;color:#b6a684}
+.stat-chip b{color:#f5c451;font-size:16px;margin-right:4px}
+table{border-collapse:collapse;width:100%;font-size:14px;background:#241b0f;border-radius:10px;overflow:hidden}
+th,td{padding:8px 10px;border-bottom:1px solid #3a2f1c;text-align:left;vertical-align:top}
+th{color:#f5c451;position:sticky;top:0;background:#2a2014;white-space:nowrap;font-size:13px}
+tr:hover td{background:#2a2014}
+td.nm{color:#e8dcc8;font-weight:bold;white-space:nowrap}
+td.num{text-align:right;white-space:nowrap;color:#b6a684}
+.tag{display:inline-block;background:#2a2014;border:1px solid #3a2f1c;border-radius:6px;padding:1px 7px;margin:2px 3px 0 0;font-size:12px;color:#cbbb9b;white-space:nowrap}
+.tag.lg{color:#ffd700;border-color:#6b5a20}
+.tag.zn{color:#7bd14a;border-color:#2f4a24}
+.wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.hint{color:#8f8067;font-size:12px;margin:-6px 0 12px}
+.mcard{background:#241b0f;border:1px solid #3a2f1c;border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.mcard .ttl{color:#f5c451;font-size:17px;font-weight:bold;margin-bottom:2px}
+.mcard .sub{color:#b6a684;font-size:14px;line-height:1.75}
+.mcard table{margin-top:6px}
+</style></head><body>
+<header><h1>🏰 阿肥放置天堂</h1><nav>
+<a href="index.html" class="">首頁</a>
+<a href="monsters.html" class="">怪物掉落圖鑑</a>
+<a href="items.html" class="">道具圖鑑</a>
+<a href="skills.html" class="">技能介紹</a>
+<a href="zones.html" class="">獵場列表</a>
+<a href="worldboss.html" class="">世界王</a>
+<a href="npc.html" class="">NPC 一覽</a>
+<a href="mastery.html" class="">精通升級數據</a>
+<a href="sets.html" class="">套裝效果</a>
+<a href="enhance.html" class="">強化機率</a>
+<a href="affix.html" class="">詞條大全</a>
+<a href="poly.html" class="on">變身型態</a>
+<a href="guide.html" class="">新手指南</a>
+<a href="changelog.html" class="">版本更新</a>
+</nav></header><main>
+<div class="hint">使用<b>變形卷軸</b>會依你<b>當下的等級</b>,從該等級的名單中<b>隨機</b>變成一種。
+背包裡帶著<b>變形控制戒指</b>(不用裝備,放背包就生效)就可以<b>指定</b>要變哪一種。</div>
+
+<div class="mcard"><div class="ttl">重點</div><div class="sub">
+・<b>只能變成「你目前等級」那一段的型態</b>。等級跨過門檻後,能變的名單就整個換掉。<br>
+・<b>沒有變形控制戒指 = 隨機</b>,有戒指才能點名。<br>
+・變身效果<b>疊在你原本的能力上</b>,不會取代裝備加成。<br>
+・「攻速」是<b>百分比</b>加成,其餘都是平加。
+</div></div>
+<div class="mcard"><div class="ttl">Lv 0 ～ 14<span class="sub" style="margin-left:8px">共 11 種</span></div>
+    <div class="wrap"><table><thead><tr><th>型態</th><th>加成</th></tr></thead><tbody>
+    <tr><td class="nm">妖魔</td><td>近傷+1、近命中+1</td></tr><tr><td class="nm">骷髏</td><td>近傷+1、近命中+1</td></tr><tr><td class="nm">那魯加妖魔</td><td>近傷+1、近命中+1</td></tr><tr><td class="nm">妖魔弓箭手</td><td>遠傷+1、遠命中+1</td></tr><tr><td class="nm">長者</td><td>額外MP+2、MP恢復+1</td></tr><tr><td class="nm">侏儒</td><td>防禦 AC 提升 1、攻速+10%</td></tr><tr><td class="nm">歐姆</td><td>額外傷+1、額外命中+1</td></tr><tr><td class="nm">巨蟻</td><td>額外命中+1、攻速+10%</td></tr><tr><td class="nm">奇異鸚鵡</td><td>額外傷+1、額外MP+1</td></tr><tr><td class="nm">浣熊</td><td>額外命中+1、額外MP+1</td></tr><tr><td class="nm">果凍怪</td><td>額外MP+1、魔防 MR+4</td></tr>
+    </tbody></table></div></div><div class="mcard"><div class="ttl">Lv 15 ～ 29<span class="sub" style="margin-left:8px">共 9 種</span></div>
+    <div class="wrap"><table><thead><tr><th>型態</th><th>加成</th></tr></thead><tbody>
+    <tr><td class="nm">妖魔鬥士</td><td>近傷+2、近命中+1</td></tr><tr><td class="nm">狼人</td><td>近傷+1、近命中+2</td></tr><tr><td class="nm">食人妖精</td><td>近傷+2、近命中+2</td></tr><tr><td class="nm">妖魔巡守</td><td>遠傷+2、遠命中+1</td></tr><tr><td class="nm">夏洛伯</td><td>防禦 AC 提升 2、攻速+15%</td></tr><tr><td class="nm">黑暗妖精運送員</td><td>遠傷+1、遠命中+2</td></tr><tr><td class="nm">巨大兵蟻</td><td>額外傷+2、額外命中+1</td></tr><tr><td class="nm">紙人</td><td>額外MP+2、MP恢復+2</td></tr><tr><td class="nm">雪人</td><td>魔傷+1</td></tr>
+    </tbody></table></div></div><div class="mcard"><div class="ttl">Lv 30 ～ 44<span class="sub" style="margin-left:8px">共 9 種</span></div>
+    <div class="wrap"><table><thead><tr><th>型態</th><th>加成</th></tr></thead><tbody>
+    <tr><td class="nm">萊肯</td><td>近傷+2、近命中+2</td></tr><tr><td class="nm">思克巴</td><td>魔傷+1、MP恢復+2</td></tr><tr><td class="nm">食人妖精王</td><td>近傷+3、近命中+2</td></tr><tr><td class="nm">黑暗妖精警衛(矛)</td><td>近傷+1、近命中+3</td></tr><tr><td class="nm">強盜(弓)</td><td>遠傷+2、遠命中+2</td></tr><tr><td class="nm">黑暗妖精盜賊</td><td>遠傷+2、遠命中+3</td></tr><tr><td class="nm">黑暗妖精法師</td><td>額外MP+3、MP恢復+1</td></tr><tr><td class="nm">亞力安</td><td>近傷+1、近命中+1、額外MP+2</td></tr><tr><td class="nm">曼波兔</td><td>閃避 ER+1、攻速+15%</td></tr>
+    </tbody></table></div></div><div class="mcard"><div class="ttl">Lv 45 ～ 49<span class="sub" style="margin-left:8px">共 6 種</span></div>
+    <div class="wrap"><table><thead><tr><th>型態</th><th>加成</th></tr></thead><tbody>
+    <tr><td class="nm">德雷克</td><td>近傷+3、近命中+3</td></tr><tr><td class="nm">布雷哲</td><td>近傷+2、近命中+4</td></tr><tr><td class="nm">庫曼</td><td>近傷+1、近命中+1、攻速+15%</td></tr><tr><td class="nm">黑暗妖精警衛(弓)</td><td>遠傷+1、遠命中+1、攻速+15%</td></tr><tr><td class="nm">黑暗妖精巡守</td><td>遠傷+3、遠命中+3</td></tr><tr><td class="nm">巴風特</td><td>魔傷+1、額外MP+2、MP恢復+2</td></tr>
+    </tbody></table></div></div><div class="mcard"><div class="ttl">Lv 50 ～ 51<span class="sub" style="margin-left:8px">共 6 種</span></div>
+    <div class="wrap"><table><thead><tr><th>型態</th><th>加成</th></tr></thead><tbody>
+    <tr><td class="nm">克特</td><td>近傷+3、近命中+3、攻速+15%</td></tr><tr><td class="nm">刺客首領</td><td>近傷+2、近命中+2、攻速+20%</td></tr><tr><td class="nm">小惡魔</td><td>遠傷+1、魔傷+1、MP恢復+3、攻速+15%</td></tr><tr><td class="nm">黑騎士</td><td>近傷+1、近命中+4、攻速+10%</td></tr><tr><td class="nm">火焰弓箭手</td><td>遠傷+3、遠命中+3、攻速+10%</td></tr><tr><td class="nm">黑法師</td><td>魔傷+1、額外MP+3、MP恢復+2、攻速+10%</td></tr>
+    </tbody></table></div></div><div class="mcard"><div class="ttl">Lv 52 以上<span class="sub" style="margin-left:8px">共 5 種</span></div>
+    <div class="wrap"><table><thead><tr><th>型態</th><th>加成</th></tr></thead><tbody>
+    <tr><td class="nm">死亡騎士</td><td>近傷+3、近命中+3、攻速+20%</td></tr><tr><td class="nm">狂暴將軍</td><td>近傷+5、攻速+15%</td></tr><tr><td class="nm">黑暗精靈</td><td>遠傷+3、遠命中+3、攻速+20%</td></tr><tr><td class="nm">黑長者</td><td>魔傷+2、額外MP+1、MP恢復+2、攻速+15%</td></tr><tr><td class="nm">巴列斯</td><td>魔傷+1、額外MP+2、MP恢復+4、攻速+10%</td></tr>
+    </tbody></table></div></div></main>
+<footer>資料自動同步自遊戲檔 · 產生於 2026-09-07</footer>
+</body></html>

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>暗黑詞條 - 阿肥放置天堂 資料站</title><style>
+<title>詞條大全 - 阿肥放置天堂 資料站</title><style>
 *{box-sizing:border-box}body{background:#1a140c;color:#e8dcc8;font-family:"Microsoft JhengHei",sans-serif;margin:0;padding:0}
 header{background:#241b0f;border-bottom:2px solid #f5c451;padding:14px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
 header h1{color:#f5c451;font-size:20px;margin:0}
-nav a{color:#cbbb9b;text-decoration:none;margin-right:14px;font-size:15px}nav a:hover,nav a.on{color:#f5c451}
+nav a{color:#cbbb9b;text-decoration:none;margin-right:14px;font-size:15px;white-space:nowrap;display:inline-block;line-height:1.9}nav a:hover,nav a.on{color:#f5c451}
 main{max-width:1000px;margin:0 auto;padding:16px}
 input,select{background:#2a2014;border:1px solid #5a4a26;color:#e8dcc8;padding:9px 12px;border-radius:8px;font-size:15px}
 input{width:100%}
@@ -57,10 +57,91 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 <a href="npc.html" class="">NPC 一覽</a>
 <a href="mastery.html" class="">精通升級數據</a>
 <a href="sets.html" class="">套裝效果</a>
-<a href="affix.html" class="on">暗黑詞條</a>
+<a href="enhance.html" class="">強化機率</a>
+<a href="affix.html" class="on">詞條大全</a>
+<a href="poly.html" class="">變身型態</a>
 <a href="guide.html" class="">新手指南</a>
 <a href="changelog.html" class="">版本更新</a>
 </nav></header><main>
+<div class="hint">這頁包含兩套完全不同的詞條系統:<b>碧恩詞條</b>(自己拿卷軸去刷的)與<b>暗黑詞條</b>(掉落時就決定好的)。</div>
+<div class="mcard"><div class="ttl">① 碧恩是誰、怎麼用</div><div class="sub">
+把<b>武器或裝備</b>拿去<b>象牙塔</b>找 NPC <b>碧恩</b>,消耗對應的「賦予祝福卷軸」(武器/防具/飾品三種,別拿錯),
+就會<b>隨機</b>從下面三系抽一個結果掛上去。<br><br>
+🔴 <b>最重要的一件事:重複刷會洗掉</b>。<br>
+　・抽到<b>和身上同一個</b>詞條 → 該詞條<b>直接消失</b>。<br>
+　・抽到<b>同系但不同</b>的詞條 → <b>取代</b>舊的那個。<br>
+　・三系<b>互不影響</b>,可以同時存在(例如同一把武器可以既是「祝福的」又是「永恆」又帶「爆炎」)。<br><br>
+・被<b>詛咒</b>的裝備<b>脫不下來</b>,而且<b>不能再施加祝福</b>,要先用「解除詛咒卷軸」。<br>
+・<b>鎖定中</b>的裝備、<b>寵物裝備</b>不能改詞條。<br>
+・當作材料的<b>卷軸本身不能帶詞條</b>,否則系統不認。
+</div></div>
+
+<div class="mcard"><div class="ttl">② 抽中什麼的機率</div>
+<div class="sub">三系各占 <b>1/3</b>,再從系內細分。以下加總剛好 100%。</div>
+<div style="display:flex;gap:18px;flex-wrap:wrap">
+  <div style="flex:1;min-width:240px"><div style="color:#f5c451;font-size:14px;margin:10px 0 4px">祝福系(合計 33.33%)</div>
+    <div class="wrap"><table><thead><tr><th>結果</th><th>機率</th></tr></thead><tbody><tr><td class="nm">祝福的</td><td class="num" style="color:#6ee7b7">16.67%</td></tr><tr><td class="nm">詛咒的</td><td class="num" style="color:#6ee7b7">16.67%</td></tr></tbody></table></div></div>
+  <div style="flex:1;min-width:240px"><div style="color:#f5c451;font-size:14px;margin:10px 0 4px">遠古系(合計 33.33%)</div>
+    <div class="wrap"><table><thead><tr><th>結果</th><th>機率</th></tr></thead><tbody><tr><td class="nm">遠古</td><td class="num" style="color:#6ee7b7">8.33%</td></tr><tr><td class="nm">永恆</td><td class="num" style="color:#6ee7b7">8.33%</td></tr><tr><td class="nm">不朽</td><td class="num" style="color:#6ee7b7">8.33%</td></tr><tr><td class="nm">太初</td><td class="num" style="color:#6ee7b7">8.33%</td></tr></tbody></table></div></div>
+  <div style="flex:1;min-width:240px"><div style="color:#f5c451;font-size:14px;margin:10px 0 4px">屬性系(合計 33.33%)</div>
+    <div class="wrap"><table><thead><tr><th>結果</th><th>機率</th></tr></thead><tbody><tr><td class="nm">火之</td><td class="num" style="color:#6ee7b7">5%</td></tr><tr><td class="nm">水之</td><td class="num" style="color:#6ee7b7">5%</td></tr><tr><td class="nm">風之</td><td class="num" style="color:#6ee7b7">5%</td></tr><tr><td class="nm">地之</td><td class="num" style="color:#6ee7b7">5%</td></tr><tr><td class="nm">爆炎</td><td class="num" style="color:#6ee7b7">2.5%</td></tr><tr><td class="nm">海嘯</td><td class="num" style="color:#6ee7b7">2.5%</td></tr><tr><td class="nm">暴風</td><td class="num" style="color:#6ee7b7">2.5%</td></tr><tr><td class="nm">崩裂</td><td class="num" style="color:#6ee7b7">2.5%</td></tr><tr><td class="nm">火靈</td><td class="num" style="color:#6ee7b7">0.83%</td></tr><tr><td class="nm">水靈</td><td class="num" style="color:#6ee7b7">0.83%</td></tr><tr><td class="nm">風靈</td><td class="num" style="color:#6ee7b7">0.83%</td></tr><tr><td class="nm">地靈</td><td class="num" style="color:#6ee7b7">0.83%</td></tr></tbody></table></div></div>
+</div></div>
+
+<div class="mcard"><div class="ttl">③ 祝福的 / 詛咒的 效果</div>
+<div class="sub">同一個位置只會有其中一個。<b>防禦 AC 在遊戲內是數字越低越強</b>,這裡已經換算成白話。</div>
+<div class="wrap"><table><thead><tr><th>詞條</th><th>武器</th><th>防具</th><th>飾品</th></tr></thead><tbody>
+    <tr><td class="nm">祝福的</td><td>額外傷害+1<br>額外命中+1<br>額外魔力 MP+2</td><td>防禦 AC 提升+1<br>傷害減免 DR+1</td><td>防禦 AC 提升+1<br>魔防 MR+1</td></tr><tr><td class="nm">詛咒的</td><td>額外傷害-1<br>額外命中-1<br>額外魔力 MP-2</td><td>防禦 AC 下降+1<br>傷害減免 DR-1</td><td>防禦 AC 下降+1<br>魔防 MR-1</td></tr>
+  </tbody></table></div></div>
+
+<div class="mcard"><div class="ttl">④ 遠古系四變體</div>
+<div class="sub">四種變體強化的方向完全不同,<b>沒有絕對最好的</b>,看你要傷害、命中還是防禦。</div>
+<div class="wrap"><table><thead><tr><th>詞條</th><th>武器</th><th>防具</th><th>飾品</th></tr></thead><tbody>
+    <tr><td class="nm">遠古</td><td>額外傷害+2<br>魔法傷害+1</td><td>傷害減免 DR+2</td><td>傷害減免 DR+1<br>魔防 MR+1</td></tr><tr><td class="nm">永恆</td><td>額外傷害+4</td><td>防禦 AC 提升+2</td><td>防禦 AC 提升+1<br>額外傷害+1</td></tr><tr><td class="nm">不朽</td><td>額外命中+4</td><td>閃避 ER+2</td><td>額外傷害+1<br>額外命中+1</td></tr><tr><td class="nm">太初</td><td>魔法傷害+2</td><td>魔防 MR+4</td><td>額外魔力 MP+2<br>魔防 MR+2</td></tr>
+  </tbody></table></div></div>
+
+<div class="mcard"><div class="ttl">⑤ 屬性詞條(含對剋加成)</div>
+<div class="sub">🔴 <b>屬性武器真正的價值在「對剋」</b>:打到被自己剋制的屬性怪時,除了基本固定傷害,<b>還會再加一筆</b>。<br>
+對剋關係:<b>火剋地、水剋火、風剋水、地剋風</b>。防具與飾品則是提供該屬性的抗性與魔防。</div>
+<div class="wrap"><table><thead><tr><th>詞條</th><th>階</th><th>武器固定傷害</th><th>武器對剋加成</th><th>防具/飾品抗性</th><th>防具/飾品魔防</th></tr></thead>
+<tbody><tr><td class="nm">火之</td><td class="num">第一階</td>
+    <td class="num" style="color:#6ee7b7">+1</td>
+    <td class="num" style="color:#fbbf24">剋「地」再 +6</td>
+    <td class="num">火抗 +1</td><td class="num">+1</td></tr><tr><td class="nm">水之</td><td class="num">第一階</td>
+    <td class="num" style="color:#6ee7b7">+1</td>
+    <td class="num" style="color:#fbbf24">剋「火」再 +6</td>
+    <td class="num">水抗 +1</td><td class="num">+1</td></tr><tr><td class="nm">風之</td><td class="num">第一階</td>
+    <td class="num" style="color:#6ee7b7">+1</td>
+    <td class="num" style="color:#fbbf24">剋「水」再 +6</td>
+    <td class="num">風抗 +1</td><td class="num">+1</td></tr><tr><td class="nm">地之</td><td class="num">第一階</td>
+    <td class="num" style="color:#6ee7b7">+1</td>
+    <td class="num" style="color:#fbbf24">剋「風」再 +6</td>
+    <td class="num">地抗 +1</td><td class="num">+1</td></tr><tr><td class="nm">爆炎</td><td class="num">第二階</td>
+    <td class="num" style="color:#6ee7b7">+3</td>
+    <td class="num" style="color:#fbbf24">剋「地」再 +9</td>
+    <td class="num">火抗 +2</td><td class="num">+2</td></tr><tr><td class="nm">海嘯</td><td class="num">第二階</td>
+    <td class="num" style="color:#6ee7b7">+3</td>
+    <td class="num" style="color:#fbbf24">剋「火」再 +9</td>
+    <td class="num">水抗 +2</td><td class="num">+2</td></tr><tr><td class="nm">暴風</td><td class="num">第二階</td>
+    <td class="num" style="color:#6ee7b7">+3</td>
+    <td class="num" style="color:#fbbf24">剋「水」再 +9</td>
+    <td class="num">風抗 +2</td><td class="num">+2</td></tr><tr><td class="nm">崩裂</td><td class="num">第二階</td>
+    <td class="num" style="color:#6ee7b7">+3</td>
+    <td class="num" style="color:#fbbf24">剋「風」再 +9</td>
+    <td class="num">地抗 +2</td><td class="num">+2</td></tr><tr><td class="nm">火靈</td><td class="num">第三階</td>
+    <td class="num" style="color:#6ee7b7">+5</td>
+    <td class="num" style="color:#fbbf24">剋「地」再 +12</td>
+    <td class="num">火抗 +3</td><td class="num">+3</td></tr><tr><td class="nm">水靈</td><td class="num">第三階</td>
+    <td class="num" style="color:#6ee7b7">+5</td>
+    <td class="num" style="color:#fbbf24">剋「火」再 +12</td>
+    <td class="num">水抗 +3</td><td class="num">+3</td></tr><tr><td class="nm">風靈</td><td class="num">第三階</td>
+    <td class="num" style="color:#6ee7b7">+5</td>
+    <td class="num" style="color:#fbbf24">剋「水」再 +12</td>
+    <td class="num">風抗 +3</td><td class="num">+3</td></tr><tr><td class="nm">地靈</td><td class="num">第三階</td>
+    <td class="num" style="color:#6ee7b7">+5</td>
+    <td class="num" style="color:#fbbf24">剋「風」再 +12</td>
+    <td class="num">地抗 +3</td><td class="num">+3</td></tr></tbody></table></div>
+<div class="sub" style="margin-top:6px">例:帶「火靈」的武器打<b>地屬性</b>的怪 → 固定傷害 +5,再加對剋 +12,合計每下 <b>+17</b>。打其他屬性只有 +5。</div></div>
+<div class="hint" style="margin-top:18px">──────── 以下是<b>暗黑詞條</b> ────────</div>
 <div class="hint">效仿暗黑破壞神的隨機詞條:部分裝備掉落時會<b>額外隨機附帶</b>能力。每件掉落各自獨立擲,同一款裝備每一件都可能不同。</div>
 <div class="mcard">
       <div class="ttl">泰坦皮帶</div>
