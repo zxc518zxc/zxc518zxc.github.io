@@ -82,6 +82,50 @@ for (const [z, keys] of Object.entries(GD.maps || {})) {
 }
 
 
+
+// ---- 🏷 道具效果標籤(2026-09-07)----
+// 麥哥反映「力量手套應該有力量+2,很多道具沒說明」——那些數值 gamedata 都有,
+// 先前只讀了 d/dmg/ac/safe,其餘欄位全被忽略。這裡把它們渲染成看得懂的中文。
+// ⚠ 只翻譯**確認過語意**的欄位;沒把握的寧可不顯示,也不要寫錯給玩家看。
+const SLOT_N = { helm: "頭盔", armor: "盔甲", tshirt: "內衣", cloak: "斗篷", boots: "靴子",
+  gloves: "手套", shield: "盾牌", ring: "戒指", amulet: "項鍊", belt: "腰帶", pet: "寵物裝備" };
+const REQ_N = { all: "全職業", knight: "騎士", mage: "法師", elf: "妖精", dark: "黑暗妖精" };
+const reqStr = r => !r || r === "all" ? "全職業" : r.split(",").map(x => REQ_N[x.trim()] || x).join("／");
+// 武器特殊效果(對照 engine 內的 eff 分支;只列玩家打得到、意義明確的)
+const EFF_N = {
+  cleave: "橫掃:攻擊波及場上其他敵人", crush: "重擊", pierce: "貫穿",
+  doublehit: "雙擊:機率追加一次攻擊", clawmark: "爪痕:機率造成武器最大傷害",
+  mp_drain: "吸取魔力", moonburst: "月光爆裂", magicstrike: "魔法打擊",
+  phantom_arrow: "幻影箭", firearrow: "火焰箭", rapidfire: "連射",
+};
+const num = (v, s) => (v ? [s.replace("N", (v > 0 ? "+" : "") + v)] : []);
+function itemFx(v) {
+  const t = [];
+  t.push(...num(v.str, "力量 N"), ...num(v.dex, "敏捷 N"), ...num(v.con, "體質 N"),
+    ...num(v.int, "智力 N"), ...num(v.wis, "精神 N"), ...num(v.cha, "魅力 N"));
+  t.push(...num(v.mhp, "最大HP N"), ...num(v.mmp, "最大MP N"),
+    ...num(v.hpR, "HP恢復 N"), ...num(v.mpR, "MP恢復 N"));
+  t.push(...num(v.hit, "命中 N"), ...num(v.dmgBonus, "傷害 N"), ...num(v.mdmg, "魔法傷害 N"), ...num(v.mr, "魔防 N"));
+  t.push(...num(v.resFire, "火抗 N"), ...num(v.resWater, "水抗 N"),
+    ...num(v.resWind, "風抗 N"), ...num(v.resEarth, "地抗 N"));
+  if (v.block) t.push("格擋 " + v.block + "%");
+  if (v.magicDrNonEle) t.push("無屬性魔法傷害 -" + v.magicDrNonEle + "%");
+  if (v.immStone) t.push("免疫石化");
+  if (v.immPoison) t.push("免疫中毒");
+  if (v.weightCap) t.push("負重上限 +" + v.weightCap);
+  if (v.eff && EFF_N[v.eff]) t.push(EFF_N[v.eff] + (v.effPct ? "(" + v.effPct + "%)" : ""));
+  if (v.sk || (v.grantSkills && v.grantSkills.length)) t.push("裝備時授予額外技能");
+  if (v.spd && v.spd !== 1) t.push(v.spd < 1 ? "攻擊速度快" : "攻擊速度慢");
+  if (v.w2h || v.twohanded || v.greatsword) t.push("雙手武器");
+  if (v.isBow) t.push("弓");
+  if (v.ranged) t.push("遠距離");
+  if (v.noEnh) t.push("無法強化");
+  if (v.enhCap) t.push("強化上限 +" + v.enhCap);
+  if (v.noSell) t.push("無法賣店");
+  if (v.tradable === false) t.push("無法交易");
+  return t;
+}
+
 // ---- 資料萃取 ----
 const TYPE_NAME = { wpn: "武器", arm: "防具", acc: "飾品", pot: "藥水", misc: "道具", material: "材料", skillbk: "技能書", etc: "其他" };
 const ELE_NAME = { fire: "火", water: "水", wind: "風", earth: "地", none: "無", "": "無" };
@@ -90,6 +134,9 @@ const items = Object.entries(GD.items || {}).filter(([id, v]) => !hiddenItem(id,
   id, n: v.n || id, t: TYPE_NAME[v.type] || v.type || "其他",
   d: v.d || "", legend: v.gachaWeight === 1,
   dmg: v.dmgS ? `${v.dmgS}/${v.dmgL || v.dmgS}` : "", ac: v.ac || 0, safe: v.safe ?? "",
+  slot: SLOT_N[v.slot] || "", req: reqStr(v.req), wcat: v.wcat || "",
+  p: v.p || 0, sell: Math.floor((v.p || 0) * 3 / 10),
+  fx: itemFx(v),
 })).sort((a, b) => a.n.localeCompare(b.n, "zh-Hant"));
 const itemOk = new Set(items.map(i => i.id));
 
@@ -289,7 +336,7 @@ fs.writeFileSync(path.join(OUT, "items.html"), page("道具圖鑑", "item", `
 ${chips(["武器", "防具", "飾品", "藥水", "道具", "材料", "技能書"].map(t => [items.filter(i => i.t === t).length, t]))}
 <div class="bar"><input id="q" placeholder="🔍 搜道具名稱"></div>
 <div class="chips" id="tchips"></div>
-<div class="wrap"><table><thead><tr><th>道具</th><th>類型</th><th>傷害</th><th>防禦</th><th>安定</th><th>說明</th></tr></thead><tbody id="tb"></tbody></table></div>`,
+<div class="wrap"><table><thead><tr><th>道具</th><th>類型</th><th>部位/類別</th><th>職業</th><th>傷害</th><th>防禦</th><th>安定</th><th>商店價</th><th>效果與說明</th></tr></thead><tbody id="tb"></tbody></table></div>`,
 `<script src="data.js"></script><script>
 const $=id=>document.getElementById(id);
 ${ESC}
@@ -297,8 +344,16 @@ const TS=["全部","武器","防具","飾品","藥水","道具","材料","技能
 $("tchips").innerHTML=TS.map(t=>'<span class="chip'+(t==="全部"?" on":"")+'" data-t="'+t+'">'+t+'</span>').join("");
 document.querySelectorAll("#tchips .chip").forEach(c=>c.onclick=()=>{document.querySelectorAll("#tchips .chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");tf=c.dataset.t;render();});
 function render(){const q=$("q").value.trim().toLowerCase();
-const list=WIKI.items.filter(i=>(tf==="全部"||i.t===tf)&&(!q||i.n.toLowerCase().includes(q)||(i.d||"").toLowerCase().includes(q)));
-$("tb").innerHTML=list.map(i=>"<tr><td class='nm'"+(i.legend?" style='color:#ffd700'":"")+">"+(i.legend?"★":"")+esc(i.n)+"</td><td class='num'>"+i.t+"</td><td class='num'>"+(i.dmg||"—")+"</td><td class='num'>"+(i.ac||"—")+"</td><td class='num'>"+((i.safe!==""&&(i.t==="武器"||i.t==="防具"))?"+"+i.safe:"—")+"</td><td style='color:#b6a684;font-size:13px'>"+esc(i.d||"")+"</td></tr>").join("")||"<tr><td colspan=6 style='color:#8f8067'>查無符合</td></tr>";}
+const list=WIKI.items.filter(i=>(tf==="全部"||i.t===tf)&&(!q||i.n.toLowerCase().includes(q)||(i.d||"").toLowerCase().includes(q)||(i.fx||[]).some(x=>x.toLowerCase().includes(q))));
+$("tb").innerHTML=list.map(i=>{
+const fx=(i.fx||[]).map(x=>"<span class='tag'>"+esc(x)+"</span>").join("");
+const desc=i.d?"<div style='color:#b6a684;font-size:13px;margin-top:3px'>"+i.d+"</div>":"";
+return "<tr><td class='nm'"+(i.legend?" style='color:#ffd700'":"")+">"+(i.legend?"★":"")+esc(i.n)+"</td>"+
+"<td class='num'>"+i.t+"</td><td class='num'>"+esc(i.slot||i.wcat||"—")+"</td><td class='num'>"+esc(i.req||"—")+"</td>"+
+"<td class='num'>"+(i.dmg||"—")+"</td><td class='num'>"+(i.ac||"—")+"</td>"+
+"<td class='num'>"+((i.safe!==""&&(i.t==="武器"||i.t==="防具"))?"+"+i.safe:"—")+"</td>"+
+"<td class='num'>"+(i.p?i.p.toLocaleString()+"<div style='color:#6b5f4c;font-size:11px'>賣店 "+i.sell.toLocaleString()+"</div>":"—")+"</td>"+
+"<td>"+(fx||desc?fx+desc:"<span style='color:#6b5f4c'>—</span>")+"</td></tr>";}).join("")||"<tr><td colspan=9 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script>`));
 
