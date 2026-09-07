@@ -645,11 +645,16 @@ let CHANGES = [];
 try { CHANGES = JSON.parse(fs.readFileSync(path.join(OUT, "changelog.json"), "utf8")); } catch (e) { }
 {
   const TCOL = { "新增": "#7bd14a", "調整": "#5b9bff", "修復": "#f5c451" };
+  // **粗體** → <b>(內容用 Markdown 寫,HTML 不會自己渲染)
+  const md = t => String(t || "").replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+  const cnt = its => ["新增", "調整", "修復"].map(t => [its.filter(i => i.t === t).length, t]).filter(([n]) => n > 0);
   const body = CHANGES.map(d => `<div class="mcard">
-    <div class="ttl">${d.date}<span class="tag" style="margin-left:8px">${d.items.length} 項</span></div>
-    ${d.items.map(i => `<div style="padding:7px 0;border-bottom:1px solid #2a2014">
+    <div class="ttl">${d.date}${d.title ? " ・ " + d.title : ""}</div>
+    ${d.note ? `<div class="sub" style="margin:2px 0 8px">${md(d.note)}</div>` : ""}
+    <div class="stats" style="margin:6px 0 10px;justify-content:flex-start">${cnt(d.items).map(([n, t]) => `<div class="stat-chip" style="padding:5px 12px;font-size:13px"><b style="color:${TCOL[t]}">${n}</b>${t}</div>`).join("")}</div>
+    ${d.items.map(i => `<div style="padding:9px 0;border-bottom:1px solid #2a2014">
       <span class="tag" style="color:${TCOL[i.t] || "#cbbb9b"}">${i.t}</span> <b style="color:#e8dcc8">${i.n}</b>
-      ${i.d ? `<div class="sub" style="margin-top:3px">${i.d}</div>` : ""}</div>`).join("")}
+      ${i.d ? `<div class="sub" style="margin-top:4px">${md(i.d)}</div>` : ""}</div>`).join("")}
   </div>`).join("") || '<div class="hint">尚無更新紀錄。</div>';
   fs.writeFileSync(path.join(OUT, "changelog.html"), page("版本更新", "log", `
 <div class="hint">遊戲的新增、調整與修復紀錄(由新到舊)。</div>
