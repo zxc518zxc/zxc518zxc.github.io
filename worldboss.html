@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>怪物掉落圖鑑 - 阿肥放置天堂 資料站</title><style>
+<title>世界王 - 阿肥放置天堂 資料站</title><style>
 *{box-sizing:border-box}body{background:#1a140c;color:#e8dcc8;font-family:"Microsoft JhengHei",sans-serif;margin:0;padding:0}
 header{background:#241b0f;border-bottom:2px solid #f5c451;padding:14px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
 header h1{color:#f5c451;font-size:20px;margin:0}
@@ -45,31 +45,26 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 </style></head><body>
 <header><h1>🏰 阿肥放置天堂</h1><nav>
 <a href="index.html" class="">首頁</a>
-<a href="monsters.html" class="on">怪物掉落圖鑑</a>
+<a href="monsters.html" class="">怪物掉落圖鑑</a>
 <a href="items.html" class="">道具圖鑑</a>
 <a href="skills.html" class="">技能介紹</a>
 <a href="zones.html" class="">獵場列表</a>
-<a href="worldboss.html" class="">世界王</a>
+<a href="worldboss.html" class="on">世界王</a>
 <a href="npc.html" class="">NPC 一覽</a>
 <a href="sets.html" class="">套裝效果</a>
 </nav></header><main>
-<div class="stats"><div class="stat-chip"><b>173</b>怪物</div><div class="stat-chip"><b>173</b>有掉落</div><div class="stat-chip"><b>14</b>世界王</div></div>
-<div class="bar"><input id="q" placeholder="🔍 搜怪物名,或輸入「道具名」找會掉它的怪"></div>
-<div class="hint">例:搜「銀長劍」→ 列出所有會掉它的怪物。</div>
-<div class="chips" id="lvchips"></div>
-<div class="wrap"><table><thead><tr><th>怪物</th><th>Lv</th><th>HP</th><th>經驗</th><th>屬性</th><th>出沒地點</th><th>掉落</th></tr></thead><tbody id="tb"></tbody></table></div></main>
+<div class="stats"><div class="stat-chip"><b>14</b>世界王</div></div>
+<div class="hint">王房會定時重生,參戰有機會取得專屬掉落。以下為目前開放的世界王。</div>
+<div class="bar"><input id="q" placeholder="🔍 搜世界王名 或 掉落道具名"></div>
+<div class="wrap"><table><thead><tr><th>世界王</th><th>Lv</th><th>HP</th><th>入場等級</th><th>重生</th><th>掉落</th></tr></thead><tbody id="tb"></tbody></table></div></main>
 <footer>資料自動同步自遊戲檔 · 產生於 2026-09-07</footer>
 <script src="data.js"></script><script>
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
-const LV=[["all","全部"],["1-20","1~20"],["21-40","21~40"],["41-60","41~60"],["61+","61+"]];let lv="all";
-$("lvchips").innerHTML=LV.map(([k,t])=>'<span class="chip'+(k==="all"?" on":"")+'" data-k="'+k+'">'+t+'</span>').join("");
-document.querySelectorAll("#lvchips .chip").forEach(c=>c.onclick=()=>{document.querySelectorAll("#lvchips .chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");lv=c.dataset.k;render();});
-function inLv(m){if(lv==="all")return true;if(lv==="61+")return m.lv>=61;const p=lv.split("-");return m.lv>=+p[0]&&m.lv<=+p[1];}
 function render(){const q=$("q").value.trim().toLowerCase();
-const list=WIKI.mobs.filter(m=>inLv(m)&&(!q||m.n.toLowerCase().includes(q)||m.drops.some(d=>d.n.toLowerCase().includes(q))));
-$("tb").innerHTML=list.map(m=>"<tr><td class='nm'>"+esc(m.n)+"</td><td class='num'>"+m.lv+"</td><td class='num'>"+m.hp.toLocaleString()+"</td><td class='num'>"+m.exp.toLocaleString()+"</td><td class='num'>"+m.e+"</td>"+
-"<td>"+(m.zones.length?m.zones.map(z=>"<span class='tag zn'>"+esc(z)+"</span>").join(""):"<span class='tag'>世界王房</span>")+"</td>"+
-"<td>"+(m.drops.length?m.drops.map(d=>"<span class='tag"+(d.legend?" lg":"")+"'>"+(d.legend?"★":"")+esc(d.n)+"</span>").join(""):"<span style='color:#6b5f4c'>—</span>")+"</td></tr>").join("")||"<tr><td colspan=7 style='color:#8f8067'>查無符合</td></tr>";}
+const list=WIKI.worldbosses.filter(w=>!q||w.n.toLowerCase().includes(q)||w.drops.some(d=>d.n.toLowerCase().includes(q)));
+$("tb").innerHTML=list.map(w=>"<tr><td class='nm'>"+esc(w.n)+(w.members.length?"<div style='font-weight:normal;color:#8f8067;font-size:12px'>同房 "+w.members.length+" 隻:"+esc(w.members.join("、"))+"</div>":"")+"</td>"+
+"<td class='num'>"+w.lv+"</td><td class='num'>"+w.hp.toLocaleString()+"</td><td class='num'>"+(w.minLv?"Lv"+w.minLv:"—")+"</td><td class='num'>"+(w.respawnMin?w.respawnMin+" 分":"—")+"</td>"+
+"<td>"+(w.drops.length?w.drops.map(d=>"<span class='tag"+(d.legend?" lg":"")+"'>"+(d.legend?"★":"")+esc(d.n)+"</span>").join(""):"<span style='color:#6b5f4c'>—</span>")+"</td></tr>").join("")||"<tr><td colspan=6 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script></body></html>

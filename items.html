@@ -28,26 +28,44 @@ footer{text-align:center;color:#6b5f4c;font-size:12px;padding:24px}
 .tile{background:#241b0f;border:1px solid #5a4a26;border-radius:14px;padding:22px;text-align:center;text-decoration:none;display:block}
 .tile:hover{border-color:#f5c451}
 .tile .em{font-size:34px}.tile .tt{color:#f5c451;font-size:18px;font-weight:bold;margin:8px 0 4px}.tile .dd{color:#b6a684;font-size:13px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:10px 0 16px}
+.stat-chip{background:#241b0f;border:1px solid #5a4a26;border-radius:10px;padding:7px 14px;font-size:14px;color:#b6a684}
+.stat-chip b{color:#f5c451;font-size:16px;margin-right:4px}
+table{border-collapse:collapse;width:100%;font-size:14px;background:#241b0f;border-radius:10px;overflow:hidden}
+th,td{padding:8px 10px;border-bottom:1px solid #3a2f1c;text-align:left;vertical-align:top}
+th{color:#f5c451;position:sticky;top:0;background:#2a2014;white-space:nowrap;font-size:13px}
+tr:hover td{background:#2a2014}
+td.nm{color:#e8dcc8;font-weight:bold;white-space:nowrap}
+td.num{text-align:right;white-space:nowrap;color:#b6a684}
+.tag{display:inline-block;background:#2a2014;border:1px solid #3a2f1c;border-radius:6px;padding:1px 7px;margin:2px 3px 0 0;font-size:12px;color:#cbbb9b;white-space:nowrap}
+.tag.lg{color:#ffd700;border-color:#6b5a20}
+.tag.zn{color:#7bd14a;border-color:#2f4a24}
+.wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.hint{color:#8f8067;font-size:12px;margin:-6px 0 12px}
 </style></head><body>
 <header><h1>🏰 阿肥放置天堂</h1><nav>
 <a href="index.html" class="">首頁</a>
 <a href="monsters.html" class="">怪物掉落圖鑑</a>
 <a href="items.html" class="on">道具圖鑑</a>
 <a href="skills.html" class="">技能介紹</a>
+<a href="zones.html" class="">獵場列表</a>
+<a href="worldboss.html" class="">世界王</a>
+<a href="npc.html" class="">NPC 一覽</a>
+<a href="sets.html" class="">套裝效果</a>
 </nav></header><main>
+<div class="stats"><div class="stat-chip"><b>121</b>武器</div><div class="stat-chip"><b>146</b>防具</div><div class="stat-chip"><b>40</b>飾品</div><div class="stat-chip"><b>11</b>藥水</div><div class="stat-chip"><b>19</b>道具</div><div class="stat-chip"><b>0</b>材料</div><div class="stat-chip"><b>116</b>技能書</div></div>
 <div class="bar"><input id="q" placeholder="🔍 搜道具名稱"></div>
 <div class="chips" id="tchips"></div>
-<div id="list"></div></main>
-<footer>資料自動同步自遊戲檔 · 產生於 2026-08-05</footer>
+<div class="wrap"><table><thead><tr><th>道具</th><th>類型</th><th>傷害</th><th>防禦</th><th>安定</th><th>說明</th></tr></thead><tbody id="tb"></tbody></table></div></main>
+<footer>資料自動同步自遊戲檔 · 產生於 2026-09-07</footer>
 <script src="data.js"></script><script>
 const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
 const TS=["全部","武器","防具","飾品","藥水","道具","材料","技能書","其他"];let tf="全部";
 $("tchips").innerHTML=TS.map(t=>'<span class="chip'+(t==="全部"?" on":"")+'" data-t="'+t+'">'+t+'</span>').join("");
 document.querySelectorAll("#tchips .chip").forEach(c=>c.onclick=()=>{document.querySelectorAll("#tchips .chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");tf=c.dataset.t;render();});
 function render(){const q=$("q").value.trim().toLowerCase();
-const list=WIKI.items.filter(i=>(tf==="全部"||i.t===tf)&&(!q||i.n.toLowerCase().includes(q))).slice(0,300);
-$("list").innerHTML=list.map(i=>'<div class="card"><img src="assets/icons/items/'+encodeURIComponent(i.n)+'.png" onerror="this.style.visibility=\'hidden\'">'+
-'<div><div class="ttl'+(i.legend?" legend":"")+'">'+(i.legend?"★":"")+i.n+' <span class="stat">'+i.t+(i.dmg?"・傷害 "+i.dmg:"")+(i.ac?"・防禦 "+i.ac:"")+(i.safe!==""&&(i.t==="武器"||i.t==="防具")?"・安定 +"+i.safe:"")+'</span></div>'+
-(i.d?'<div class="sub">'+i.d+"</div>":"")+"</div></div>").join("")||'<div class="stat">查無符合</div>';}
+const list=WIKI.items.filter(i=>(tf==="全部"||i.t===tf)&&(!q||i.n.toLowerCase().includes(q)||(i.d||"").toLowerCase().includes(q)));
+$("tb").innerHTML=list.map(i=>"<tr><td class='nm'"+(i.legend?" style='color:#ffd700'":"")+">"+(i.legend?"★":"")+esc(i.n)+"</td><td class='num'>"+i.t+"</td><td class='num'>"+(i.dmg||"—")+"</td><td class='num'>"+(i.ac||"—")+"</td><td class='num'>"+((i.safe!==""&&(i.t==="武器"||i.t==="防具"))?"+"+i.safe:"—")+"</td><td style='color:#b6a684;font-size:13px'>"+esc(i.d||"")+"</td></tr>").join("")||"<tr><td colspan=6 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script></body></html>
