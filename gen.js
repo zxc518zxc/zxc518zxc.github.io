@@ -26,6 +26,7 @@ const FEAT = {
   glory:   false, // 榮光進化(精通)
   potion:  false, // 嗑藥大師(精通)
   codex:   false, // 圖鑑
+  mcard:   false, // 商城:精通洗鍊卡 / 精通轉換卡
 };
 // 🐉 世界王等級上限(對應遊戲的 CMD `wbmax`;0=不限)。超過此等級的王不列出。
 const WB_MAX_LV = 52;
@@ -56,7 +57,11 @@ const HIDDEN_ITEM_RE = [];
 if (!FEAT.tianfa) HIDDEN_ITEM_RE.push(/傲慢之塔|天罰|奇美拉之皮/);
 if (!FEAT.doll)   HIDDEN_ITEM_RE.push(/娃娃/);
 if (!FEAT.castle) HIDDEN_ITEM_RE.push(/攻城|城堡/);
+// 用 id 精準擋(比對名稱會誤傷:「精通」兩字還有別的道具在用)
+const HIDDEN_ITEM_ID = new Set();
+if (!FEAT.mcard) { HIDDEN_ITEM_ID.add("mastery_reset_card"); HIDDEN_ITEM_ID.add("mastery_swap_card"); }
 const hiddenItem = (id, v) => {
+  if (HIDDEN_ITEM_ID.has(id)) return true;
   const s = (v.n || "") + " " + (v.d || "");
   return HIDDEN_ITEM_RE.some(re => re.test(s));
 };
@@ -331,8 +336,21 @@ for (const z of zones) if (AREA.zones.includes(z.id)) z.area = AREA.items.map(it
 
 // 🏘 NPC 一覽
 const NPC_TYPE = { shop: "商店", craft: "製作", skill: "技能", warehouse: "倉庫", exchange: "兌換",
-  teleport: "傳送", quest: "任務", bank: "銀行", rename: "改名", pray: "祈福", blackmarket: "黑市" };
-const HIDE_NPC = new Set([!FEAT.bm && "blackmarket", !FEAT.pray && "pray", "rename"].filter(Boolean));
+  teleport: "傳送", quest: "任務", bank: "銀行", rename: "改名", pray: "祈福", blackmarket: "黑市",
+  // 這幾種原本沒對照,會直接印出英文 type(ally/pledge/legend/bless/refine)
+  ally: "協力", pledge: "血盟", legend: "傳說", bless: "詞條", refine: "提煉" };
+
+// 🔒 收起中的內容 → 對應的村莊 NPC 也不列。
+// 對過 cmd/goline 全部 featOn 呼叫點(2026-09-07):14 項開關裡**只有這三項有村莊 NPC**,
+// 其餘(push/dice/slot/castle/doll/tianfa/codex/glory/potion/taxpool/mcard)都是遊戲介面內的
+// 分頁或商城品項,gamedata.towns 裡沒有對應 NPC,所以這份名單就是完整的。
+// ⚠ 不要擋的:潘朵拉(title 雖然寫「黑市」但刻意保留開放)、依斯巴(遺忘之島入口,
+//    靠搭船資格控管不是開關)、阿吸勒(冰涼商人,活動內容,沒綁開關)。
+const HIDE_NPC = new Set([
+  !FEAT.bm && "blackmarket",   // 黑市商人 厲飛雨
+  !FEAT.pray && "pray",        // 祈福女神 阿克婭
+  "rename",                    // 孟婆 轉世重生(開關 rename,目前恆收)
+].filter(Boolean));
 const towns = Object.entries(GD.towns || {}).map(([id, t]) => ({
   id, n: t.n || id,
   npcs: (t.npcs || []).filter(n => !HIDE_NPC.has(n.type)).map(n => ({
@@ -687,6 +705,9 @@ if (MASTERY.length) {
   const ABIL_N = { hit: "命中", dmg: "傷害", balance: "平衡(命中+傷害)" };
   // **粗體 → <b>**(Go 那邊的說明用 Markdown 寫,HTML 不會自己渲染)
   const md = s => String(s || "").replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+  // 🔒 精通洗鍊卡收起中(FEAT.mcard=false)→ 說明裡不要提它,否則玩家會跑來問哪裡買。
+  //    Go 的 AbilNote 是寫死字串,在呈現層把那一段拿掉即可。
+  const abilNote = t => FEAT.mcard ? t : String(t || "").replace("(或用「精通洗鍊卡」重選)", "");
   const matStr = m => {
     const nm = m.item === "(綁定武器)" ? "綁定武器" : itemName(m.item);
     return (m.en >= 0 ? "+" + m.en + " " : "") + nm + " ×" + m.n;
@@ -717,7 +738,7 @@ if (MASTERY.length) {
 
     // 三選一能力(武器大師/妖精三系)
     const ab = ms.abilities ? `
-      <div style="color:#f5c451;font-size:14px;margin:12px 0 4px">三選一能力${ms.abilNote ? ` <span style="color:#8f8067;font-size:12px;font-weight:normal">${md(ms.abilNote)}</span>` : ""}</div>
+      <div style="color:#f5c451;font-size:14px;margin:12px 0 4px">三選一能力${ms.abilNote ? ` <span style="color:#8f8067;font-size:12px;font-weight:normal">${md(abilNote(ms.abilNote))}</span>` : ""}</div>
       <div class="wrap"><table><thead><tr><th>能力</th>${lvCols(5).map(i => `<th>Lv${i}</th>`).join("")}</tr></thead><tbody>
       ${Object.entries(ms.abilities).map(([k, v]) => `<tr><td class="nm">${ABIL_N[k] || k}</td>${lvCols(5).map(i => `<td class="num">+${v[i] ?? 0}</td>`).join("")}</tr>`).join("")}
       </tbody></table></div>` : "";
