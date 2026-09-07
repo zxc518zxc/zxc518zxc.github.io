@@ -567,34 +567,60 @@ catch (e) { console.warn("⚠ 找不到 mastery.json → 跳過「精通升級�
 
 if (MASTERY.length) {
   const ABIL_N = { hit: "命中", dmg: "傷害", balance: "平衡(命中+傷害)" };
+  // **粗體 → <b>**(Go 那邊的說明用 Markdown 寫,HTML 不會自己渲染)
+  const md = s => String(s || "").replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
   const matStr = m => {
     const nm = m.item === "(綁定武器)" ? "綁定武器" : itemName(m.item);
     return (m.en >= 0 ? "+" + m.en + " " : "") + nm + " ×" + m.n;
   };
+  const cell = arr => (arr && arr.length) ? arr.map(matStr).join("<br>") : "—";
+  const lvCols = cap => Array.from({ length: cap }, (_, i) => i + 1);
+
   const secs = MASTERY.map(ms => {
     const rows = ms.levels.map(l => {
       const need = [];
-      if (l.exp) need.push("經驗 " + l.exp.toLocaleString());
-      if (l.feed) need.push("捐獻 " + itemName(l.feed));
-      if (l.gold) need.push("金幣 " + (l.gold / 10000).toLocaleString() + " 萬");
-      const mats = (l.mats || []).map(matStr).join("、");
-      return `<tr><td class="nm">Lv${l.from} → Lv${l.to}</td><td>${need.join("・") || "—"}</td><td>${mats || "—"}</td><td>${l.zone ? (zoneName[l.zone] || l.zone) : (l.note || "—")}</td></tr>`;
+      if (l.exp) need.push("擊殺經驗 " + l.exp.toLocaleString());
+      if (l.needs && l.needs.length) need.push(l.needs.map(matStr).join("<br>"));
+      const extra = [];
+      if (l.gold) extra.push("金幣 " + (l.gold / 10000).toLocaleString() + " 萬");
+      if (l.zone) extra.push(zoneName[l.zone] || l.zone);
+      return `<tr><td class="nm">Lv${l.from} → Lv${l.to}</td>
+        <td>${need.join("<br>") || "—"}</td>
+        <td>${cell(l.mats)}${l.gold ? (l.mats && l.mats.length ? "<br>" : "") + "金幣 " + (l.gold / 10000).toLocaleString() + " 萬" : ""}</td>
+        <td>${l.zone ? (zoneName[l.zone] || l.zone) : ""}${l.note ? (l.zone ? "<br>" : "") + `<span style="color:#8f8067;font-size:12px">${md(l.note)}</span>` : ""}${!l.zone && !l.note ? "—" : ""}</td></tr>`;
     }).join("");
-    const ab = ms.abilities ? `<div style="margin-top:10px"><div style="color:#f5c451;font-size:14px;margin-bottom:4px">三選一能力${ms.abilNote ? ` <span style="color:#8f8067;font-size:12px;font-weight:normal">${ms.abilNote}</span>` : ""}</div>
-      <div class="wrap"><table><thead><tr><th>能力</th>${[1, 2, 3, 4, 5].map(i => `<th>Lv${i}</th>`).join("")}</tr></thead><tbody>
-      ${Object.entries(ms.abilities).map(([k, v]) => `<tr><td class="nm">${ABIL_N[k] || k}</td>${[1, 2, 3, 4, 5].map(i => `<td class="num">+${v[i] ?? 0}</td>`).join("")}</tr>`).join("")}
-      </tbody></table></div></div>` : "";
+
+    // 固定效果 × 等級(力量/敏捷加成、礦道藥水%、魔力奪取吸取量、召喚獸加成)
+    const eff = (ms.effects && ms.effects.length) ? `
+      <div style="color:#f5c451;font-size:14px;margin:12px 0 4px">能力效果<span style="color:#8f8067;font-size:12px;font-weight:normal">(光環生效才有效)</span></div>
+      <div class="wrap"><table><thead><tr><th>效果</th>${lvCols(ms.cap).map(i => `<th>Lv${i}</th>`).join("")}</tr></thead><tbody>
+      ${ms.effects.map(e => `<tr><td class="nm">${e.name}</td>${lvCols(ms.cap).map(i => `<td class="num">+${e.values[i] ?? 0}${e.unit || ""}</td>`).join("")}</tr>`).join("")}
+      </tbody></table></div>` : "";
+
+    // 三選一能力(武器大師/妖精三系)
+    const ab = ms.abilities ? `
+      <div style="color:#f5c451;font-size:14px;margin:12px 0 4px">三選一能力${ms.abilNote ? ` <span style="color:#8f8067;font-size:12px;font-weight:normal">${md(ms.abilNote)}</span>` : ""}</div>
+      <div class="wrap"><table><thead><tr><th>能力</th>${lvCols(5).map(i => `<th>Lv${i}</th>`).join("")}</tr></thead><tbody>
+      ${Object.entries(ms.abilities).map(([k, v]) => `<tr><td class="nm">${ABIL_N[k] || k}</td>${lvCols(5).map(i => `<td class="num">+${v[i] ?? 0}</td>`).join("")}</tr>`).join("")}
+      </tbody></table></div>` : "";
+
+    const aura = ms.auraCost ? `
+      <div style="color:#f5c451;font-size:14px;margin:12px 0 4px">光環</div>
+      <div class="wrap"><table><thead><tr><th>費用</th><th>規則</th></tr></thead><tbody>
+      <tr><td class="nm">${ms.auraCost}</td><td style="font-size:13px">${md(ms.auraNote || "")}</td></tr>
+      </tbody></table></div>` : "";
+
     return `<div class="mcard" data-cls="${ms.cls || "全職業"}" data-n="${ms.name}">
       <div class="ttl">${ms.name} <span class="tag">${ms.cls || "全職業"}</span> <span class="tag">上限 Lv${ms.cap}</span></div>
-      <div class="sub" style="margin:4px 0 8px">${ms.desc}</div>
-      ${ms.auraCost ? `<div class="hint">💡 光環費用:${ms.auraCost}</div>` : ""}
-      <div class="wrap"><table><thead><tr><th>升級</th><th>所需累積</th><th>突破材料</th><th>指定狩獵區／備註</th></tr></thead><tbody>${rows}</tbody></table></div>
-      ${ab}</div>`;
+      <div class="sub" style="margin:4px 0 8px">${md(ms.desc)}</div>
+      <div style="color:#f5c451;font-size:14px;margin:10px 0 4px">升級表</div>
+      <div class="wrap"><table><thead><tr><th>升級</th><th>所需累積</th><th>突破消耗</th><th>指定狩獵區／備註</th></tr></thead><tbody>${rows}</tbody></table></div>
+      ${eff}${ab}${aura}</div>`;
   }).join("");
 
   fs.writeFileSync(path.join(OUT, "mastery.html"), page("精通升級數據", "mastery", `
 ${chips([[MASTERY.length, "種精通"]])}
-<div class="hint">各精通升到滿級需要什麼。光環要另外花金幣啟用,且大多在突破後歸零、需重新啟用。</div>
+<div class="hint">各精通升到滿級需要什麼、練起來加多少。<b>光環要另外花金幣啟用</b>,而且大多在突破後歸零、需重新啟用。</div>
 <div class="bar"><input id="q" placeholder="🔍 搜精通名 或 職業(例:妖精)"></div>
 <div id="list">${secs}</div>`,
   `<script>
