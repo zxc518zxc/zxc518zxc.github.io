@@ -62,12 +62,47 @@ th,td{padding:8px 10px;border-bottom:1px solid #3a2f1c;text-align:left;vertical-
 th{color:#f5c451;position:sticky;top:0;background:#2a2014;white-space:nowrap;font-size:13px}
 tr:hover td{background:#2a2014}
 td.nm{color:#e8dcc8;font-weight:bold;white-space:nowrap}
+td.vil{color:#e8dcc8;font-weight:bold;white-space:nowrap}
+td.vil .mo{display:none}   /* 手機卡片式才顯示,見 @media(max-width:640px) */
+td.vil .de{display:inline}
 td.num{text-align:right;white-space:nowrap;color:#b6a684}
 .tag{display:inline-block;background:#2a2014;border:1px solid #3a2f1c;border-radius:6px;padding:1px 7px;margin:2px 3px 0 0;font-size:12px;color:#cbbb9b;white-space:nowrap}
 .tag.lg{color:#ffd700;border-color:#6b5a20}
 .tag.zn{color:#7bd14a;border-color:#2f4a24}
 .tag.wb{color:#f5a97f;border-color:#6b3f28;background:rgba(245,169,127,.08)}
 .wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* ── 📱 手機:大表格改成「一筆一張卡」──
+   原本靠 .wrap 橫向捲動,技術上沒有溢出(body 仍是 375),但表格寬 512px,
+   玩家要左右滑才看得完整列,而且不會發現可以滑 ⇒ 改成堆疊卡片,欄位名用
+   data-l 屬性帶進來(td::before),完全不需要橫滑。
+   ⚠ 只套在有 #tb 的主資料表;.mcard 內的小表格欄位少,維持原樣照常橫捲。 */
+@media(max-width:640px){
+  #tb-wrap{overflow-x:visible}
+  #tb-wrap table{display:block;background:transparent;border-radius:0;font-size:14px}
+  #tb-wrap thead{display:none}
+  #tb-wrap tbody{display:block}
+  #tb-wrap tr{display:block;background:#241b0f;border:1px solid #3a2f1c;border-radius:10px;
+    padding:10px 12px;margin-bottom:10px}
+  /* ⚠ td 必須是 block(不能用 flex/grid):像「出沒怪」那種一格塞十幾個 <span class=tag>,
+     flex 會把它們排成不換行的一列而被切掉。block + 絕對定位的標籤才能自然換行。 */
+  #tb-wrap td{display:block;border:0;padding:3px 0 3px 76px;position:relative;
+    text-align:left;min-height:20px}
+  #tb-wrap td::before{content:attr(data-l);position:absolute;left:0;top:5px;width:70px;
+    color:#8a7d63;font-size:12px;line-height:1.3}
+  #tb-wrap td.nm{padding:0 0 7px;margin-bottom:5px;font-size:16px;
+    border-bottom:1px solid #33291a;white-space:normal}
+  #tb-wrap td.nm::before{display:none}
+  #tb-wrap td.num{text-align:left;white-space:normal}
+  #tb-wrap td.e{display:none}          /* 值是「—」的欄位在手機上不佔位 */
+  /* NPC:桌機版村莊名只印在該村第一列(表格分組),手機每張卡都要有 → 兩份切換 */
+  #tb-wrap td.vil .de{display:none}
+  #tb-wrap td.vil .mo{display:inline}
+  /* 少數技能效果是一整句話(例:「即死:對不死系怪物判定…」),.tag 的 nowrap 會撐出去 */
+  #tb-wrap .tag{white-space:normal}
+  #tb-wrap td[colspan]{display:block}
+  #tb-wrap td[colspan]::before{display:none}
+}
 .hint{color:#8f8067;font-size:12px;margin:-6px 0 12px}
 .mcard{background:#241b0f;border:1px solid #3a2f1c;border-radius:12px;padding:14px 16px;margin-bottom:14px}
 .mcard .ttl{color:#f5c451;font-size:17px;font-weight:bold;margin-bottom:2px}
@@ -363,6 +398,15 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
       <div class="wrap"><table><thead><tr><th>費用</th><th>規則</th></tr></thead><tbody>
       <tr><td class="nm">等級 × 1 萬金幣/小時</td><td style="font-size:13px">每次 +1 小時、最多累計 12 小時、離線照常倒數;<b>突破後光環與累計時間歸零</b>,需重新啟用。餵養／突破道具<b>上鎖不計</b>。</td></tr>
       </tbody></table></div></div></div></main>
+<script>
+/* 📱 手機卡片式:值是「—」的欄位加 .e 由 CSS 隱藏,免得每張卡都一堆空白列。
+   各頁 render 是各自的 innerHTML 賦值,所以用 MutationObserver 統一處理一次就好。 */
+(function(){var tb=document.getElementById('tb');if(!tb)return;
+ function mark(){var a=tb.querySelectorAll('td');for(var i=0;i<a.length;i++){
+   var t=(a[i].textContent||'').trim();
+   if(t==='—'||t==='')a[i].classList.add('e');else a[i].classList.remove('e');}}
+ new MutationObserver(mark).observe(tb,{childList:true});mark();})();
+</script>
 <footer>資料自動同步自遊戲檔 · 產生於 2026-09-07</footer>
 <script>
 const $=id=>document.getElementById(id);

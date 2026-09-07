@@ -422,12 +422,47 @@ th,td{padding:8px 10px;border-bottom:1px solid #3a2f1c;text-align:left;vertical-
 th{color:#f5c451;position:sticky;top:0;background:#2a2014;white-space:nowrap;font-size:13px}
 tr:hover td{background:#2a2014}
 td.nm{color:#e8dcc8;font-weight:bold;white-space:nowrap}
+td.vil{color:#e8dcc8;font-weight:bold;white-space:nowrap}
+td.vil .mo{display:none}   /* 手機卡片式才顯示,見 @media(max-width:640px) */
+td.vil .de{display:inline}
 td.num{text-align:right;white-space:nowrap;color:#b6a684}
 .tag{display:inline-block;background:#2a2014;border:1px solid #3a2f1c;border-radius:6px;padding:1px 7px;margin:2px 3px 0 0;font-size:12px;color:#cbbb9b;white-space:nowrap}
 .tag.lg{color:#ffd700;border-color:#6b5a20}
 .tag.zn{color:#7bd14a;border-color:#2f4a24}
 .tag.wb{color:#f5a97f;border-color:#6b3f28;background:rgba(245,169,127,.08)}
 .wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* ── 📱 手機:大表格改成「一筆一張卡」──
+   原本靠 .wrap 橫向捲動,技術上沒有溢出(body 仍是 375),但表格寬 512px,
+   玩家要左右滑才看得完整列,而且不會發現可以滑 ⇒ 改成堆疊卡片,欄位名用
+   data-l 屬性帶進來(td::before),完全不需要橫滑。
+   ⚠ 只套在有 #tb 的主資料表;.mcard 內的小表格欄位少,維持原樣照常橫捲。 */
+@media(max-width:640px){
+  #tb-wrap{overflow-x:visible}
+  #tb-wrap table{display:block;background:transparent;border-radius:0;font-size:14px}
+  #tb-wrap thead{display:none}
+  #tb-wrap tbody{display:block}
+  #tb-wrap tr{display:block;background:#241b0f;border:1px solid #3a2f1c;border-radius:10px;
+    padding:10px 12px;margin-bottom:10px}
+  /* ⚠ td 必須是 block(不能用 flex/grid):像「出沒怪」那種一格塞十幾個 <span class=tag>,
+     flex 會把它們排成不換行的一列而被切掉。block + 絕對定位的標籤才能自然換行。 */
+  #tb-wrap td{display:block;border:0;padding:3px 0 3px 76px;position:relative;
+    text-align:left;min-height:20px}
+  #tb-wrap td::before{content:attr(data-l);position:absolute;left:0;top:5px;width:70px;
+    color:#8a7d63;font-size:12px;line-height:1.3}
+  #tb-wrap td.nm{padding:0 0 7px;margin-bottom:5px;font-size:16px;
+    border-bottom:1px solid #33291a;white-space:normal}
+  #tb-wrap td.nm::before{display:none}
+  #tb-wrap td.num{text-align:left;white-space:normal}
+  #tb-wrap td.e{display:none}          /* 值是「—」的欄位在手機上不佔位 */
+  /* NPC:桌機版村莊名只印在該村第一列(表格分組),手機每張卡都要有 → 兩份切換 */
+  #tb-wrap td.vil .de{display:none}
+  #tb-wrap td.vil .mo{display:inline}
+  /* 少數技能效果是一整句話(例:「即死:對不死系怪物判定…」),.tag 的 nowrap 會撐出去 */
+  #tb-wrap .tag{white-space:normal}
+  #tb-wrap td[colspan]{display:block}
+  #tb-wrap td[colspan]::before{display:none}
+}
 .hint{color:#8f8067;font-size:12px;margin:-6px 0 12px}
 .mcard{background:#241b0f;border:1px solid #3a2f1c;border-radius:12px;padding:14px 16px;margin-bottom:14px}
 .mcard .ttl{color:#f5c451;font-size:17px;font-weight:bold;margin-bottom:2px}
@@ -460,6 +495,15 @@ const page = (title, active, body, extra = "") => `<!DOCTYPE html>
 <nav>${NAV.map(([href, key, icon, label]) =>
   `<a href="${href}" class="${active === key ? "on" : ""}"><span class="i">${icon}</span>${label}</a>`).join("\n")}
 </nav></header><main>${body}</main>
+<script>
+/* 📱 手機卡片式:值是「—」的欄位加 .e 由 CSS 隱藏,免得每張卡都一堆空白列。
+   各頁 render 是各自的 innerHTML 賦值,所以用 MutationObserver 統一處理一次就好。 */
+(function(){var tb=document.getElementById('tb');if(!tb)return;
+ function mark(){var a=tb.querySelectorAll('td');for(var i=0;i<a.length;i++){
+   var t=(a[i].textContent||'').trim();
+   if(t==='—'||t==='')a[i].classList.add('e');else a[i].classList.remove('e');}}
+ new MutationObserver(mark).observe(tb,{childList:true});mark();})();
+</script>
 <footer>資料自動同步自遊戲檔 · 產生於 ${new Date().toISOString().slice(0, 10)}</footer>
 ${extra.split("data.js").join("data.js?v=" + DATA_V)}</body></html>`;
 
@@ -494,7 +538,7 @@ ${chips([[mobList.length, "怪物"], [mobList.filter(m => m.drops.length).length
 <div class="bar"><input id="q" placeholder="🔍 搜怪物名,或輸入「道具名」找會掉它的怪"></div>
 <div class="hint">例:搜「銀長劍」→ 列出所有會掉它的怪物。</div>
 <div class="chips" id="lvchips"></div>
-<div class="wrap"><table><thead><tr><th>怪物</th><th>Lv</th><th>HP</th><th>經驗</th><th>屬性</th><th>出沒地點</th><th>掉落</th></tr></thead><tbody id="tb"></tbody></table></div>`,
+<div class="wrap" id="tb-wrap"><table><thead><tr><th>怪物</th><th>Lv</th><th>HP</th><th>經驗</th><th>屬性</th><th>出沒地點</th><th>掉落</th></tr></thead><tbody id="tb"></tbody></table></div>`,
 `<script src="data.js"></script><script>
 const $=id=>document.getElementById(id);
 ${ESC}
@@ -504,9 +548,9 @@ document.querySelectorAll("#lvchips .chip").forEach(c=>c.onclick=()=>{document.q
 function inLv(m){if(lv==="all")return true;if(lv==="61+")return m.lv>=61;const p=lv.split("-");return m.lv>=+p[0]&&m.lv<=+p[1];}
 function render(){const q=$("q").value.trim().toLowerCase();
 const list=WIKI.mobs.filter(m=>inLv(m)&&(!q||m.n.toLowerCase().includes(q)||m.drops.some(d=>d.n.toLowerCase().includes(q))));
-$("tb").innerHTML=list.map(m=>"<tr><td class='nm'>"+esc(m.n)+"</td><td class='num'>"+m.lv+"</td><td class='num'>"+m.hp.toLocaleString()+"</td><td class='num'>"+m.exp.toLocaleString()+"</td><td class='num'>"+m.e+"</td>"+
-"<td>"+(m.wbOnly?"<span class='tag wb'>🐉 世界王房限定</span>":(m.zones.length?m.zones.map(z=>"<span class='tag zn'>"+esc(z)+"</span>").join(""):"<span class='tag'>—</span>"))+"</td>"+
-"<td>"+(m.drops.length?m.drops.map(d=>"<span class='tag"+(d.legend?" lg":"")+"'>"+(d.legend?"★":"")+esc(d.n)+"</span>").join(""):"<span style='color:#6b5f4c'>—</span>")+"</td></tr>").join("")||"<tr><td colspan=7 style='color:#8f8067'>查無符合</td></tr>";}
+$("tb").innerHTML=list.map(m=>"<tr><td class='nm'>"+esc(m.n)+"</td><td class='num' data-l='等級'>Lv "+m.lv+"</td><td class='num' data-l='HP'>"+m.hp.toLocaleString()+"</td><td class='num' data-l='經驗'>"+m.exp.toLocaleString()+"</td><td class='num' data-l='屬性'>"+m.e+"</td>"+
+"<td data-l='出沒地點'>"+(m.wbOnly?"<span class='tag wb'>🐉 世界王房限定</span>":(m.zones.length?m.zones.map(z=>"<span class='tag zn'>"+esc(z)+"</span>").join(""):"<span class='tag'>—</span>"))+"</td>"+
+"<td data-l='掉落'>"+(m.drops.length?m.drops.map(d=>"<span class='tag"+(d.legend?" lg":"")+"'>"+(d.legend?"★":"")+esc(d.n)+"</span>").join(""):"<span style='color:#6b5f4c'>—</span>")+"</td></tr>").join("")||"<tr><td colspan=7 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script>`));
 
@@ -515,7 +559,7 @@ fs.writeFileSync(path.join(OUT, "items.html"), page("道具圖鑑", "item", `
 ${chips(["武器", "防具", "飾品", "藥水", "道具", "材料", "技能書"].map(t => [items.filter(i => i.t === t).length, t]))}
 <div class="bar"><input id="q" placeholder="🔍 搜道具名稱"></div>
 <div class="chips" id="tchips"></div>
-<div class="wrap"><table><thead><tr><th>道具</th><th>類型</th><th>部位/類別</th><th>職業</th><th>傷害</th><th>防禦</th><th>安定</th><th>價格</th><th>效果與說明</th></tr></thead><tbody id="tb"></tbody></table></div>`,
+<div class="wrap" id="tb-wrap"><table><thead><tr><th>道具</th><th>類型</th><th>部位/類別</th><th>職業</th><th>傷害</th><th>防禦</th><th>安定</th><th>價格</th><th>效果與說明</th></tr></thead><tbody id="tb"></tbody></table></div>`,
 `<script src="data.js"></script><script>
 const $=id=>document.getElementById(id);
 ${ESC}
@@ -530,11 +574,11 @@ const desc=i.d?"<div style='color:#b6a684;font-size:13px;margin-top:3px'>"+i.d+"
 const src=(i.src&&i.src.length)?"<div style='margin-top:3px;font-size:12px;color:#7bd14a'>📍 掉落:"+i.src.map(x=>esc(x)).join("、")+(i.src.length>=8?" …等":"")+"</div>":"";
 const area=(i.area&&i.area.length)?"<div style='margin-top:3px;font-size:12px;color:#7bd14a'>⛏ 採集地區:"+i.area.map(x=>esc(x)).join("、")+"(在這些地方打任何怪都可能掉)</div>":"";
 return "<tr><td class='nm'"+(i.legend?" style='color:#ffd700'":"")+">"+(i.legend?"★":"")+esc(i.n)+"</td>"+
-"<td class='num'>"+i.t+"</td><td class='num'>"+esc(i.slot||i.wcat||"—")+"</td><td class='num'>"+esc(i.req||"—")+"</td>"+
-"<td class='num'>"+(i.dmg||"—")+"</td><td class='num'>"+(i.ac||"—")+"</td>"+
-"<td class='num'>"+((i.safe!==""&&(i.t==="武器"||i.t==="防具"))?"+"+i.safe:"—")+"</td>"+
-"<td class='num'>"+(i.p?((i.buy?"<div style='color:#7bd14a'>商店賣 "+i.p.toLocaleString()+"</div>":"")+"<div style='color:#b6a684'>賣店回收 "+i.sell.toLocaleString()+"</div>"):"—")+"</td>"+
-"<td>"+(fx||desc||src||area?fx+desc+src+area:"<span style='color:#6b5f4c'>—</span>")+"</td></tr>";}).join("")||"<tr><td colspan=9 style='color:#8f8067'>查無符合</td></tr>";}
+"<td class='num' data-l='類型'>"+i.t+"</td><td class='num' data-l='部位'>"+esc(i.slot||i.wcat||"—")+"</td><td class='num' data-l='職業'>"+esc(i.req||"—")+"</td>"+
+"<td class='num' data-l='傷害'>"+(i.dmg||"—")+"</td><td class='num' data-l='防禦'>"+(i.ac||"—")+"</td>"+
+"<td class='num' data-l='安定'>"+((i.safe!==""&&(i.t==="武器"||i.t==="防具"))?"+"+i.safe:"—")+"</td>"+
+"<td class='num' data-l='價格'>"+(i.p?((i.buy?"<div style='color:#7bd14a'>商店賣 "+i.p.toLocaleString()+"</div>":"")+"<div style='color:#b6a684'>賣店回收 "+i.sell.toLocaleString()+"</div>"):"—")+"</td>"+
+"<td data-l='效果'>"+(fx||desc||src||area?fx+desc+src+area:"<span style='color:#6b5f4c'>—</span>")+"</td></tr>";}).join("")||"<tr><td colspan=9 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script>`));
 
@@ -543,7 +587,7 @@ fs.writeFileSync(path.join(OUT, "skills.html"), page("技能介紹", "skill", `
 ${chips([[skills.length, "技能"], ...["攻擊", "治癒", "增益", "被動", "工具", "轉換"].map(t => [skills.filter(s => s.t === t).length, t])])}
 <div class="bar"><input id="q" placeholder="🔍 搜技能名稱、效果(例:即死、吸血、暈眩)"><select id="cls"><option value="all">全職業</option><option value="k">騎士</option><option value="m">法師</option><option value="e">妖精</option><option value="dk">黑暗妖精</option></select></div>
 <div class="chips" id="tchips"></div>
-<div class="wrap"><table><thead><tr><th>技能</th><th>類型</th><th>階級</th><th>MP</th><th>學習需求</th><th>效果與說明</th></tr></thead><tbody id="tb"></tbody></table></div>`,
+<div class="wrap" id="tb-wrap"><table><thead><tr><th>技能</th><th>類型</th><th>階級</th><th>MP</th><th>學習需求</th><th>效果與說明</th></tr></thead><tbody id="tb"></tbody></table></div>`,
 `<script src="data.js"></script><script>
 const $=id=>document.getElementById(id);
 ${ESC}
@@ -558,9 +602,9 @@ const list=WIKI.skills.filter(s=>(tf==="全部"||s.t===tf)&&(c==="all"||s[c]>0)&
 $("tb").innerHTML=list.map(s=>{
 const fx=(s.fx||[]).map(x=>"<span class='tag'>"+esc(x)+"</span>").join("");
 const desc=s.d?"<div style='color:#b6a684;font-size:13px;margin-top:3px'>"+esc(s.d)+"</div>":"";
-return "<tr><td class='nm'>"+esc(s.n)+"</td><td class='num'>"+esc(s.t)+"</td><td class='num'>"+(s.tier||"—")+"</td><td class='num'>"+(s.mp||"—")+"</td>"+
-"<td class='num' style='font-size:12px'>"+reqStr(s)+"</td>"+
-"<td>"+(fx||desc?fx+desc:"<span style='color:#6b5f4c'>—</span>")+"</td></tr>";}).join("")||"<tr><td colspan=6 style='color:#8f8067'>查無符合</td></tr>";}
+return "<tr><td class='nm'>"+esc(s.n)+"</td><td class='num' data-l='類型'>"+esc(s.t)+"</td><td class='num' data-l='階級'>"+(s.tier||"—")+"</td><td class='num' data-l='MP'>"+(s.mp||"—")+"</td>"+
+"<td class='num' data-l='學習條件' style='font-size:12px'>"+reqStr(s)+"</td>"+
+"<td data-l='效果'>"+(fx||desc?fx+desc:"<span style='color:#6b5f4c'>—</span>")+"</td></tr>";}).join("")||"<tr><td colspan=6 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;$("cls").onchange=render;render();
 </script>`));
 
@@ -569,7 +613,7 @@ fs.writeFileSync(path.join(OUT, "zones.html"), page("獵場列表", "zone", `
 ${chips([[zones.length, "獵場"], [zones.filter(z => z.cat === "野外").length, "野外"], [zones.filter(z => z.cat === "地監").length, "地監"]])}
 <div class="bar"><input id="q" placeholder="🔍 搜獵場名,或輸入「怪物名」找牠出沒的獵場"></div>
 <div class="chips" id="cchips"></div>
-<div class="wrap"><table><thead><tr><th>獵場</th><th>類型</th><th>怪物等級</th><th>出沒怪物</th></tr></thead><tbody id="tb"></tbody></table></div>`,
+<div class="wrap" id="tb-wrap"><table><thead><tr><th>獵場</th><th>類型</th><th>怪物等級</th><th>出沒怪物</th></tr></thead><tbody id="tb"></tbody></table></div>`,
 `<script src="data.js"></script><script>
 const $=id=>document.getElementById(id);
 ${ESC}
@@ -578,7 +622,7 @@ $("cchips").innerHTML=CS.map(t=>'<span class="chip'+(t==="全部"?" on":"")+'" d
 document.querySelectorAll("#cchips .chip").forEach(c=>c.onclick=()=>{document.querySelectorAll("#cchips .chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");cf=c.dataset.t;render();});
 function render(){const q=$("q").value.trim().toLowerCase();
 const list=WIKI.zones.filter(z=>(cf==="全部"||z.cat===cf)&&(!q||z.n.toLowerCase().includes(q)||z.mobs.some(m=>m.toLowerCase().includes(q))));
-$("tb").innerHTML=list.map(z=>"<tr><td class='nm'>"+esc(z.n)+(z.area?"<div style='font-weight:normal;color:#7bd14a;font-size:12px'>⛏ 採集:"+z.area.map(x=>esc(x)).join("、")+"</div>":"")+"</td><td class='num'>"+z.cat+"</td><td class='num'>"+(z.lvMin?"Lv"+z.lvMin+"~"+z.lvMax:"—")+"</td><td>"+z.mobs.map(m=>"<span class='tag'>"+esc(m)+"</span>").join("")+"</td></tr>").join("")||"<tr><td colspan=4 style='color:#8f8067'>查無符合</td></tr>";}
+$("tb").innerHTML=list.map(z=>"<tr><td class='nm'>"+esc(z.n)+(z.area?"<div style='font-weight:normal;color:#7bd14a;font-size:12px'>⛏ 採集:"+z.area.map(x=>esc(x)).join("、")+"</div>":"")+"</td><td class='num' data-l='類型'>"+z.cat+"</td><td class='num' data-l='怪物等級'>"+(z.lvMin?"Lv"+z.lvMin+"~"+z.lvMax:"—")+"</td><td data-l='出沒怪'>"+z.mobs.map(m=>"<span class='tag'>"+esc(m)+"</span>").join("")+"</td></tr>").join("")||"<tr><td colspan=4 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script>`));
 
@@ -587,15 +631,15 @@ fs.writeFileSync(path.join(OUT, "worldboss.html"), page("世界王", "wb", `
 ${chips([[worldbosses.length, "世界王"]])}
 <div class="hint">王房會定時重生,參戰有機會取得專屬掉落。以下為目前開放的世界王。</div>
 <div class="bar"><input id="q" placeholder="🔍 搜世界王名 或 掉落道具名"></div>
-<div class="wrap"><table><thead><tr><th>世界王</th><th>Lv</th><th>HP</th><th>入場等級</th><th>重生</th><th>掉落</th></tr></thead><tbody id="tb"></tbody></table></div>`,
+<div class="wrap" id="tb-wrap"><table><thead><tr><th>世界王</th><th>Lv</th><th>HP</th><th>入場等級</th><th>重生</th><th>掉落</th></tr></thead><tbody id="tb"></tbody></table></div>`,
 `<script src="data.js"></script><script>
 const $=id=>document.getElementById(id);
 ${ESC}
 function render(){const q=$("q").value.trim().toLowerCase();
 const list=WIKI.worldbosses.filter(w=>!q||w.n.toLowerCase().includes(q)||w.drops.some(d=>d.n.toLowerCase().includes(q)));
 $("tb").innerHTML=list.map(w=>"<tr><td class='nm'>"+esc(w.n)+(w.members.length?"<div style='font-weight:normal;color:#8f8067;font-size:12px'>同房 "+w.members.length+" 隻:"+esc(w.members.join("、"))+"</div>":"")+"</td>"+
-"<td class='num'>"+w.lv+"</td><td class='num'>"+w.hp.toLocaleString()+"</td><td class='num'>"+(w.minLv?"Lv"+w.minLv:"—")+"</td><td class='num'>"+(w.respawnMin?w.respawnMin+" 分":"—")+"</td>"+
-"<td>"+(w.drops.length?w.drops.map(d=>"<span class='tag"+(d.legend?" lg":"")+"'>"+(d.legend?"★":"")+esc(d.n)+"</span>").join(""):"<span style='color:#6b5f4c'>—</span>")+"</td></tr>").join("")||"<tr><td colspan=6 style='color:#8f8067'>查無符合</td></tr>";}
+"<td class='num' data-l='等級'>Lv "+w.lv+"</td><td class='num' data-l='HP'>"+w.hp.toLocaleString()+"</td><td class='num' data-l='入場等級'>"+(w.minLv?"Lv"+w.minLv:"—")+"</td><td class='num' data-l='重生'>"+(w.respawnMin?w.respawnMin+" 分":"—")+"</td>"+
+"<td data-l='掉落'>"+(w.drops.length?w.drops.map(d=>"<span class='tag"+(d.legend?" lg":"")+"'>"+(d.legend?"★":"")+esc(d.n)+"</span>").join(""):"<span style='color:#6b5f4c'>—</span>")+"</td></tr>").join("")||"<tr><td colspan=6 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script>`));
 
@@ -603,14 +647,14 @@ $("q").oninput=render;render();
 fs.writeFileSync(path.join(OUT, "npc.html"), page("NPC 一覽", "npc", `
 ${chips([[towns.length, "村莊"], [towns.reduce((s, t) => s + t.npcs.length, 0), "NPC"]])}
 <div class="bar"><input id="q" placeholder="🔍 搜 NPC 名、村莊名 或 服務(例:製作)"></div>
-<div class="wrap"><table><thead><tr><th>村莊</th><th>NPC</th><th>身分</th><th>說明</th></tr></thead><tbody id="tb"></tbody></table></div>`,
+<div class="wrap" id="tb-wrap"><table><thead><tr><th>村莊</th><th>NPC</th><th>身分</th><th>說明</th></tr></thead><tbody id="tb"></tbody></table></div>`,
 `<script src="data.js"></script><script>
 const $=id=>document.getElementById(id);
 ${ESC}
 function render(){const q=$("q").value.trim().toLowerCase();
 const rows=[];
 for(const t of WIKI.towns){const ns=t.npcs.filter(n=>!q||n.n.toLowerCase().includes(q)||t.n.toLowerCase().includes(q)||(n.t||"").toLowerCase().includes(q)||(n.title||"").toLowerCase().includes(q));
-ns.forEach((n,i)=>rows.push("<tr><td class='nm'>"+(i===0?esc(t.n):"")+"</td><td class='nm'>"+esc(n.n)+"</td><td class='num'>"+esc(n.title||n.t)+"</td><td style='color:#b6a684;font-size:13px'>"+esc(n.d||"")+"</td></tr>"));}
+ns.forEach((n,i)=>rows.push("<tr><td class='vil' data-l='村莊'><span class='de'>"+(i===0?esc(t.n):"")+"</span><span class='mo'>"+esc(t.n)+"</span></td><td class='nm'>"+esc(n.n)+"</td><td class='num' data-l='身分'>"+esc(n.title||n.t)+"</td><td data-l='說明' style='color:#b6a684;font-size:13px'>"+esc(n.d||"")+"</td></tr>"));}
 $("tb").innerHTML=rows.join("")||"<tr><td colspan=4 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script>`));
@@ -620,13 +664,13 @@ fs.writeFileSync(path.join(OUT, "sets.html"), page("套裝效果", "set", `
 ${chips([[sets.length, "套裝"]])}
 <div class="hint">湊齊整套裝備即可獲得額外加成。</div>
 <div class="bar"><input id="q" placeholder="🔍 搜套裝名 或 裝備名"></div>
-<div class="wrap"><table><thead><tr><th>套裝</th><th>湊齊加成</th><th>組成裝備</th></tr></thead><tbody id="tb"></tbody></table></div>`,
+<div class="wrap" id="tb-wrap"><table><thead><tr><th>套裝</th><th>湊齊加成</th><th>組成裝備</th></tr></thead><tbody id="tb"></tbody></table></div>`,
 `<script src="data.js"></script><script>
 const $=id=>document.getElementById(id);
 ${ESC}
 function render(){const q=$("q").value.trim().toLowerCase();
 const list=WIKI.sets.filter(s=>!q||s.n.toLowerCase().includes(q)||s.items.some(i=>i.toLowerCase().includes(q)));
-$("tb").innerHTML=list.map(s=>"<tr><td class='nm'>"+esc(s.n)+"</td><td class='num'>"+(s.ac?"防禦 +"+s.ac:"—")+"</td><td>"+s.items.map(i=>"<span class='tag'>"+esc(i)+"</span>").join("")+"</td></tr>").join("")||"<tr><td colspan=3 style='color:#8f8067'>查無符合</td></tr>";}
+$("tb").innerHTML=list.map(s=>"<tr><td class='nm'>"+esc(s.n)+"</td><td class='num' data-l='效果'>"+(s.ac?"防禦 +"+s.ac:"—")+"</td><td data-l='組成'>"+s.items.map(i=>"<span class='tag'>"+esc(i)+"</span>").join("")+"</td></tr>").join("")||"<tr><td colspan=3 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script>`));
 
