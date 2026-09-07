@@ -145,6 +145,65 @@ function itemFx(v) {
   return t;
 }
 
+
+// ---- ✨ 技能效果標籤(2026-09-07;麥哥要求比照原作者做詳細版)----
+// gamedata 的 skills 有 49 種欄位,先前只讀了 n/type/tier/mp/reqK/reqM/reqE。
+// ⚠ 只翻譯**確認過語意**的欄位(reqWpn 的四種值對照 afk/skills2b.go:85 的 switch)。
+const SK_TYPE = { atk: "攻擊", heal: "治癒", buff: "增益", manual: "工具", passive: "被動", convert: "轉換" };
+const SK_ELE = { fire: "火", water: "水", wind: "風", earth: "地", none: "無" };
+const SK_WPN = { bow: "需裝備弓", nonbow: "需裝備近戰武器(不可用弓)", w2h: "需裝備雙手武器", greatsword: "需裝備巨劍" };
+const SK_MEFF = { teleport: "瞬間移動到其他地圖", sense: "偵測周遭環境", charm: "魅惑一隻怪物,使其暫時為你而戰" };
+// 增益技能的效果鍵 → 中文(對照 index.html 的 DOLL_FX_N,同一套鍵)
+const SK_EFF_N = { str: "力量", dex: "敏捷", con: "體質", int: "智力", wis: "精神", cha: "魅力",
+  ac: "防禦 AC", mr: "魔防 MR", er: "迴避 ER", dr: "傷害減免",
+  meleeDmg: "近距離傷害", meleeHit: "近距離命中", rangedDmg: "遠距離傷害", rangedHit: "遠距離命中",
+  extraDmg: "額外傷害", extraHit: "額外命中", mgd: "魔法傷害", mpR: "MP恢復", hpRegen: "HP回復",
+  mhp: "最大HP", mmp: "最大MP", extraMp: "額外魔法點數",
+  resFire: "火抗", resWater: "水抗", resWind: "風抗", resEarth: "地抗" };
+const PCT_KEYS = new Set(["er", "critM", "critR"]);
+function skillBuff(d) {
+  if (!d || typeof d !== "object") return [];
+  return Object.entries(d).map(([kk, v]) => {
+    const nm = SK_EFF_N[kk] || kk;
+    // ⚠ ac 在引擎裡是**越低越好**(derived.go: e.Ac -= v),所以 +N 的 ac 對玩家而言是「防禦提升 N」
+    if (kk === "ac") return "防禦 AC 提升 " + v;
+    return nm + " " + (v > 0 ? "+" : "") + v + (PCT_KEYS.has(kk) ? "%" : "");
+  });
+}
+const SK_STATUS = { poison: "中毒", blind: "黑暗", broken: "防禦破壞", slow: "緩速", stone: "石化",
+  weaken: "衰弱", disease: "疾病", vacuum: "真空", sleep: "沉睡", mrhalf: "魔防減半",
+  magicseal: "魔法封印", armorbreak: "破甲" };
+// 骰子 [n, 面數] → nDf(最小 n、最大 n×f)
+const dice = d => Array.isArray(d) && d.length === 2 ? `${d[0]}D${d[1]}(${d[0]}~${d[0] * d[1]})` : "";
+function skillFx(v) {
+  const t = [];
+  if (v.dmgDice) t.push((v.dmgType === "magic" ? "魔法傷害 " : "傷害 ") + dice(v.dmgDice));
+  if (v.ele && v.ele !== "none") t.push("屬性:" + (SK_ELE[v.ele] || v.ele));
+  if (v.target === "all") t.push("範圍:場上全部敵人");
+  if (v.hits) t.push("連續攻擊 " + v.hits + " 次");
+  if (v.healDice || v.healBase) t.push("治癒 " + (v.healBase ? "基礎 " + v.healBase + " " : "") + dice(v.healDice));
+  if (v.dur) t.push("持續 " + v.dur + " 秒");
+  if (v.hpCost) t.push("消耗 HP " + v.hpCost);
+  if (v.mpGain) t.push("回復 MP " + v.mpGain);
+  if (v.lifesteal) t.push("吸血:造成的傷害轉為自身 HP");
+  if (v.instakill) t.push("即死:對「" + (v.instakill.tag === "undead" ? "不死系" : v.instakill.tag) + "」怪物判定,命中即秒殺(BOSS 免疫)");
+  if (v.stun) t.push("命中後使目標暈眩");
+  if (v.freeze) t.push("冰凍");
+  if (v.haste) t.push("加速");
+  if (v.drain) t.push("吸取");
+  if (v.summon) t.push("召喚夥伴協助作戰");
+  if (v.status && SK_STATUS[v.status.kind]) t.push("附加狀態:" + SK_STATUS[v.status.kind] + (v.status.dur ? "(" + v.status.dur + " 秒)" : ""));
+  if (v.reqWpn && SK_WPN[v.reqWpn]) t.push(SK_WPN[v.reqWpn]);
+  if (v.reqShield) t.push("需裝備盾牌");
+  if (v.reqEle) t.push("需妖精屬性:" + (SK_ELE[v.reqEle] || v.reqEle));
+  if (v.reqEleAny) t.push("需已選擇任一妖精屬性");
+  if (v.ranged) t.push("遠距離");
+  if (v.mEff && SK_MEFF[v.mEff]) t.push(SK_MEFF[v.mEff]);
+  t.push(...skillBuff(v.d)); // 增益技能的實際數值
+  if (v.autoCd) t.push("自動施放冷卻 " + v.autoCd + " 秒");
+  return t;
+}
+
 // ---- 資料萃取 ----
 const TYPE_NAME = { wpn: "武器", arm: "防具", acc: "飾品", pot: "藥水", misc: "道具", material: "材料", skillbk: "技能書", etc: "其他" };
 const ELE_NAME = { fire: "火", water: "水", wind: "風", earth: "地", none: "無", "": "無" };
@@ -251,8 +310,9 @@ const sets = Object.values(GD.sets || {}).map(s => ({
 })).filter(s => s.items.length > 0).sort((a, b) => a.n.localeCompare(b.n, "zh-Hant"));
 
 const skills = Object.entries(GD.skills || {}).map(([id, v]) => ({
-  id, n: v.n || id, t: v.type || "", tier: v.tier || 0, mp: v.mp || 0,
-  k: v.reqK || 0, m: v.reqM || 0, e: v.reqE || 0,
+  id, n: v.n || id, t: SK_TYPE[v.type] || v.type || "", tier: v.tier || 0, mp: v.mp || 0,
+  k: v.reqK || 0, m: v.reqM || 0, e: v.reqE || 0, dk: v.reqD || 0,
+  d: (typeof v.d === "string" ? v.d : "") || v.msg || "", fx: skillFx(v),
 })).sort((a, b) => (a.tier - b.tier) || a.n.localeCompare(b.n, "zh-Hant"));
 
 const dataJs = "const WIKI=" + JSON.stringify({ items, mobs: mobList, skills, zones, worldbosses, towns, sets }) + ";";
@@ -406,16 +466,27 @@ $("q").oninput=render;render();
 
 // ---- 技能 ----
 fs.writeFileSync(path.join(OUT, "skills.html"), page("技能介紹", "skill", `
-${chips([[skills.length, "技能"], [skills.filter(s => s.k > 0).length, "騎士可學"], [skills.filter(s => s.m > 0).length, "法師可學"], [skills.filter(s => s.e > 0).length, "妖精可學"]])}
-<div class="bar"><input id="q" placeholder="🔍 搜技能名稱"><select id="cls"><option value="all">全職業</option><option value="k">騎士</option><option value="m">法師</option><option value="e">妖精</option></select></div>
-<div class="wrap"><table><thead><tr><th>技能</th><th>類型</th><th>MP</th><th>騎士</th><th>法師</th><th>妖精</th></tr></thead><tbody id="tb"></tbody></table></div>`,
+${chips([[skills.length, "技能"], ...["攻擊", "治癒", "增益", "被動", "工具", "轉換"].map(t => [skills.filter(s => s.t === t).length, t])])}
+<div class="bar"><input id="q" placeholder="🔍 搜技能名稱、效果(例:即死、吸血、暈眩)"><select id="cls"><option value="all">全職業</option><option value="k">騎士</option><option value="m">法師</option><option value="e">妖精</option><option value="dk">黑暗妖精</option></select></div>
+<div class="chips" id="tchips"></div>
+<div class="wrap"><table><thead><tr><th>技能</th><th>類型</th><th>階級</th><th>MP</th><th>學習需求</th><th>效果與說明</th></tr></thead><tbody id="tb"></tbody></table></div>`,
 `<script src="data.js"></script><script>
 const $=id=>document.getElementById(id);
 ${ESC}
-const req=v=>v?("Lv"+v):"—";
+const TS=["全部","攻擊","治癒","增益","被動","工具","轉換"];let tf="全部";
+$("tchips").innerHTML=TS.map(t=>'<span class="chip'+(t==="全部"?" on":"")+'" data-t="'+t+'">'+t+'</span>').join("");
+document.querySelectorAll("#tchips .chip").forEach(c=>c.onclick=()=>{document.querySelectorAll("#tchips .chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");tf=c.dataset.t;render();});
+// 學習需求:只列學得到的職業,四個都沒有=不用學(自動取得)
+function reqStr(s){const p=[];if(s.k)p.push("騎士 Lv"+s.k);if(s.m)p.push("法師 Lv"+s.m);if(s.e)p.push("妖精 Lv"+s.e);if(s.dk)p.push("黑暗妖精 Lv"+s.dk);return p.length?p.join("<br>"):"—";}
 function render(){const q=$("q").value.trim().toLowerCase();const c=$("cls").value;
-const list=WIKI.skills.filter(s=>(!q||s.n.toLowerCase().includes(q))&&(c==="all"||s[c]>0));
-$("tb").innerHTML=list.map(s=>"<tr><td class='nm'>"+esc(s.n)+"</td><td class='num'>"+esc(s.t)+"</td><td class='num'>"+s.mp+"</td><td class='num'>"+req(s.k)+"</td><td class='num'>"+req(s.m)+"</td><td class='num'>"+req(s.e)+"</td></tr>").join("")||"<tr><td colspan=6 style='color:#8f8067'>查無符合</td></tr>";}
+const list=WIKI.skills.filter(s=>(tf==="全部"||s.t===tf)&&(c==="all"||s[c]>0)&&
+  (!q||s.n.toLowerCase().includes(q)||(s.d||"").toLowerCase().includes(q)||(s.fx||[]).some(x=>x.toLowerCase().includes(q))));
+$("tb").innerHTML=list.map(s=>{
+const fx=(s.fx||[]).map(x=>"<span class='tag'>"+esc(x)+"</span>").join("");
+const desc=s.d?"<div style='color:#b6a684;font-size:13px;margin-top:3px'>"+esc(s.d)+"</div>":"";
+return "<tr><td class='nm'>"+esc(s.n)+"</td><td class='num'>"+esc(s.t)+"</td><td class='num'>"+(s.tier||"—")+"</td><td class='num'>"+(s.mp||"—")+"</td>"+
+"<td class='num' style='font-size:12px'>"+reqStr(s)+"</td>"+
+"<td>"+(fx||desc?fx+desc:"<span style='color:#6b5f4c'>—</span>")+"</td></tr>";}).join("")||"<tr><td colspan=6 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;$("cls").onchange=render;render();
 </script>`));
 
