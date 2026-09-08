@@ -9,6 +9,19 @@
 const fs = require("fs");
 const path = require("path");
 
+// 🔗 對外連結(首頁最下方的「開始遊戲 & 加入社群」用)。
+//    ⚠ 換 Discord 邀請碼、換 LINE 社群、改 LINE ID 就改這裡,不要去改 index.html
+//      (index.html 是本檔產生的,手改會被下次 gen.js 蓋掉)。
+//    ⚠ LINE 社群網址不要帶 ?utm_source=... 那串(LINE「複製連結」自動加的追蹤參數,
+//      沒有作用只是變長;拿掉後實測行為完全相同)。
+const LINKS = {
+    game: "https://afei.gg/",
+    gameLabel: "afei.gg",
+    discord: "https://discord.gg/cP7fh2jRXA",
+    lineGroup: "https://line.me/ti/g2/qRBgqtR_BIo7qZ9fd5ZDPV3wLehoG9gkTUtk0w",
+    lineId: "@068ivpaq",
+};
+
 const GD = JSON.parse(fs.readFileSync(path.join(__dirname, "../go端專案/gamedata.json"), "utf8"));
 const OUT = __dirname;
 
@@ -432,6 +445,20 @@ footer{text-align:center;color:#6b5f4c;font-size:12px;padding:24px}
 .tile{background:#241b0f;border:1px solid #5a4a26;border-radius:14px;padding:22px;text-align:center;text-decoration:none;display:block}
 .tile:hover{border-color:#f5c451}
 .tile .em{font-size:34px}.tile .tt{color:#f5c451;font-size:18px;font-weight:bold;margin:8px 0 4px}.tile .dd{color:#b6a684;font-size:13px}
+/* 社群入口(首頁最下方):遊戲本體 + Discord + LINE。用 .link 區隔於資料頁磁磚 */
+.sechd{text-align:center;color:#f5c451;font-size:17px;font-weight:bold;margin:34px 0 4px}
+.sechd+.sub{text-align:center;color:#8a7d63;font-size:13px;margin-bottom:14px}
+.links{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.link{background:#241b0f;border:1px solid #5a4a26;border-radius:14px;padding:18px 16px;
+  text-decoration:none;display:flex;align-items:center;gap:13px}
+.link:hover{border-color:#f5c451}
+.link .em{font-size:29px;flex:none;line-height:1}
+.link .tt{color:#f5c451;font-size:16px;font-weight:bold}
+.link .dd{color:#b6a684;font-size:12.5px;margin-top:2px;word-break:break-all}
+.link.play{background:linear-gradient(180deg,#33260f,#241b0f);border-color:#f5c451}
+.link.play .tt{font-size:17px}
+.lineid{color:#e8dcc8;font-family:Consolas,monospace;background:#1a1409;
+  border:1px solid #3a2f1c;border-radius:6px;padding:1px 7px;font-size:13px}
 .stats{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:10px 0 16px}
 .stat-chip{background:#241b0f;border:1px solid #5a4a26;border-radius:10px;padding:7px 14px;font-size:14px;color:#b6a684}
 .stat-chip b{color:#f5c451;font-size:16px;margin-right:4px}
@@ -548,6 +575,15 @@ ${chips([[mobList.length, "怪物"], [items.length, "道具"], [skills.length, "
 <a class="tile" href="affix.html"><div class="em">🌑</div><div class="tt">詞條大全</div><div class="dd">碧恩祝福・遠古・屬性・暗黑詞條</div></a>
 <a class="tile" href="poly.html"><div class="em">💪</div><div class="tt">變身型態</div><div class="dd">46 種變身的加成一次看完</div></a>
 <a class="tile" href="changelog.html"><div class="em">📢</div><div class="tt">版本更新</div><div class="dd">最近改了什麼</div></a>
+</div>
+
+<div class="sechd">💬 開始遊戲 & 加入社群</div>
+<div class="sub">有問題到社群問,或加官方帳號私訊客服</div>
+<div class="links">
+<a class="link play" href="${LINKS.game}" target="_blank" rel="noopener"><div class="em">🎮</div><div><div class="tt">進入遊戲</div><div class="dd">${LINKS.gameLabel}</div></div></a>
+<a class="link" href="${LINKS.discord}" target="_blank" rel="noopener"><div class="em">💬</div><div><div class="tt">Discord</div><div class="dd">公告・討論・找隊友</div></div></a>
+<a class="link" href="${LINKS.lineGroup}" target="_blank" rel="noopener"><div class="em">👥</div><div><div class="tt">LINE 社群</div><div class="dd">玩家交流・活動通知</div></div></a>
+<a class="link" href="https://line.me/R/ti/p/${encodeURIComponent(LINKS.lineId)}" target="_blank" rel="noopener"><div class="em">📮</div><div><div class="tt">LINE 官方帳號</div><div class="dd">客服私訊 <span class="lineid">${LINKS.lineId}</span></div></div></a>
 </div>`));
 
 // ---- 怪物掉落 ----

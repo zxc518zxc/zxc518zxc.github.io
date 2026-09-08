@@ -54,6 +54,20 @@ footer{text-align:center;color:#6b5f4c;font-size:12px;padding:24px}
 .tile{background:#241b0f;border:1px solid #5a4a26;border-radius:14px;padding:22px;text-align:center;text-decoration:none;display:block}
 .tile:hover{border-color:#f5c451}
 .tile .em{font-size:34px}.tile .tt{color:#f5c451;font-size:18px;font-weight:bold;margin:8px 0 4px}.tile .dd{color:#b6a684;font-size:13px}
+/* 社群入口(首頁最下方):遊戲本體 + Discord + LINE。用 .link 區隔於資料頁磁磚 */
+.sechd{text-align:center;color:#f5c451;font-size:17px;font-weight:bold;margin:34px 0 4px}
+.sechd+.sub{text-align:center;color:#8a7d63;font-size:13px;margin-bottom:14px}
+.links{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.link{background:#241b0f;border:1px solid #5a4a26;border-radius:14px;padding:18px 16px;
+  text-decoration:none;display:flex;align-items:center;gap:13px}
+.link:hover{border-color:#f5c451}
+.link .em{font-size:29px;flex:none;line-height:1}
+.link .tt{color:#f5c451;font-size:16px;font-weight:bold}
+.link .dd{color:#b6a684;font-size:12.5px;margin-top:2px;word-break:break-all}
+.link.play{background:linear-gradient(180deg,#33260f,#241b0f);border-color:#f5c451}
+.link.play .tt{font-size:17px}
+.lineid{color:#e8dcc8;font-family:Consolas,monospace;background:#1a1409;
+  border:1px solid #3a2f1c;border-radius:6px;padding:1px 7px;font-size:13px}
 .stats{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:10px 0 16px}
 .stat-chip{background:#241b0f;border:1px solid #5a4a26;border-radius:10px;padding:7px 14px;font-size:14px;color:#b6a684}
 .stat-chip b{color:#f5c451;font-size:16px;margin-right:4px}
@@ -163,5 +177,5 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
    if(t==='—'||t==='')a[i].classList.add('e');else a[i].classList.remove('e');}}
  new MutationObserver(mark).observe(tb,{childList:true});mark();})();
 </script>
-<footer>資料自動同步自遊戲檔 · 產生於 2026-09-07</footer>
+<footer>資料自動同步自遊戲檔 · 產生於 2026-09-08</footer>
 </body></html>
