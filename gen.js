@@ -81,9 +81,12 @@ const hiddenItem = (id, v) => {
 
 // ---- 頻道(獵場)----
 const ZONE_CAT = { wild: "野外", dungeon: "地監", special: "特殊", village: "村莊" };
-const zoneName = {}, zoneCat = {};
+const zoneName = {}, zoneCat = {}, zoneAc = {};
 for (const [cat, arr] of Object.entries(GD.mapCategories || {}))
-  for (const z of arr || []) { zoneName[z.v] = z.t; zoneCat[z.v] = ZONE_CAT[cat] || cat; }
+  for (const z of arr || []) { zoneName[z.v] = z.t; zoneCat[z.v] = ZONE_CAT[cat] || cat; zoneAc[z.v] = z.acReq || 0; }
+// 🛡 AC 門檻(acReq,負向好;缺省/0=沒門檻)。**這是公開的**——與掉落機率不同,
+//    它是玩家「該不該來這區」的判斷依據,而且遊戲裡刻意不給任何提示(靜默懲罰,
+//    見 go端專案/.ai/systems/狩獵區AC門檻.md),不寫在資料站上玩家永遠不知道自己為什麼被打那麼痛。
 
 // 🔴 世界王本尊怪 —— **一定要從獵場怪物池濾掉**。
 //
@@ -341,7 +344,7 @@ const mobList = [...mobSeen.values()]
 const zones = Object.entries(zoneMobs).map(([z, keys]) => {
   const ms = [...new Set(keys.map(k => GD.mobs?.[k]?.n).filter(Boolean))];
   const lvs = ms.map(n => (mobSeen.get(n) || {}).lv || 0).filter(x => x > 0);
-  return { id: z, n: zoneName[z], cat: zoneCat[z] || "野外", mobs: ms,
+  return { id: z, n: zoneName[z], cat: zoneCat[z] || "野外", mobs: ms, ac: zoneAc[z] || 0,
     lvMin: lvs.length ? Math.min(...lvs) : 0, lvMax: lvs.length ? Math.max(...lvs) : 0 };
 }).filter(z => z.mobs.length > 0).sort((a, b) => a.lvMin - b.lvMin || a.n.localeCompare(b.n, "zh-Hant"));
 // 標出「地區採集」頻道(在這裡打任何怪都可能掉那幾種素材)
@@ -664,10 +667,11 @@ $("q").oninput=render;$("cls").onchange=render;render();
 
 // ---- 獵場 ----
 fs.writeFileSync(path.join(OUT, "zones.html"), page("獵場列表", "zone", `
-${chips([[zones.length, "獵場"], [zones.filter(z => z.cat === "野外").length, "野外"], [zones.filter(z => z.cat === "地監").length, "地監"]])}
+${chips([[zones.length, "獵場"], [zones.filter(z => z.cat === "野外").length, "野外"], [zones.filter(z => z.cat === "地監").length, "地監"], [zones.filter(z => z.ac).length, "有 AC 門檻"]])}
+<div class="hint">🛡 <b>AC 門檻</b>:部分獵場對防禦有要求。你的<b>防禦 AC 沒達標</b>時,被怪<b>物理攻擊</b>會多吃傷害——<b>每差 1 點多吃 20%</b>(差 5 點=傷害兩倍)。遊戲裡不會有任何提示,所以先在這裡看清楚再去。<br>※ 只影響怪物的物理攻擊;魔法、中毒、世界王房、玩家對戰都不受影響。AC 是<b>數字越低越強</b>(−60 比 −50 強)。</div>
 <div class="bar"><input id="q" placeholder="🔍 搜獵場名,或輸入「怪物名」找牠出沒的獵場"></div>
 <div class="chips" id="cchips"></div>
-<div class="wrap" id="tb-wrap"><table><thead><tr><th>獵場</th><th>類型</th><th>怪物等級</th><th>出沒怪物</th></tr></thead><tbody id="tb"></tbody></table></div>`,
+<div class="wrap" id="tb-wrap"><table><thead><tr><th>獵場</th><th>類型</th><th>怪物等級</th><th>🛡 AC 門檻</th><th>出沒怪物</th></tr></thead><tbody id="tb"></tbody></table></div>`,
 `<script src="data.js"></script><script>
 const $=id=>document.getElementById(id);
 ${ESC}
@@ -676,7 +680,7 @@ $("cchips").innerHTML=CS.map(t=>'<span class="chip'+(t==="全部"?" on":"")+'" d
 document.querySelectorAll("#cchips .chip").forEach(c=>c.onclick=()=>{document.querySelectorAll("#cchips .chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");cf=c.dataset.t;render();});
 function render(){const q=$("q").value.trim().toLowerCase();
 const list=WIKI.zones.filter(z=>(cf==="全部"||z.cat===cf)&&(!q||z.n.toLowerCase().includes(q)||z.mobs.some(m=>m.toLowerCase().includes(q))));
-$("tb").innerHTML=list.map(z=>"<tr><td class='nm'>"+esc(z.n)+(z.area?"<div style='font-weight:normal;color:#7bd14a;font-size:12px'>⛏ 採集:"+z.area.map(x=>esc(x)).join("、")+"</div>":"")+"</td><td class='num' data-l='類型'>"+z.cat+"</td><td class='num' data-l='怪物等級'>"+(z.lvMin?"Lv"+z.lvMin+"~"+z.lvMax:"—")+"</td><td data-l='出沒怪'>"+z.mobs.map(m=>"<span class='tag'>"+esc(m)+"</span>").join("")+"</td></tr>").join("")||"<tr><td colspan=4 style='color:#8f8067'>查無符合</td></tr>";}
+$("tb").innerHTML=list.map(z=>"<tr><td class='nm'>"+esc(z.n)+(z.area?"<div style='font-weight:normal;color:#7bd14a;font-size:12px'>⛏ 採集:"+z.area.map(x=>esc(x)).join("、")+"</div>":"")+"</td><td class='num' data-l='類型'>"+z.cat+"</td><td class='num' data-l='怪物等級'>"+(z.lvMin?"Lv"+z.lvMin+"~"+z.lvMax:"—")+"</td><td class='num' data-l='AC門檻'>"+(z.ac?"<b style='color:#f5a97f'>"+z.ac+" 以下</b>":"<span style='color:#6b5f4c'>無</span>")+"</td><td data-l='出沒怪'>"+z.mobs.map(m=>"<span class='tag'>"+esc(m)+"</span>").join("")+"</td></tr>").join("")||"<tr><td colspan=5 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script>`));
 
