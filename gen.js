@@ -681,7 +681,7 @@ $("q").oninput=render;$("cls").onchange=render;render();
 const EVENTS = [
   {
     title: "🏁 開服衝等大賽",
-    when: "2026/09/11(四)20:00 ～ 2026/09/18(四)20:00",
+    when: "2026/09/11(五)20:00 ～ 2026/09/18(五)20:00",
     over: false,
     intro: "新服開張,誰先衝上去誰就是這一週的名字。以活動結束當下的等級排名為最終名次。",
     rewards: [
