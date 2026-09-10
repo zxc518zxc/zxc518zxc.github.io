@@ -62,7 +62,13 @@ if (SHOW_ICONS) {
 fs.writeFileSync(path.join(OUT, ".nojekyll"), "");
 
 // ---- 未開放內容的判定 ----
+// 🐉 封閉頻道:遊戲裡由 engine/afk/zonegate.go 的 BlockedZones 擋死(連封包硬送都會被回
+//    「此頻道已關閉」)。三龍窟的怪是 Lv93~95、血 12~15 萬,而角色等級上限只有 55 ⇒
+//    玩家永遠碰不到。列在資料站上只會讓人問「三龍窟怎麼進」(2026-09-09 麥哥拍板關掉)。
+//    ⚠ 日後遊戲裡開放(刪 zonegate.go 的 BlockedZones)時,這裡也要同步拿掉。
+const BLOCKED_ZONES = new Set(["antaras_lair", "fafurion_lair", "valakas_lair"]);
 const hiddenZone = z =>
+  BLOCKED_ZONES.has(z) ||
   (!FEAT.tianfa && (z === "twilight_mt" || z.startsWith("pride_"))) ||
   (!FEAT.castle && z.startsWith("siege_")) ||
   z.startsWith("pk_") || z === "lobby";
@@ -531,6 +537,7 @@ const NAV = [
   ["enhance.html", "enh", "⚒️", "強化機率"],
   ["affix.html", "affix", "🌑", "詞條大全"],
   ["poly.html", "poly", "💪", "變身型態"],
+  ["event.html", "event", "🎉", "活動介紹"],
   ["guide.html", "guide", "🌱", "新手指南"],
   ["changelog.html", "log", "📢", "版本更新"],
 ];
@@ -565,6 +572,7 @@ fs.writeFileSync(path.join(OUT, "index.html"), page("首頁", "index", `
 <div style="text-align:center;padding:10px 0 4px"><div style="font-size:15px;color:#b6a684">掛機練功・打寶強化・世界王討伐</div></div>
 ${chips([[mobList.length, "怪物"], [items.length, "道具"], [skills.length, "技能"], [zones.length, "獵場"], [worldbosses.length, "世界王"], [towns.reduce((s, t) => s + t.npcs.length, 0), "NPC"], [sets.length, "套裝"]])}
 <div class="grid">
+<a class="tile" href="event.html"><div class="em">🎉</div><div class="tt">活動介紹</div><div class="dd">開服衝等活動・9/11~9/18</div></a>
 <a class="tile" href="monsters.html"><div class="em">👹</div><div class="tt">怪物掉落圖鑑</div><div class="dd">打什麼掉什麼・可用道具名反查</div></a>
 <a class="tile" href="items.html"><div class="em">⚔️</div><div class="tt">道具圖鑑</div><div class="dd">武器防具飾品的數值與說明</div></a>
 <a class="tile" href="skills.html"><div class="em">✨</div><div class="tt">技能介紹</div><div class="dd">各職業的學習等級與 MP</div></a>
@@ -666,6 +674,48 @@ $("q").oninput=render;$("cls").onchange=render;render();
 </script>`));
 
 // ---- 獵場 ----
+// ---- 🎉 活動介紹(限時活動)----
+// ⚠ 這頁是**手寫內容**,不是從 gamedata 產的 —— 活動規則本來就不在遊戲資料裡。
+//    要改活動/新增下一檔,就改下面這個 EVENTS 陣列再重跑 gen.js;
+//    活動結束把該筆的 over 改成 true(會自動變灰並標「已結束」)。
+const EVENTS = [
+  {
+    title: "🏁 開服衝等大賽",
+    when: "2026/09/11(四)20:00 ～ 2026/09/18(四)20:00",
+    over: false,
+    intro: "新服開張,誰先衝上去誰就是這一週的名字。以活動結束當下的等級排名為最終名次。",
+    rewards: [
+      ["🥇 全職業 等級第一名", "💎 5000 藍鑽"],
+      ["🛡️ 騎士 等級第一名", "💎 2000 藍鑽"],
+      ["🏹 妖精 等級第一名", "💎 2000 藍鑽"],
+      ["🔮 法師 等級第一名", "💎 2000 藍鑽"],
+      ["🌑 黑暗妖精 等級第一名", "💎 2000 藍鑽"],
+    ],
+    rules: [
+      "名次以<b>活動結束當下</b>的等級為準;同等級時經驗值高的排前面 —— 與遊戲內「排行榜」完全相同的排法,你隨時都能自己查。",
+      "<b>獎項不重複領取</b>:全職業第一名只領 5000 藍鑽那一份,<b>不再領自己職業的 2000</b>;該職業的第一名獎<b>順延給同職業第二名</b>。也就是說,五個獎項會由五位不同的玩家獲得。",
+      "獎勵於活動結束後統一發放,寄到<b>交易所 →「領取」</b>頁,離線也收得到。",
+      "離線掛機獲得的經驗同樣計入,不需要一直守在電腦前。",
+      "獎勵發放對象為該角色所屬的<b>帳號</b>。",
+    ],
+  },
+];
+
+const evCard = e => `<div class="mcard"` + (e.over ? ` style="opacity:.55"` : "") + `
+  <div class="ttl">${e.title}${e.over ? "（已結束）" : ""}</div>
+  <div class="sub" style="color:#f5a97f;font-weight:bold">🗓️ ${e.when}</div>
+  <div class="sub" style="margin-top:6px">${e.intro}</div>
+  <div class="sub" style="margin-top:12px;color:#f5c451;font-weight:bold">🎁 獎勵</div>
+  <div class="wrap"><table><thead><tr><th>名次</th><th>獎勵</th></tr></thead><tbody>${e.rewards.map(([k, v]) => `<tr><td class="nm">${k}</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">${v}</td></tr>`).join("")}</tbody></table></div>
+  <div class="sub" style="margin-top:12px;color:#f5c451;font-weight:bold">📋 規則</div>
+  <ul style="color:#b6a684;font-size:14px;line-height:1.9;margin:4px 0 0;padding-left:20px">${e.rules.map(r => `<li>${r}</li>`).join("")}</ul>
+</div>`;
+
+fs.writeFileSync(path.join(OUT, "event.html"), page("活動介紹", "event", `
+${chips([[EVENTS.filter(e => !e.over).length, "進行中活動"]])}
+<div class="hint">活動規則以本頁公告為準。獎勵一律寄到遊戲內「交易所 →&nbsp;領取」,離線也收得到。</div>
+${EVENTS.map(evCard).join("")}`));
+
 fs.writeFileSync(path.join(OUT, "zones.html"), page("獵場列表", "zone", `
 ${chips([[zones.length, "獵場"], [zones.filter(z => z.cat === "野外").length, "野外"], [zones.filter(z => z.cat === "地監").length, "地監"], [zones.filter(z => z.ac).length, "有 AC 門檻"]])}
 <div class="hint">🛡 <b>AC 門檻</b>:部分獵場對防禦有要求。你的<b>防禦 AC 沒達標</b>時,被怪<b>物理攻擊</b>會多吃傷害——<b>每差 1 點多吃 20%</b>(差 5 點=傷害兩倍)。遊戲裡不會有任何提示,所以先在這裡看清楚再去。<br>※ 只影響怪物的物理攻擊;魔法、中毒、世界王房、玩家對戰都不受影響。AC 是<b>數字越低越強</b>(−60 比 −50 強)。</div>

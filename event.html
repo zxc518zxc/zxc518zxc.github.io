@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>怪物掉落圖鑑 - 阿肥放置天地 資料站</title><style>
+<title>活動介紹 - 阿肥放置天地 資料站</title><style>
 *{box-sizing:border-box}body{background:#1a140c;color:#e8dcc8;font-family:"Microsoft JhengHei",sans-serif;margin:0;padding:0}
 /* ── 頁首與導覽列 ──
    14 個功能鍵,所以做成膠囊按鈕 + 圖示;捲動時固定在頂端(查資料時不用捲回去換頁)。
@@ -126,7 +126,7 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 <header>
 <div class="brand"><h1>🏰 阿肥放置天地</h1><span class="sub">玩家資料站</span></div>
 <nav><a href="index.html" class=""><span class="i">🏠</span>首頁</a>
-<a href="monsters.html" class="on"><span class="i">👹</span>怪物掉落圖鑑</a>
+<a href="monsters.html" class=""><span class="i">👹</span>怪物掉落圖鑑</a>
 <a href="items.html" class=""><span class="i">⚔️</span>道具圖鑑</a>
 <a href="skills.html" class=""><span class="i">✨</span>技能介紹</a>
 <a href="zones.html" class=""><span class="i">🗺️</span>獵場列表</a>
@@ -137,15 +137,21 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 <a href="enhance.html" class=""><span class="i">⚒️</span>強化機率</a>
 <a href="affix.html" class=""><span class="i">🌑</span>詞條大全</a>
 <a href="poly.html" class=""><span class="i">💪</span>變身型態</a>
-<a href="event.html" class=""><span class="i">🎉</span>活動介紹</a>
+<a href="event.html" class="on"><span class="i">🎉</span>活動介紹</a>
 <a href="guide.html" class=""><span class="i">🌱</span>新手指南</a>
 <a href="changelog.html" class=""><span class="i">📢</span>版本更新</a>
 </nav></header><main>
-<div class="stats"><div class="stat-chip"><b>166</b>怪物</div><div class="stat-chip"><b>166</b>有掉落</div><div class="stat-chip"><b>14</b>世界王</div></div>
-<div class="bar"><input id="q" placeholder="🔍 搜怪物名,或輸入「道具名」找會掉它的怪"></div>
-<div class="hint">例:搜「銀長劍」→ 列出所有會掉它的怪物。</div>
-<div class="chips" id="lvchips"></div>
-<div class="wrap" id="tb-wrap"><table><thead><tr><th>怪物</th><th>Lv</th><th>HP</th><th>經驗</th><th>屬性</th><th>出沒地點</th><th>掉落</th></tr></thead><tbody id="tb"></tbody></table></div></main>
+<div class="stats"><div class="stat-chip"><b>1</b>進行中活動</div></div>
+<div class="hint">活動規則以本頁公告為準。獎勵一律寄到遊戲內「交易所 →&nbsp;領取」,離線也收得到。</div>
+<div class="mcard"
+  <div class="ttl">🏁 開服衝等大賽</div>
+  <div class="sub" style="color:#f5a97f;font-weight:bold">🗓️ 2026/09/11(四)20:00 ～ 2026/09/18(四)20:00</div>
+  <div class="sub" style="margin-top:6px">新服開張,誰先衝上去誰就是這一週的名字。以活動結束當下的等級排名為最終名次。</div>
+  <div class="sub" style="margin-top:12px;color:#f5c451;font-weight:bold">🎁 獎勵</div>
+  <div class="wrap"><table><thead><tr><th>名次</th><th>獎勵</th></tr></thead><tbody><tr><td class="nm">🥇 全職業 等級第一名</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">💎 5000 藍鑽</td></tr><tr><td class="nm">🛡️ 騎士 等級第一名</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">💎 2000 藍鑽</td></tr><tr><td class="nm">🏹 妖精 等級第一名</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">💎 2000 藍鑽</td></tr><tr><td class="nm">🔮 法師 等級第一名</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">💎 2000 藍鑽</td></tr><tr><td class="nm">🌑 黑暗妖精 等級第一名</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">💎 2000 藍鑽</td></tr></tbody></table></div>
+  <div class="sub" style="margin-top:12px;color:#f5c451;font-weight:bold">📋 規則</div>
+  <ul style="color:#b6a684;font-size:14px;line-height:1.9;margin:4px 0 0;padding-left:20px"><li>名次以<b>活動結束當下</b>的等級為準;同等級時經驗值高的排前面 —— 與遊戲內「排行榜」完全相同的排法,你隨時都能自己查。</li><li><b>獎項不重複領取</b>:全職業第一名只領 5000 藍鑽那一份,<b>不再領自己職業的 2000</b>;該職業的第一名獎<b>順延給同職業第二名</b>。也就是說,五個獎項會由五位不同的玩家獲得。</li><li>獎勵於活動結束後統一發放,寄到<b>交易所 →「領取」</b>頁,離線也收得到。</li><li>離線掛機獲得的經驗同樣計入,不需要一直守在電腦前。</li><li>獎勵發放對象為該角色所屬的<b>帳號</b>。</li></ul>
+</div></main>
 <script>
 /* 📱 手機卡片式:值是「—」的欄位加 .e 由 CSS 隱藏,免得每張卡都一堆空白列。
    各頁 render 是各自的 innerHTML 賦值,所以用 MutationObserver 統一處理一次就好。 */
@@ -156,17 +162,4 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
  new MutationObserver(mark).observe(tb,{childList:true});mark();})();
 </script>
 <footer>資料自動同步自遊戲檔 · 產生於 2026-09-10</footer>
-<script src="data.js?v=ad490889"></script><script>
-const $=id=>document.getElementById(id);
-const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
-const LV=[["all","全部"],["1-20","1~20"],["21-40","21~40"],["41-60","41~60"],["61+","61+"]];let lv="all";
-$("lvchips").innerHTML=LV.map(([k,t])=>'<span class="chip'+(k==="all"?" on":"")+'" data-k="'+k+'">'+t+'</span>').join("");
-document.querySelectorAll("#lvchips .chip").forEach(c=>c.onclick=()=>{document.querySelectorAll("#lvchips .chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");lv=c.dataset.k;render();});
-function inLv(m){if(lv==="all")return true;if(lv==="61+")return m.lv>=61;const p=lv.split("-");return m.lv>=+p[0]&&m.lv<=+p[1];}
-function render(){const q=$("q").value.trim().toLowerCase();
-const list=WIKI.mobs.filter(m=>inLv(m)&&(!q||m.n.toLowerCase().includes(q)||m.drops.some(d=>d.n.toLowerCase().includes(q))));
-$("tb").innerHTML=list.map(m=>"<tr><td class='nm'>"+esc(m.n)+"</td><td class='num' data-l='等級'>Lv "+m.lv+"</td><td class='num' data-l='HP'>"+m.hp.toLocaleString()+"</td><td class='num' data-l='經驗'>"+m.exp.toLocaleString()+"</td><td class='num' data-l='屬性'>"+m.e+"</td>"+
-"<td data-l='出沒地點'>"+(m.wbOnly?"<span class='tag wb'>🐉 世界王房限定</span>":(m.zones.length?m.zones.map(z=>"<span class='tag zn'>"+esc(z)+"</span>").join(""):"<span class='tag'>—</span>"))+"</td>"+
-"<td data-l='掉落'>"+(m.drops.length?m.drops.map(d=>"<span class='tag"+(d.legend?" lg":"")+"'>"+(d.legend?"★":"")+esc(d.n)+"</span>").join(""):"<span style='color:#6b5f4c'>—</span>")+"</td></tr>").join("")||"<tr><td colspan=7 style='color:#8f8067'>查無符合</td></tr>";}
-$("q").oninput=render;render();
-</script></body></html>
+</body></html>
