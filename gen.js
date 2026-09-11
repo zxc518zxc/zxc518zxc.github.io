@@ -79,6 +79,9 @@ if (!FEAT.castle) HIDDEN_ITEM_RE.push(/攻城|城堡/);
 // 用 id 精準擋(比對名稱會誤傷:「精通」兩字還有別的道具在用)
 const HIDDEN_ITEM_ID = new Set();
 if (!FEAT.mcard) { HIDDEN_ITEM_ID.add("mastery_reset_card"); HIDDEN_ITEM_ID.add("mastery_swap_card"); }
+// 🪪 更名卡:2026-09-14 中午維修才上線;道具已在 gamedata 裡,上線前不擋會提早出現在資料站。上線當天改成 true。
+const RENAME_CARD_LIVE = true; // 2026-09-11 開服隨 exe 一起上線 → 資料站放出
+if (!RENAME_CARD_LIVE) HIDDEN_ITEM_ID.add("rename_card");
 const hiddenItem = (id, v) => {
   if (HIDDEN_ITEM_ID.has(id)) return true;
   const s = (v.n || "") + " " + (v.d || "");
@@ -261,6 +264,9 @@ try {
   AREA = dump.areaDrops || AREA;
   SHOP_SELL = new Set(dump.shopSell || []);
 } catch (e) { }
+// 🔍 偷窺卡 2026-09-11 起重新在各村雜貨商販售(30 萬)。mastery.json 是舊匯出、還沒有它,
+//    而 wikidump **不能重跑**(會讓強化機率暗改曝光)⇒ 在這裡手動補一筆。日後能重跑 wikidump 時這行可刪。
+SHOP_SELL.add("peek_card");
 
 // ⚒💪🔮 強化機率 / 變身型態 / 碧恩詞條 —— 全部由 cmd/wikidump 從 Go 程式**實跑**匯出,
 //    不是人工抄的。改了 enhance.go / stage3.go / derived.go 就要重跑 wikidump 再重生。
