@@ -1,2317 +1,2402 @@
 {
-  "mastery": [
+ "mastery": [
+  {
+   "key": "str",
+   "name": "力量精通",
+   "cls": "騎士",
+   "cap": 3,
+   "desc": "餵對應的「力量魔法頭盔」(白板)每個 +1 經驗 → 經驗滿後突破(消耗**祝福的**同款)→ 啟用光環後生效。",
+   "auraCost": "1 萬金幣/小時",
+   "auraNote": "每次 +1 小時、最多累計 12 小時、離線照常倒數;**突破後光環與累計時間歸零**,需重新啟用。餵養／突破道具**上鎖不計**。",
+   "levels": [
     {
-      "key": "str",
-      "name": "力量精通",
-      "cls": "騎士",
-      "cap": 3,
-      "desc": "餵對應的「力量魔法頭盔」(白板)每個 +1 經驗 → 經驗滿後突破(消耗**祝福的**同款)→ 啟用光環後生效。",
-      "auraCost": "1 萬金幣/小時",
-      "auraNote": "每次 +1 小時、最多累計 12 小時、離線照常倒數;**突破後光環與累計時間歸零**,需重新啟用。餵養／突破道具**上鎖不計**。",
-      "levels": [
-        {
-          "from": 0,
-          "to": 1,
-          "needs": [
-            {
-              "item": "arm_47",
-              "en": -1,
-              "n": 5
-            }
-          ],
-          "mats": [
-            {
-              "item": "arm_47",
-              "en": -1,
-              "n": 1
-            }
-          ],
-          "note": "突破消耗的是**祝福的**同款頭盔"
-        },
-        {
-          "from": 1,
-          "to": 2,
-          "needs": [
-            {
-              "item": "arm_47",
-              "en": -1,
-              "n": 15
-            }
-          ],
-          "mats": [
-            {
-              "item": "arm_47",
-              "en": -1,
-              "n": 2
-            }
-          ],
-          "note": "突破消耗的是**祝福的**同款頭盔"
-        },
-        {
-          "from": 2,
-          "to": 3,
-          "needs": [
-            {
-              "item": "arm_47",
-              "en": -1,
-              "n": 30
-            }
-          ],
-          "mats": [
-            {
-              "item": "arm_47",
-              "en": -1,
-              "n": 3
-            }
-          ],
-          "note": "突破消耗的是**祝福的**同款頭盔"
-        }
-      ],
-      "effects": [
-        {
-          "name": "近距離傷害",
-          "values": [
-            0,
-            3,
-            6,
-            10
-          ]
-        }
-      ]
+     "from": 0,
+     "to": 1,
+     "needs": [
+      {
+       "item": "arm_47",
+       "en": -1,
+       "n": 5
+      }
+     ],
+     "mats": [
+      {
+       "item": "arm_47",
+       "en": -1,
+       "n": 1
+      }
+     ],
+     "note": "突破消耗的是**祝福的**同款頭盔"
     },
     {
-      "key": "dex",
-      "name": "敏捷精通",
-      "cls": "騎士",
-      "cap": 3,
-      "desc": "餵對應的「敏捷魔法頭盔」(白板)每個 +1 經驗 → 經驗滿後突破(消耗**祝福的**同款)→ 啟用光環後生效。",
-      "auraCost": "1 萬金幣/小時",
-      "auraNote": "每次 +1 小時、最多累計 12 小時、離線照常倒數;**突破後光環與累計時間歸零**,需重新啟用。餵養／突破道具**上鎖不計**。",
-      "levels": [
-        {
-          "from": 0,
-          "to": 1,
-          "needs": [
-            {
-              "item": "arm_46",
-              "en": -1,
-              "n": 5
-            }
-          ],
-          "mats": [
-            {
-              "item": "arm_46",
-              "en": -1,
-              "n": 1
-            }
-          ],
-          "note": "突破消耗的是**祝福的**同款頭盔"
-        },
-        {
-          "from": 1,
-          "to": 2,
-          "needs": [
-            {
-              "item": "arm_46",
-              "en": -1,
-              "n": 15
-            }
-          ],
-          "mats": [
-            {
-              "item": "arm_46",
-              "en": -1,
-              "n": 2
-            }
-          ],
-          "note": "突破消耗的是**祝福的**同款頭盔"
-        },
-        {
-          "from": 2,
-          "to": 3,
-          "needs": [
-            {
-              "item": "arm_46",
-              "en": -1,
-              "n": 30
-            }
-          ],
-          "mats": [
-            {
-              "item": "arm_46",
-              "en": -1,
-              "n": 3
-            }
-          ],
-          "note": "突破消耗的是**祝福的**同款頭盔"
-        }
-      ],
-      "effects": [
-        {
-          "name": "近距離命中",
-          "values": [
-            0,
-            2,
-            5,
-            10
-          ]
-        }
-      ]
+     "from": 1,
+     "to": 2,
+     "needs": [
+      {
+       "item": "arm_47",
+       "en": -1,
+       "n": 15
+      }
+     ],
+     "mats": [
+      {
+       "item": "arm_47",
+       "en": -1,
+       "n": 2
+      }
+     ],
+     "note": "突破消耗的是**祝福的**同款頭盔"
     },
     {
-      "key": "mine",
-      "name": "礦道不滅曙光(黑奴的救贖)",
-      "cls": "騎士",
-      "cap": 5,
-      "desc": "餵「對武器施法的卷軸」與「對盔甲施法的卷軸」(皆白板)**分兩軌各自累積**,**兩軌都滿才可突破**(消耗治癒魔法頭盔)→ 啟用光環後藥水恢復量提升。",
-      "auraCost": "1 萬金幣/小時",
-      "auraNote": "每次 +1 小時、最多累計 12 小時、離線照常倒數;**突破後光環與累計時間歸零**,需重新啟用。餵養／突破道具**上鎖不計**。",
-      "levels": [
-        {
-          "from": 0,
-          "to": 1,
-          "needs": [
-            {
-              "item": "scroll_weapon",
-              "en": -1,
-              "n": 10
-            },
-            {
-              "item": "scroll_armor",
-              "en": -1,
-              "n": 10
-            }
-          ],
-          "mats": [
-            {
-              "item": "arm_45",
-              "en": -1,
-              "n": 1
-            }
-          ]
-        },
-        {
-          "from": 1,
-          "to": 2,
-          "needs": [
-            {
-              "item": "scroll_weapon",
-              "en": -1,
-              "n": 50
-            },
-            {
-              "item": "scroll_armor",
-              "en": -1,
-              "n": 50
-            }
-          ],
-          "mats": [
-            {
-              "item": "arm_45",
-              "en": -1,
-              "n": 2
-            }
-          ]
-        },
-        {
-          "from": 2,
-          "to": 3,
-          "needs": [
-            {
-              "item": "scroll_weapon",
-              "en": -1,
-              "n": 100
-            },
-            {
-              "item": "scroll_armor",
-              "en": -1,
-              "n": 100
-            }
-          ],
-          "mats": [
-            {
-              "item": "arm_45",
-              "en": -1,
-              "n": 3
-            }
-          ]
-        },
-        {
-          "from": 3,
-          "to": 4,
-          "needs": [
-            {
-              "item": "scroll_weapon",
-              "en": -1,
-              "n": 200
-            },
-            {
-              "item": "scroll_armor",
-              "en": -1,
-              "n": 200
-            }
-          ],
-          "mats": [
-            {
-              "item": "arm_45",
-              "en": -1,
-              "n": 5
-            }
-          ]
-        },
-        {
-          "from": 4,
-          "to": 5,
-          "needs": [
-            {
-              "item": "scroll_weapon",
-              "en": -1,
-              "n": 500
-            },
-            {
-              "item": "scroll_armor",
-              "en": -1,
-              "n": 500
-            }
-          ],
-          "mats": [
-            {
-              "item": "arm_45",
-              "en": -1,
-              "n": 1
-            }
-          ],
-          "note": "突破需**祝福的**治癒魔法頭盔"
-        }
-      ],
-      "effects": [
-        {
-          "name": "藥水恢復量提升",
-          "values": [
-            0,
-            5,
-            10,
-            15,
-            20,
-            40
-          ],
-          "unit": "%"
-        }
-      ]
-    },
-    {
-      "key": "wm1",
-      "name": "武器大師(第一精通)",
-      "cls": "騎士",
-      "cap": 5,
-      "desc": "綁定一把武器 → 在**指定狩獵區**擊殺累積經驗 → 經驗滿後突破(消耗強化過的綁定武器)→ 突破後三選一能力 → 啟用光環後,**手持綁定武器**時生效(換武器立即失效)。",
-      "auraCost": "能力光環 1 萬/小時;武器共鳴 10 萬/小時(限 Lv5);黑奴的崛起 5 萬/小時",
-      "auraNote": "每次 +1 小時、最多累計 12 小時、離線照常倒數;**突破後光環與累計時間歸零**,需重新啟用。餵養／突破道具**上鎖不計**。",
-      "levels": [
-        {
-          "from": 0,
-          "to": 1,
-          "exp": 666,
-          "gold": 1000000,
-          "zone": "zone_22"
-        },
-        {
-          "from": 1,
-          "to": 2,
-          "exp": 6666,
-          "zone": "zone_23",
-          "mats": [
-            {
-              "item": "(綁定武器)",
-              "en": 7,
-              "n": 1
-            }
-          ]
-        },
-        {
-          "from": 2,
-          "to": 3,
-          "exp": 16888,
-          "zone": "zone_25",
-          "mats": [
-            {
-              "item": "(綁定武器)",
-              "en": 8,
-              "n": 1
-            }
-          ]
-        },
-        {
-          "from": 3,
-          "to": 4,
-          "exp": 66666,
-          "zone": "zone_04",
-          "mats": [
-            {
-              "item": "(綁定武器)",
-              "en": 9,
-              "n": 1
-            }
-          ]
-        },
-        {
-          "from": 4,
-          "to": 5,
-          "exp": 88888,
-          "zone": "zone_04",
-          "mats": [
-            {
-              "item": "(綁定武器)",
-              "en": 9,
-              "n": 2
-            }
-          ]
-        }
-      ],
-      "abilities": {
-        "balance": [
-          0,
-          1,
-          2,
-          3,
-          5,
-          9
-        ],
-        "dmg": [
-          0,
-          3,
-          5,
-          7,
-          10,
-          15
-        ],
-        "hit": [
-          0,
-          3,
-          5,
-          7,
-          10,
-          15
-        ]
-      },
-      "abilNote": "突破後可重選(或用「精通洗鍊卡」重選);需開啟光環**且手持綁定武器**才生效。"
-    },
-    {
-      "key": "wm2",
-      "name": "武器大師(第二精通)",
-      "cls": "騎士",
-      "cap": 5,
-      "desc": "第一精通 Lv5 滿級後接任務開啟。之後每次雙槽切換要 100 萬金幣,切換時**兩槽光環歸零**。",
-      "auraCost": "能力光環 1 萬/小時;武器共鳴 10 萬/小時(限 Lv5);黑奴的崛起 5 萬/小時",
-      "auraNote": "每次 +1 小時、最多累計 12 小時、離線照常倒數;**突破後光環與累計時間歸零**,需重新啟用。餵養／突破道具**上鎖不計**。",
-      "levels": [
-        {
-          "from": 0,
-          "to": 1,
-          "exp": 6666,
-          "gold": 1000000,
-          "zone": "training"
-        },
-        {
-          "from": 1,
-          "to": 2,
-          "exp": 16888,
-          "zone": "zone_08",
-          "mats": [
-            {
-              "item": "(綁定武器)",
-              "en": 7,
-              "n": 1
-            }
-          ]
-        },
-        {
-          "from": 2,
-          "to": 3,
-          "exp": 66666,
-          "zone": "dragon_valley",
-          "mats": [
-            {
-              "item": "(綁定武器)",
-              "en": 8,
-              "n": 1
-            }
-          ]
-        },
-        {
-          "from": 3,
-          "to": 4,
-          "exp": 26888,
-          "zone": "zone_41",
-          "mats": [
-            {
-              "item": "(綁定武器)",
-              "en": 9,
-              "n": 1
-            }
-          ]
-        },
-        {
-          "from": 4,
-          "to": 5,
-          "exp": 26888,
-          "zone": "dream_island",
-          "mats": [
-            {
-              "item": "(綁定武器)",
-              "en": 9,
-              "n": 2
-            }
-          ]
-        }
-      ],
-      "abilities": {
-        "balance": [
-          0,
-          1,
-          2,
-          3,
-          5,
-          9
-        ],
-        "dmg": [
-          0,
-          3,
-          5,
-          7,
-          10,
-          15
-        ],
-        "hit": [
-          0,
-          3,
-          5,
-          7,
-          10,
-          15
-        ]
-      },
-      "abilNote": "突破後可重選(或用「精通洗鍊卡」重選);需開啟光環**且手持綁定武器**才生效。"
-    },
-    {
-      "key": "mdrain",
-      "name": "魔力奪取",
-      "cls": "法師",
-      "cap": 5,
-      "desc": "擊殺累積經驗,突破吃「魔法書(魔力奪取)」與金幣;啟用光環後提升每次吸取的魔力量。",
-      "auraCost": "1 萬金幣/小時(不隨等級)",
-      "auraNote": "每次 +1 小時、最多累計 12 小時、離線照常倒數;**突破後光環與累計時間歸零**,需重新啟用。餵養／突破道具**上鎖不計**。",
-      "levels": [
-        {
-          "from": 0,
-          "to": 1,
-          "exp": 666,
-          "gold": 2000000,
-          "mats": [
-            {
-              "item": "bk_mana_drain",
-              "en": -1,
-              "n": 1
-            }
-          ]
-        },
-        {
-          "from": 1,
-          "to": 2,
-          "exp": 2500,
-          "gold": 4000000,
-          "mats": [
-            {
-              "item": "bk_mana_drain",
-              "en": -1,
-              "n": 1
-            }
-          ]
-        },
-        {
-          "from": 2,
-          "to": 3,
-          "exp": 12345,
-          "gold": 6000000,
-          "mats": [
-            {
-              "item": "bk_mana_drain",
-              "en": -1,
-              "n": 2
-            }
-          ]
-        },
-        {
-          "from": 3,
-          "to": 4,
-          "exp": 30000,
-          "gold": 8000000,
-          "mats": [
-            {
-              "item": "bk_mana_drain",
-              "en": -1,
-              "n": 2
-            }
-          ]
-        },
-        {
-          "from": 4,
-          "to": 5,
-          "exp": 77777,
-          "gold": 10000000,
-          "mats": [
-            {
-              "item": "bk_mana_drain",
-              "en": -1,
-              "n": 3
-            }
-          ]
-        }
-      ],
-      "effects": [
-        {
-          "name": "吸取魔力量提升",
-          "values": [
-            0,
-            2,
-            4,
-            10,
-            14,
-            20
-          ]
-        }
-      ]
-    },
-    {
-      "key": "summon",
-      "name": "召喚精通",
-      "cls": "法師",
-      "cap": 5,
-      "desc": "突破吃「魔法書(召喚術)」與強化瑪那魔杖;啟用光環後提升召喚獸的命中與傷害。",
-      "auraCost": "依等級 2~6 萬金幣/小時",
-      "auraNote": "每次 +1 小時、最多累計 12 小時、離線照常倒數;**突破後光環與累計時間歸零**,需重新啟用。餵養／突破道具**上鎖不計**。",
-      "levels": [
-        {
-          "from": 0,
-          "to": 1,
-          "mats": [
-            {
-              "item": "bk_summon",
-              "en": -1,
-              "n": 1
-            },
-            {
-              "item": "wpn_manawand",
-              "en": 7,
-              "n": 1
-            }
-          ]
-        },
-        {
-          "from": 1,
-          "to": 2,
-          "mats": [
-            {
-              "item": "bk_summon",
-              "en": -1,
-              "n": 1
-            },
-            {
-              "item": "panacea_cha",
-              "en": -1,
-              "n": 2
-            }
-          ]
-        },
-        {
-          "from": 2,
-          "to": 3,
-          "mats": [
-            {
-              "item": "bk_summon",
-              "en": -1,
-              "n": 2
-            },
-            {
-              "item": "panacea_cha",
-              "en": -1,
-              "n": 5
-            }
-          ]
-        },
-        {
-          "from": 3,
-          "to": 4,
-          "mats": [
-            {
-              "item": "bk_summon",
-              "en": -1,
-              "n": 1
-            },
-            {
-              "item": "wpn_manawand",
-              "en": 9,
-              "n": 1
-            }
-          ]
-        },
-        {
-          "from": 4,
-          "to": 5,
-          "mats": [
-            {
-              "item": "bk_summon",
-              "en": -1,
-              "n": 3
-            },
-            {
-              "item": "wpn_manawand",
-              "en": 9,
-              "n": 1
-            },
-            {
-              "item": "panacea_cha",
-              "en": -1,
-              "n": 10
-            }
-          ]
-        }
-      ],
-      "effects": [
-        {
-          "name": "召喚獸命中/傷害提升",
-          "values": [
-            0,
-            4,
-            8,
-            12,
-            16,
-            25
-          ]
-        }
-      ]
-    },
-    {
-      "key": "windgod",
-      "name": "願風神護佑你",
-      "cls": "妖精",
-      "cap": 5,
-      "desc": "捐獻米索莉塊累積經驗(每個 +1),突破吃精靈水晶與強化十字弓;能力加成套在「遠距離」。",
-      "auraCost": "等級 × 1 萬金幣/小時",
-      "auraNote": "每次 +1 小時、最多累計 12 小時、離線照常倒數;**突破後光環與累計時間歸零**,需重新啟用。餵養／突破道具**上鎖不計**。",
-      "levels": [
-        {
-          "from": 0,
-          "to": 1,
-          "needs": [
-            {
-              "item": "new_item_164",
-              "en": -1,
-              "n": 2000
-            }
-          ],
-          "mats": [
-            {
-              "item": "bk_elf_stormshot",
-              "en": -1,
-              "n": 2
-            }
-          ]
-        },
-        {
-          "from": 1,
-          "to": 2,
-          "needs": [
-            {
-              "item": "new_item_180",
-              "en": -1,
-              "n": 2000
-            }
-          ],
-          "mats": [
-            {
-              "item": "bk_elf_triple",
-              "en": -1,
-              "n": 3
-            }
-          ]
-        },
-        {
-          "from": 2,
-          "to": 3,
-          "needs": [
-            {
-              "item": "new_item_164",
-              "en": -1,
-              "n": 5000
-            }
-          ],
-          "mats": [
-            {
-              "item": "wpn_31",
-              "en": 8,
-              "n": 2
-            }
-          ]
-        },
-        {
-          "from": 3,
-          "to": 4,
-          "needs": [
-            {
-              "item": "new_item_180",
-              "en": -1,
-              "n": 5000
-            }
-          ],
-          "mats": [
-            {
-              "item": "bk_elf_stormshot",
-              "en": -1,
-              "n": 3
-            },
-            {
-              "item": "bk_elf_triple",
-              "en": -1,
-              "n": 2
-            }
-          ]
-        },
-        {
-          "from": 4,
-          "to": 5,
-          "needs": [
-            {
-              "item": "new_item_164",
-              "en": -1,
-              "n": 10000
-            }
-          ],
-          "mats": [
-            {
-              "item": "wpn_31",
-              "en": 9,
-              "n": 2
-            }
-          ]
-        }
-      ],
-      "abilities": {
-        "balance": [
-          0,
-          1,
-          2,
-          3,
-          5,
-          9
-        ],
-        "dmg": [
-          0,
-          3,
-          5,
-          7,
-          10,
-          15
-        ],
-        "hit": [
-          0,
-          3,
-          5,
-          7,
-          10,
-          15
-        ]
-      },
-      "abilNote": "突破後可重選(或用「精通洗鍊卡」重選);需開啟光環才生效。"
-    },
-    {
-      "key": "firewill",
-      "name": "火之意志",
-      "cls": "妖精",
-      "cap": 5,
-      "desc": "風神的近戰版:捐獻同素材,突破改吃強化武士刀／鎖子甲破壞者;能力加成套在「近距離」。",
-      "auraCost": "等級 × 1 萬金幣/小時",
-      "auraNote": "每次 +1 小時、最多累計 12 小時、離線照常倒數;**突破後光環與累計時間歸零**,需重新啟用。餵養／突破道具**上鎖不計**。",
-      "levels": [
-        {
-          "from": 0,
-          "to": 1,
-          "needs": [
-            {
-              "item": "new_item_164",
-              "en": -1,
-              "n": 2000
-            }
-          ],
-          "mats": [
-            {
-              "item": "wpn_katana",
-              "en": 7,
-              "n": 2
-            }
-          ]
-        },
-        {
-          "from": 1,
-          "to": 2,
-          "needs": [
-            {
-              "item": "new_item_180",
-              "en": -1,
-              "n": 2000
-            }
-          ],
-          "mats": [
-            {
-              "item": "wpn_mailbreaker",
-              "en": 7,
-              "n": 2
-            }
-          ]
-        },
-        {
-          "from": 2,
-          "to": 3,
-          "needs": [
-            {
-              "item": "new_item_164",
-              "en": -1,
-              "n": 5000
-            }
-          ],
-          "mats": [
-            {
-              "item": "wpn_katana",
-              "en": 8,
-              "n": 2
-            }
-          ]
-        },
-        {
-          "from": 3,
-          "to": 4,
-          "needs": [
-            {
-              "item": "new_item_180",
-              "en": -1,
-              "n": 5000
-            }
-          ],
-          "mats": [
-            {
-              "item": "wpn_mailbreaker",
-              "en": 8,
-              "n": 2
-            }
-          ]
-        },
-        {
-          "from": 4,
-          "to": 5,
-          "needs": [
-            {
-              "item": "new_item_164",
-              "en": -1,
-              "n": 10000
-            }
-          ],
-          "mats": [
-            {
-              "item": "wpn_katana",
-              "en": 9,
-              "n": 1
-            },
-            {
-              "item": "wpn_mailbreaker",
-              "en": 9,
-              "n": 1
-            }
-          ]
-        }
-      ],
-      "abilities": {
-        "balance": [
-          0,
-          1,
-          2,
-          3,
-          5,
-          9
-        ],
-        "dmg": [
-          0,
-          3,
-          5,
-          7,
-          10,
-          15
-        ],
-        "hit": [
-          0,
-          3,
-          5,
-          7,
-          10,
-          15
-        ]
-      },
-      "abilNote": "突破後可重選(或用「精通洗鍊卡」重選);需開啟光環才生效。"
-    },
-    {
-      "key": "darkwill",
-      "name": "暗殺之術",
-      "cls": "黑暗妖精",
-      "cap": 5,
-      "desc": "黑暗妖精專屬,突破吃強化黑暗雙刀;能力加成套在「近距離」。",
-      "auraCost": "等級 × 1 萬金幣/小時",
-      "auraNote": "每次 +1 小時、最多累計 12 小時、離線照常倒數;**突破後光環與累計時間歸零**,需重新啟用。餵養／突破道具**上鎖不計**。",
-      "levels": [
-        {
-          "from": 0,
-          "to": 1,
-          "needs": [
-            {
-              "item": "new_item_164",
-              "en": -1,
-              "n": 5000
-            }
-          ],
-          "mats": [
-            {
-              "item": "wpn_dual_dark",
-              "en": 7,
-              "n": 1
-            }
-          ]
-        },
-        {
-          "from": 1,
-          "to": 2,
-          "needs": [
-            {
-              "item": "new_item_180",
-              "en": -1,
-              "n": 5000
-            }
-          ],
-          "mats": [
-            {
-              "item": "wpn_dual_dark",
-              "en": 7,
-              "n": 2
-            }
-          ]
-        },
-        {
-          "from": 2,
-          "to": 3,
-          "needs": [
-            {
-              "item": "new_item_164",
-              "en": -1,
-              "n": 10000
-            }
-          ],
-          "mats": [
-            {
-              "item": "wpn_dual_dark",
-              "en": 8,
-              "n": 1
-            }
-          ]
-        },
-        {
-          "from": 3,
-          "to": 4,
-          "needs": [
-            {
-              "item": "new_item_180",
-              "en": -1,
-              "n": 10000
-            }
-          ],
-          "mats": [
-            {
-              "item": "wpn_dual_dark",
-              "en": 8,
-              "n": 2
-            }
-          ]
-        },
-        {
-          "from": 4,
-          "to": 5,
-          "needs": [
-            {
-              "item": "new_item_164",
-              "en": -1,
-              "n": 15000
-            }
-          ],
-          "mats": [
-            {
-              "item": "wpn_dual_dark",
-              "en": 9,
-              "n": 1
-            }
-          ]
-        }
-      ],
-      "abilities": {
-        "balance": [
-          0,
-          1,
-          2,
-          3,
-          5,
-          9
-        ],
-        "dmg": [
-          0,
-          3,
-          5,
-          7,
-          10,
-          15
-        ],
-        "hit": [
-          0,
-          3,
-          5,
-          7,
-          10,
-          15
-        ]
-      },
-      "abilNote": "突破後可重選(或用「精通洗鍊卡」重選);需開啟光環才生效。"
+     "from": 2,
+     "to": 3,
+     "needs": [
+      {
+       "item": "arm_47",
+       "en": -1,
+       "n": 30
+      }
+     ],
+     "mats": [
+      {
+       "item": "arm_47",
+       "en": -1,
+       "n": 3
+      }
+     ],
+     "note": "突破消耗的是**祝福的**同款頭盔"
     }
-  ],
-  "areaDrops": {
-    "zones": [
-      "zone_01",
-      "zone_15",
-      "zone_16",
-      "zone_17"
-    ],
-    "items": [
-      "new_item_164",
-      "new_item_195",
-      "new_item_165"
-    ]
+   ],
+   "effects": [
+    {
+     "name": "近距離傷害",
+     "values": [
+      0,
+      3,
+      6,
+      10
+     ]
+    }
+   ]
   },
-  "affixes": [
+  {
+   "key": "dex",
+   "name": "敏捷精通",
+   "cls": "騎士",
+   "cap": 3,
+   "desc": "餵對應的「敏捷魔法頭盔」(白板)每個 +1 經驗 → 經驗滿後突破(消耗**祝福的**同款)→ 啟用光環後生效。",
+   "auraCost": "1 萬金幣/小時",
+   "auraNote": "每次 +1 小時、最多累計 12 小時、離線照常倒數;**突破後光環與累計時間歸零**,需重新啟用。餵養／突破道具**上鎖不計**。",
+   "levels": [
     {
-      "item": "blt_titan",
-      "countProb": [
-        0.5,
-        0.45,
-        0.05
-      ],
-      "colorProb": [
-        0.7,
-        0.25,
-        0.05
-      ],
-      "pool": [
-        {
-          "key": "meleeDmg",
-          "name": "近距離傷害",
-          "bands": [
-            {
-              "lo": 1,
-              "hi": 1
-            },
-            {
-              "lo": 2,
-              "hi": 2
-            },
-            {
-              "lo": 3,
-              "hi": 3
-            }
-          ]
-        },
-        {
-          "key": "meleeHit",
-          "name": "近距離命中",
-          "bands": [
-            {
-              "lo": 1,
-              "hi": 1
-            },
-            {
-              "lo": 2,
-              "hi": 2
-            },
-            {
-              "lo": 3,
-              "hi": 3
-            }
-          ]
-        },
-        {
-          "key": "rangedDmg",
-          "name": "遠距離傷害",
-          "bands": [
-            {
-              "lo": 1,
-              "hi": 1
-            },
-            {
-              "lo": 2,
-              "hi": 2
-            },
-            {
-              "lo": 3,
-              "hi": 3
-            }
-          ]
-        },
-        {
-          "key": "rangedHit",
-          "name": "遠距離命中",
-          "bands": [
-            {
-              "lo": 1,
-              "hi": 1
-            },
-            {
-              "lo": 2,
-              "hi": 2
-            },
-            {
-              "lo": 3,
-              "hi": 3
-            }
-          ]
-        },
-        {
-          "key": "extraDmg",
-          "name": "額外傷害",
-          "bands": [
-            {
-              "lo": 1,
-              "hi": 1
-            },
-            {
-              "lo": 2,
-              "hi": 2
-            },
-            {
-              "lo": 3,
-              "hi": 3
-            }
-          ]
-        },
-        {
-          "key": "extraHit",
-          "name": "額外命中",
-          "bands": [
-            {
-              "lo": 1,
-              "hi": 1
-            },
-            {
-              "lo": 2,
-              "hi": 2
-            },
-            {
-              "lo": 3,
-              "hi": 3
-            }
-          ]
-        },
-        {
-          "key": "ac",
-          "name": "防禦",
-          "bands": [
-            {
-              "lo": 1,
-              "hi": 1
-            },
-            {
-              "lo": 2,
-              "hi": 2
-            },
-            {
-              "lo": 3,
-              "hi": 3
-            }
-          ]
-        },
-        {
-          "key": "mr",
-          "name": "魔防",
-          "bands": [
-            {
-              "lo": 1,
-              "hi": 2
-            },
-            {
-              "lo": 3,
-              "hi": 4
-            },
-            {
-              "lo": 5,
-              "hi": 5
-            }
-          ]
-        },
-        {
-          "key": "mhp",
-          "name": "最大HP",
-          "bands": [
-            {
-              "lo": 10,
-              "hi": 19
-            },
-            {
-              "lo": 20,
-              "hi": 29
-            },
-            {
-              "lo": 30,
-              "hi": 30
-            }
-          ]
-        },
-        {
-          "key": "mmp",
-          "name": "最大MP",
-          "bands": [
-            {
-              "lo": 10,
-              "hi": 19
-            },
-            {
-              "lo": 20,
-              "hi": 29
-            },
-            {
-              "lo": 30,
-              "hi": 30
-            }
-          ]
-        },
-        {
-          "key": "mpR",
-          "name": "MP恢復",
-          "bands": [
-            {
-              "lo": 1,
-              "hi": 2
-            },
-            {
-              "lo": 3,
-              "hi": 4
-            },
-            {
-              "lo": 5,
-              "hi": 5
-            }
-          ]
-        },
-        {
-          "key": "extraMp",
-          "name": "額外魔法點數",
-          "bands": [
-            {
-              "lo": 1,
-              "hi": 2
-            },
-            {
-              "lo": 3,
-              "hi": 4
-            },
-            {
-              "lo": 5,
-              "hi": 5
-            }
-          ]
-        },
-        {
-          "key": "dr",
-          "name": "傷害減免",
-          "bands": [
-            {
-              "lo": 1,
-              "hi": 1
-            },
-            {
-              "lo": 2,
-              "hi": 2
-            },
-            {
-              "lo": 3,
-              "hi": 3
-            }
-          ]
-        }
-      ]
+     "from": 0,
+     "to": 1,
+     "needs": [
+      {
+       "item": "arm_46",
+       "en": -1,
+       "n": 5
+      }
+     ],
+     "mats": [
+      {
+       "item": "arm_46",
+       "en": -1,
+       "n": 1
+      }
+     ],
+     "note": "突破消耗的是**祝福的**同款頭盔"
+    },
+    {
+     "from": 1,
+     "to": 2,
+     "needs": [
+      {
+       "item": "arm_46",
+       "en": -1,
+       "n": 15
+      }
+     ],
+     "mats": [
+      {
+       "item": "arm_46",
+       "en": -1,
+       "n": 2
+      }
+     ],
+     "note": "突破消耗的是**祝福的**同款頭盔"
+    },
+    {
+     "from": 2,
+     "to": 3,
+     "needs": [
+      {
+       "item": "arm_46",
+       "en": -1,
+       "n": 30
+      }
+     ],
+     "mats": [
+      {
+       "item": "arm_46",
+       "en": -1,
+       "n": 3
+      }
+     ],
+     "note": "突破消耗的是**祝福的**同款頭盔"
     }
-  ],
-  "shopSell": [
-    "amr_plate",
-    "amr_robe",
-    "arm_103",
-    "arm_105",
-    "arm_108",
-    "arm_42",
-    "arm_43",
-    "arm_60",
-    "arm_61",
-    "arm_62",
-    "arm_63",
-    "arm_65",
-    "arm_66",
-    "arm_67",
-    "arm_68",
-    "arm_69",
-    "bk_antidote",
-    "bk_aurora",
-    "bk_bless_wpn",
-    "bk_chill",
-    "bk_cold_shiver",
-    "bk_dark_blind",
-    "bk_elf_earthguard",
-    "bk_elf_eleres",
-    "bk_elf_firewpn",
-    "bk_elf_mind",
-    "bk_elf_mr",
-    "bk_elf_purify",
-    "bk_elf_singleres",
-    "bk_elf_windshot",
-    "bk_elf_worldtree",
-    "bk_ench_wpn",
-    "bk_energy_sense",
-    "bk_firearrow",
-    "bk_fireball",
-    "bk_heal1",
-    "bk_heal_mid",
-    "bk_hell_fang",
-    "bk_holy_wpn",
-    "bk_ice_spike",
-    "bk_icearrow",
-    "bk_lightarrow",
-    "bk_load_up",
-    "bk_poison_curse",
-    "bk_reveal",
-    "bk_rock_prison",
-    "bk_shield",
-    "bk_shield2",
-    "bk_sunlight",
-    "bk_teleport",
-    "bk_thunder",
-    "bk_undead_bane",
-    "bk_vampire",
-    "bk_windblade",
-    "candle",
-    "hlm_mr",
-    "new_item_139",
-    "new_item_140",
-    "new_item_142",
-    "new_item_143",
-    "new_item_187",
-    "new_item_188",
-    "new_item_189",
-    "potion_blue",
-    "potion_brave",
-    "potion_haste",
-    "potion_heal",
-    "potion_strong",
-    "potion_ult",
-    "scroll_magicbarrier",
-    "scroll_poly",
-    "scroll_revive",
-    "scroll_teleport",
-    "wpn_1",
-    "wpn_10",
-    "wpn_12",
-    "wpn_13",
-    "wpn_14",
-    "wpn_15",
-    "wpn_16",
-    "wpn_17",
-    "wpn_18",
-    "wpn_19",
-    "wpn_20",
-    "wpn_21",
-    "wpn_22",
-    "wpn_28",
-    "wpn_2hsword",
-    "wpn_3",
-    "wpn_37",
-    "wpn_38",
-    "wpn_5",
-    "wpn_6",
-    "wpn_7",
-    "wpn_9",
-    "wpn_battleaxe",
-    "wpn_damascus",
-    "wpn_giantaxe",
-    "wpn_halberd",
-    "wpn_invader",
-    "wpn_katana",
-    "wpn_longsword",
-    "wpn_scimitar",
-    "wpn_shortsword",
-    "wpn_silveraxe",
-    "wpn_silversword",
-    "wpn_witchwand"
-  ],
-  "enh": [
+   ],
+   "effects": [
     {
-      "slot": "武器",
-      "kind": "一般卷軸",
-      "steps": [
-        {
-          "off": 0,
-          "succ": 33.3333333,
-          "stay": 0,
-          "destroy": 66.66666670000001
-        },
-        {
-          "off": 1,
-          "succ": 33.3333333,
-          "stay": 0,
-          "destroy": 66.66666670000001
-        },
-        {
-          "off": 2,
-          "succ": 33.3333333,
-          "stay": 0,
-          "destroy": 66.66666670000001
-        },
-        {
-          "off": 3,
-          "succ": 0.9009009,
-          "stay": 32.4324324,
-          "destroy": 66.66666670000001
-        },
-        {
-          "off": 4,
-          "succ": 0.8130081,
-          "stay": 32.5203252,
-          "destroy": 66.6666667
-        },
-        {
-          "off": 5,
-          "succ": 0.7407407,
-          "stay": 32.5925926,
-          "destroy": 66.6666667
-        }
-      ],
-      "note": "第 6 次以後的機率不再變動，一律套用最後一列。"
-    },
-    {
-      "slot": "武器",
-      "kind": "祝福卷軸",
-      "steps": [
-        {
-          "off": 0,
-          "succ": 33.3333333,
-          "stay": 0,
-          "destroy": 66.66666670000001
-        },
-        {
-          "off": 1,
-          "succ": 33.3333333,
-          "stay": 0,
-          "destroy": 66.66666670000001
-        },
-        {
-          "off": 2,
-          "succ": 33.3333333,
-          "stay": 0,
-          "destroy": 66.66666670000001
-        },
-        {
-          "off": 3,
-          "succ": 3.3333333,
-          "stay": 30,
-          "destroy": 66.6666667
-        },
-        {
-          "off": 4,
-          "succ": 3.030303,
-          "stay": 30.3030303,
-          "destroy": 66.6666667
-        },
-        {
-          "off": 5,
-          "succ": 2.7777778,
-          "stay": 30.5555556,
-          "destroy": 66.6666666
-        }
-      ],
-      "note": "第 6 次以後的機率不再變動，一律套用最後一列。 祝福卷成功時會跳級。"
-    },
-    {
-      "slot": "防具",
-      "kind": "一般卷軸",
-      "steps": [
-        {
-          "off": 0,
-          "succ": 25,
-          "stay": 0,
-          "destroy": 75
-        },
-        {
-          "off": 1,
-          "succ": 20,
-          "stay": 0,
-          "destroy": 80
-        },
-        {
-          "off": 2,
-          "succ": 16.6666667,
-          "stay": 0,
-          "destroy": 83.33333329999999
-        },
-        {
-          "off": 3,
-          "succ": 14.2857143,
-          "stay": 0,
-          "destroy": 85.7142857
-        },
-        {
-          "off": 4,
-          "succ": 12.5,
-          "stay": 0,
-          "destroy": 87.5
-        },
-        {
-          "off": 5,
-          "succ": 0.3003003,
-          "stay": 10.8108108,
-          "destroy": 88.8888889
-        },
-        {
-          "off": 6,
-          "succ": 0.2439024,
-          "stay": 9.7560976,
-          "destroy": 90
-        },
-        {
-          "off": 7,
-          "succ": 0.2020202,
-          "stay": 8.8888889,
-          "destroy": 90.9090909
-        }
-      ],
-      "note": "第 8 次以後的機率不再變動，一律套用最後一列。"
-    },
-    {
-      "slot": "防具",
-      "kind": "祝福卷軸",
-      "steps": [
-        {
-          "off": 0,
-          "succ": 25,
-          "stay": 0,
-          "destroy": 75
-        },
-        {
-          "off": 1,
-          "succ": 20,
-          "stay": 0,
-          "destroy": 80
-        },
-        {
-          "off": 2,
-          "succ": 16.6666667,
-          "stay": 0,
-          "destroy": 83.33333329999999
-        },
-        {
-          "off": 3,
-          "succ": 14.2857143,
-          "stay": 0,
-          "destroy": 85.7142857
-        },
-        {
-          "off": 4,
-          "succ": 12.5,
-          "stay": 0,
-          "destroy": 87.5
-        },
-        {
-          "off": 5,
-          "succ": 1.1111111,
-          "stay": 10,
-          "destroy": 88.8888889
-        },
-        {
-          "off": 6,
-          "succ": 0.9090909,
-          "stay": 9.0909091,
-          "destroy": 90
-        },
-        {
-          "off": 7,
-          "succ": 0.7575758,
-          "stay": 8.3333333,
-          "destroy": 90.9090909
-        }
-      ],
-      "note": "第 8 次以後的機率不再變動，一律套用最後一列。 祝福卷成功時會跳級。"
-    },
-    {
-      "slot": "飾品",
-      "kind": "一般卷軸",
-      "steps": [
-        {
-          "off": 0,
-          "succ": 50,
-          "stay": 0,
-          "destroy": 50
-        },
-        {
-          "off": 1,
-          "succ": 40,
-          "stay": 0,
-          "destroy": 60
-        },
-        {
-          "off": 2,
-          "succ": 30,
-          "stay": 0,
-          "destroy": 70
-        },
-        {
-          "off": 3,
-          "succ": 20,
-          "stay": 0,
-          "destroy": 80
-        }
-      ],
-      "note": "飾品沒有安定值，從 +0 就開始賭；失敗一律破壞，沒有「維持」。第 3 次以後固定 20%。祝福卷成功時 +1～+3。"
+     "name": "近距離命中",
+     "values": [
+      0,
+      2,
+      5,
+      10
+     ]
     }
-  ],
-  "blessJump": [
+   ]
+  },
+  {
+   "key": "mine",
+   "name": "礦道不滅曙光(黑奴的救贖)",
+   "cls": "騎士",
+   "cap": 5,
+   "desc": "餵「對武器施法的卷軸」與「對盔甲施法的卷軸」(皆白板)**分兩軌各自累積**,**兩軌都滿才可突破**(消耗治癒魔法頭盔)→ 啟用光環後藥水恢復量提升。",
+   "auraCost": "1 萬金幣/小時",
+   "auraNote": "每次 +1 小時、最多累計 12 小時、離線照常倒數;**突破後光環與累計時間歸零**,需重新啟用。餵養／突破道具**上鎖不計**。",
+   "levels": [
     {
-      "from": 0,
-      "to": 2,
-      "text": "+1 ～ +3"
+     "from": 0,
+     "to": 1,
+     "needs": [
+      {
+       "item": "scroll_weapon",
+       "en": -1,
+       "n": 10
+      },
+      {
+       "item": "scroll_armor",
+       "en": -1,
+       "n": 10
+      }
+     ],
+     "mats": [
+      {
+       "item": "arm_45",
+       "en": -1,
+       "n": 1
+      }
+     ]
     },
     {
-      "from": 3,
-      "to": 5,
-      "text": "+1 ～ +2"
+     "from": 1,
+     "to": 2,
+     "needs": [
+      {
+       "item": "scroll_weapon",
+       "en": -1,
+       "n": 50
+      },
+      {
+       "item": "scroll_armor",
+       "en": -1,
+       "n": 50
+      }
+     ],
+     "mats": [
+      {
+       "item": "arm_45",
+       "en": -1,
+       "n": 2
+      }
+     ]
     },
     {
-      "from": 6,
-      "to": 12,
-      "text": "+1 ～ +1"
+     "from": 2,
+     "to": 3,
+     "needs": [
+      {
+       "item": "scroll_weapon",
+       "en": -1,
+       "n": 100
+      },
+      {
+       "item": "scroll_armor",
+       "en": -1,
+       "n": 100
+      }
+     ],
+     "mats": [
+      {
+       "item": "arm_45",
+       "en": -1,
+       "n": 3
+      }
+     ]
+    },
+    {
+     "from": 3,
+     "to": 4,
+     "needs": [
+      {
+       "item": "scroll_weapon",
+       "en": -1,
+       "n": 200
+      },
+      {
+       "item": "scroll_armor",
+       "en": -1,
+       "n": 200
+      }
+     ],
+     "mats": [
+      {
+       "item": "arm_45",
+       "en": -1,
+       "n": 5
+      }
+     ]
+    },
+    {
+     "from": 4,
+     "to": 5,
+     "needs": [
+      {
+       "item": "scroll_weapon",
+       "en": -1,
+       "n": 500
+      },
+      {
+       "item": "scroll_armor",
+       "en": -1,
+       "n": 500
+      }
+     ],
+     "mats": [
+      {
+       "item": "arm_45",
+       "en": -1,
+       "n": 1
+      }
+     ],
+     "note": "突破需**祝福的**治癒魔法頭盔"
     }
-  ],
-  "poly": [
+   ],
+   "effects": [
     {
-      "min": 0,
-      "max": 14,
-      "forms": [
-        {
-          "name": "妖魔",
-          "eff": "近傷+1、近命中+1"
-        },
-        {
-          "name": "骷髏",
-          "eff": "近傷+1、近命中+1"
-        },
-        {
-          "name": "那魯加妖魔",
-          "eff": "近傷+1、近命中+1"
-        },
-        {
-          "name": "妖魔弓箭手",
-          "eff": "遠傷+1、遠命中+1"
-        },
-        {
-          "name": "長者",
-          "eff": "額外MP+2、MP恢復+1"
-        },
-        {
-          "name": "侏儒",
-          "eff": "AC-1、攻速+10%"
-        },
-        {
-          "name": "歐姆",
-          "eff": "額外傷+1、額外命中+1"
-        },
-        {
-          "name": "巨蟻",
-          "eff": "額外命中+1、攻速+10%"
-        },
-        {
-          "name": "奇異鸚鵡",
-          "eff": "額外傷+1、額外MP+1"
-        },
-        {
-          "name": "浣熊",
-          "eff": "額外命中+1、額外MP+1"
-        },
-        {
-          "name": "果凍怪",
-          "eff": "額外MP+1、MR+4"
-        }
-      ]
-    },
-    {
-      "min": 15,
-      "max": 29,
-      "forms": [
-        {
-          "name": "妖魔鬥士",
-          "eff": "近傷+2、近命中+1"
-        },
-        {
-          "name": "狼人",
-          "eff": "近傷+1、近命中+2"
-        },
-        {
-          "name": "食人妖精",
-          "eff": "近傷+2、近命中+2"
-        },
-        {
-          "name": "妖魔巡守",
-          "eff": "遠傷+2、遠命中+1"
-        },
-        {
-          "name": "夏洛伯",
-          "eff": "AC-2、攻速+15%"
-        },
-        {
-          "name": "黑暗妖精運送員",
-          "eff": "遠傷+1、遠命中+2"
-        },
-        {
-          "name": "巨大兵蟻",
-          "eff": "額外傷+2、額外命中+1"
-        },
-        {
-          "name": "紙人",
-          "eff": "額外MP+2、MP恢復+2"
-        },
-        {
-          "name": "雪人",
-          "eff": "魔傷+1"
-        }
-      ]
-    },
-    {
-      "min": 30,
-      "max": 44,
-      "forms": [
-        {
-          "name": "萊肯",
-          "eff": "近傷+2、近命中+2"
-        },
-        {
-          "name": "思克巴",
-          "eff": "魔傷+1、MP恢復+2"
-        },
-        {
-          "name": "食人妖精王",
-          "eff": "近傷+3、近命中+2"
-        },
-        {
-          "name": "黑暗妖精警衛(矛)",
-          "eff": "近傷+1、近命中+3"
-        },
-        {
-          "name": "強盜(弓)",
-          "eff": "遠傷+2、遠命中+2"
-        },
-        {
-          "name": "黑暗妖精盜賊",
-          "eff": "遠傷+2、遠命中+3"
-        },
-        {
-          "name": "黑暗妖精法師",
-          "eff": "額外MP+3、MP恢復+1"
-        },
-        {
-          "name": "亞力安",
-          "eff": "近傷+1、近命中+1、額外MP+2"
-        },
-        {
-          "name": "曼波兔",
-          "eff": "ER+1、攻速+15%"
-        }
-      ]
-    },
-    {
-      "min": 45,
-      "max": 49,
-      "forms": [
-        {
-          "name": "德雷克",
-          "eff": "近傷+3、近命中+3"
-        },
-        {
-          "name": "布雷哲",
-          "eff": "近傷+2、近命中+4"
-        },
-        {
-          "name": "庫曼",
-          "eff": "近傷+1、近命中+1、攻速+15%"
-        },
-        {
-          "name": "黑暗妖精警衛(弓)",
-          "eff": "遠傷+1、遠命中+1、攻速+15%"
-        },
-        {
-          "name": "黑暗妖精巡守",
-          "eff": "遠傷+3、遠命中+3"
-        },
-        {
-          "name": "巴風特",
-          "eff": "魔傷+1、額外MP+2、MP恢復+2"
-        }
-      ]
-    },
-    {
-      "min": 50,
-      "max": 51,
-      "forms": [
-        {
-          "name": "克特",
-          "eff": "近傷+3、近命中+3、攻速+15%"
-        },
-        {
-          "name": "刺客首領",
-          "eff": "近傷+2、近命中+2、攻速+20%"
-        },
-        {
-          "name": "小惡魔",
-          "eff": "遠傷+1、魔傷+1、MP恢復+3、攻速+15%"
-        },
-        {
-          "name": "黑騎士",
-          "eff": "近傷+1、近命中+4、攻速+10%"
-        },
-        {
-          "name": "火焰弓箭手",
-          "eff": "遠傷+3、遠命中+3、攻速+10%"
-        },
-        {
-          "name": "黑法師",
-          "eff": "魔傷+1、額外MP+3、MP恢復+2、攻速+10%"
-        }
-      ]
-    },
-    {
-      "min": 52,
-      "max": 9999,
-      "forms": [
-        {
-          "name": "死亡騎士",
-          "eff": "近傷+3、近命中+3、攻速+20%"
-        },
-        {
-          "name": "狂暴將軍",
-          "eff": "近傷+5、攻速+15%"
-        },
-        {
-          "name": "黑暗精靈",
-          "eff": "遠傷+3、遠命中+3、攻速+20%"
-        },
-        {
-          "name": "黑長者",
-          "eff": "魔傷+2、額外MP+1、MP恢復+2、攻速+15%"
-        },
-        {
-          "name": "巴列斯",
-          "eff": "魔傷+1、額外MP+2、MP恢復+4、攻速+10%"
-        }
-      ]
+     "name": "藥水恢復量提升",
+     "values": [
+      0,
+      5,
+      10,
+      15,
+      20,
+      40
+     ],
+     "unit": "%"
     }
-  ],
-  "bianOdds": [
+   ]
+  },
+  {
+   "key": "wm1",
+   "name": "武器大師(第一精通)",
+   "cls": "騎士",
+   "cap": 5,
+   "desc": "綁定一把武器 → 在**指定狩獵區**擊殺累積經驗 → 經驗滿後突破(消耗強化過的綁定武器)→ 突破後三選一能力 → 啟用光環後,**手持綁定武器**時生效(換武器立即失效)。",
+   "auraCost": "能力光環 1 萬/小時;武器共鳴 10 萬/小時(限 Lv5);黑奴的崛起 5 萬/小時",
+   "auraNote": "每次 +1 小時、最多累計 12 小時、離線照常倒數;**突破後光環與累計時間歸零**,需重新啟用。餵養／突破道具**上鎖不計**。",
+   "levels": [
     {
-      "group": "祝福系",
-      "name": "祝福的",
-      "pct": 16.666666666666668
+     "from": 0,
+     "to": 1,
+     "exp": 666,
+     "gold": 1000000,
+     "zone": "zone_22"
     },
     {
-      "group": "祝福系",
-      "name": "詛咒的",
-      "pct": 16.666666666666668
+     "from": 1,
+     "to": 2,
+     "exp": 6666,
+     "zone": "zone_23",
+     "mats": [
+      {
+       "item": "(綁定武器)",
+       "en": 7,
+       "n": 1
+      }
+     ]
     },
     {
-      "group": "遠古系",
-      "name": "遠古",
-      "pct": 8.333333333333334
+     "from": 2,
+     "to": 3,
+     "exp": 16888,
+     "zone": "zone_25",
+     "mats": [
+      {
+       "item": "(綁定武器)",
+       "en": 8,
+       "n": 1
+      }
+     ]
     },
     {
-      "group": "遠古系",
-      "name": "永恆",
-      "pct": 8.333333333333334
+     "from": 3,
+     "to": 4,
+     "exp": 66666,
+     "zone": "zone_04",
+     "mats": [
+      {
+       "item": "(綁定武器)",
+       "en": 9,
+       "n": 1
+      }
+     ]
     },
     {
-      "group": "遠古系",
-      "name": "不朽",
-      "pct": 8.333333333333334
-    },
-    {
-      "group": "遠古系",
-      "name": "太初",
-      "pct": 8.333333333333334
-    },
-    {
-      "group": "屬性系",
-      "name": "火之",
-      "pct": 5
-    },
-    {
-      "group": "屬性系",
-      "name": "水之",
-      "pct": 5
-    },
-    {
-      "group": "屬性系",
-      "name": "風之",
-      "pct": 5
-    },
-    {
-      "group": "屬性系",
-      "name": "地之",
-      "pct": 5
-    },
-    {
-      "group": "屬性系",
-      "name": "爆炎",
-      "pct": 2.5
-    },
-    {
-      "group": "屬性系",
-      "name": "海嘯",
-      "pct": 2.5
-    },
-    {
-      "group": "屬性系",
-      "name": "暴風",
-      "pct": 2.5
-    },
-    {
-      "group": "屬性系",
-      "name": "崩裂",
-      "pct": 2.5
-    },
-    {
-      "group": "屬性系",
-      "name": "火靈",
-      "pct": 0.8333333333333335
-    },
-    {
-      "group": "屬性系",
-      "name": "水靈",
-      "pct": 0.8333333333333335
-    },
-    {
-      "group": "屬性系",
-      "name": "風靈",
-      "pct": 0.8333333333333335
-    },
-    {
-      "group": "屬性系",
-      "name": "地靈",
-      "pct": 0.8333333333333335
+     "from": 4,
+     "to": 5,
+     "exp": 88888,
+     "zone": "zone_04",
+     "mats": [
+      {
+       "item": "(綁定武器)",
+       "en": 9,
+       "n": 2
+      }
+     ]
     }
-  ],
-  "bless": [
+   ],
+   "abilities": {
+    "balance": [
+     0,
+     1,
+     2,
+     3,
+     5,
+     9
+    ],
+    "dmg": [
+     0,
+     3,
+     5,
+     7,
+     10,
+     15
+    ],
+    "hit": [
+     0,
+     3,
+     5,
+     7,
+     10,
+     15
+    ]
+   },
+   "abilNote": "突破後可重選(或用「精通洗鍊卡」重選);需開啟光環**且手持綁定武器**才生效。"
+  },
+  {
+   "key": "wm2",
+   "name": "武器大師(第二精通)",
+   "cls": "騎士",
+   "cap": 5,
+   "desc": "第一精通 Lv5 滿級後接任務開啟。之後每次雙槽切換要 100 萬金幣,切換時**兩槽光環歸零**。",
+   "auraCost": "能力光環 1 萬/小時;武器共鳴 10 萬/小時(限 Lv5);黑奴的崛起 5 萬/小時",
+   "auraNote": "每次 +1 小時、最多累計 12 小時、離線照常倒數;**突破後光環與累計時間歸零**,需重新啟用。餵養／突破道具**上鎖不計**。",
+   "levels": [
     {
-      "slot": "武器",
-      "key": "true",
-      "name": "祝福的",
-      "eff": [
-        "額外傷害+1",
-        "額外命中+1",
-        "額外魔力 MP+2"
-      ]
+     "from": 0,
+     "to": 1,
+     "exp": 6666,
+     "gold": 1000000,
+     "zone": "training"
     },
     {
-      "slot": "武器",
-      "key": "cursed",
-      "name": "詛咒的",
-      "eff": [
-        "額外傷害-1",
-        "額外命中-1",
-        "額外魔力 MP-2"
-      ]
+     "from": 1,
+     "to": 2,
+     "exp": 16888,
+     "zone": "zone_08",
+     "mats": [
+      {
+       "item": "(綁定武器)",
+       "en": 7,
+       "n": 1
+      }
+     ]
     },
     {
-      "slot": "防具",
-      "key": "true",
-      "name": "祝福的",
-      "eff": [
-        "防禦 AC 提升+1",
-        "傷害減免 DR+1"
-      ]
+     "from": 2,
+     "to": 3,
+     "exp": 66666,
+     "zone": "dragon_valley",
+     "mats": [
+      {
+       "item": "(綁定武器)",
+       "en": 8,
+       "n": 1
+      }
+     ]
     },
     {
-      "slot": "防具",
-      "key": "cursed",
-      "name": "詛咒的",
-      "eff": [
-        "防禦 AC 下降+1",
-        "傷害減免 DR-1"
-      ]
+     "from": 3,
+     "to": 4,
+     "exp": 26888,
+     "zone": "zone_41",
+     "mats": [
+      {
+       "item": "(綁定武器)",
+       "en": 9,
+       "n": 1
+      }
+     ]
     },
     {
-      "slot": "飾品",
-      "key": "true",
-      "name": "祝福的",
-      "eff": [
-        "防禦 AC 提升+1",
-        "魔防 MR+1"
-      ]
-    },
-    {
-      "slot": "飾品",
-      "key": "cursed",
-      "name": "詛咒的",
-      "eff": [
-        "防禦 AC 下降+1",
-        "魔防 MR-1"
-      ]
+     "from": 4,
+     "to": 5,
+     "exp": 26888,
+     "zone": "dream_island",
+     "mats": [
+      {
+       "item": "(綁定武器)",
+       "en": 9,
+       "n": 2
+      }
+     ]
     }
-  ],
-  "anc": [
+   ],
+   "abilities": {
+    "balance": [
+     0,
+     1,
+     2,
+     3,
+     5,
+     9
+    ],
+    "dmg": [
+     0,
+     3,
+     5,
+     7,
+     10,
+     15
+    ],
+    "hit": [
+     0,
+     3,
+     5,
+     7,
+     10,
+     15
+    ]
+   },
+   "abilNote": "突破後可重選(或用「精通洗鍊卡」重選);需開啟光環**且手持綁定武器**才生效。"
+  },
+  {
+   "key": "mdrain",
+   "name": "魔力奪取",
+   "cls": "法師",
+   "cap": 5,
+   "desc": "擊殺累積經驗,突破吃「魔法書(魔力奪取)」與金幣;啟用光環後提升每次吸取的魔力量。",
+   "auraCost": "1 萬金幣/小時(不隨等級)",
+   "auraNote": "每次 +1 小時、最多累計 12 小時、離線照常倒數;**突破後光環與累計時間歸零**,需重新啟用。餵養／突破道具**上鎖不計**。",
+   "levels": [
     {
-      "slot": "武器",
-      "key": "ancient",
-      "name": "遠古",
-      "eff": [
-        "額外傷害+2",
-        "魔法傷害+1"
-      ]
+     "from": 0,
+     "to": 1,
+     "exp": 666,
+     "gold": 2000000,
+     "mats": [
+      {
+       "item": "bk_mana_drain",
+       "en": -1,
+       "n": 1
+      }
+     ]
     },
     {
-      "slot": "武器",
-      "key": "eternal",
-      "name": "永恆",
-      "eff": [
-        "額外傷害+4"
-      ]
+     "from": 1,
+     "to": 2,
+     "exp": 2500,
+     "gold": 4000000,
+     "mats": [
+      {
+       "item": "bk_mana_drain",
+       "en": -1,
+       "n": 1
+      }
+     ]
     },
     {
-      "slot": "武器",
-      "key": "immortal",
-      "name": "不朽",
-      "eff": [
-        "額外命中+4"
-      ]
+     "from": 2,
+     "to": 3,
+     "exp": 12345,
+     "gold": 6000000,
+     "mats": [
+      {
+       "item": "bk_mana_drain",
+       "en": -1,
+       "n": 2
+      }
+     ]
     },
     {
-      "slot": "武器",
-      "key": "primordial",
-      "name": "太初",
-      "eff": [
-        "魔法傷害+2"
-      ]
+     "from": 3,
+     "to": 4,
+     "exp": 30000,
+     "gold": 8000000,
+     "mats": [
+      {
+       "item": "bk_mana_drain",
+       "en": -1,
+       "n": 2
+      }
+     ]
     },
     {
-      "slot": "防具",
-      "key": "ancient",
-      "name": "遠古",
-      "eff": [
-        "傷害減免 DR+2"
-      ]
-    },
-    {
-      "slot": "防具",
-      "key": "eternal",
-      "name": "永恆",
-      "eff": [
-        "防禦 AC 提升+2"
-      ]
-    },
-    {
-      "slot": "防具",
-      "key": "immortal",
-      "name": "不朽",
-      "eff": [
-        "閃避 ER+2"
-      ]
-    },
-    {
-      "slot": "防具",
-      "key": "primordial",
-      "name": "太初",
-      "eff": [
-        "魔防 MR+4"
-      ]
-    },
-    {
-      "slot": "飾品",
-      "key": "ancient",
-      "name": "遠古",
-      "eff": [
-        "傷害減免 DR+1",
-        "魔防 MR+1"
-      ]
-    },
-    {
-      "slot": "飾品",
-      "key": "eternal",
-      "name": "永恆",
-      "eff": [
-        "防禦 AC 提升+1",
-        "額外傷害+1"
-      ]
-    },
-    {
-      "slot": "飾品",
-      "key": "immortal",
-      "name": "不朽",
-      "eff": [
-        "額外傷害+1",
-        "額外命中+1"
-      ]
-    },
-    {
-      "slot": "飾品",
-      "key": "primordial",
-      "name": "太初",
-      "eff": [
-        "額外魔力 MP+2",
-        "魔防 MR+2"
-      ]
+     "from": 4,
+     "to": 5,
+     "exp": 77777,
+     "gold": 10000000,
+     "mats": [
+      {
+       "item": "bk_mana_drain",
+       "en": -1,
+       "n": 3
+      }
+     ]
     }
-  ],
-  "attrAffix": [
+   ],
+   "effects": [
     {
-      "code": "fire1",
-      "name": "火之",
-      "ele": "火",
-      "tier": 1,
-      "fix": 1,
-      "counter": 6,
-      "res": 1,
-      "mr": 1,
-      "beats": "地"
-    },
-    {
-      "code": "water1",
-      "name": "水之",
-      "ele": "水",
-      "tier": 1,
-      "fix": 1,
-      "counter": 6,
-      "res": 1,
-      "mr": 1,
-      "beats": "火"
-    },
-    {
-      "code": "wind1",
-      "name": "風之",
-      "ele": "風",
-      "tier": 1,
-      "fix": 1,
-      "counter": 6,
-      "res": 1,
-      "mr": 1,
-      "beats": "水"
-    },
-    {
-      "code": "earth1",
-      "name": "地之",
-      "ele": "地",
-      "tier": 1,
-      "fix": 1,
-      "counter": 6,
-      "res": 1,
-      "mr": 1,
-      "beats": "風"
-    },
-    {
-      "code": "fire3",
-      "name": "爆炎",
-      "ele": "火",
-      "tier": 3,
-      "fix": 3,
-      "counter": 9,
-      "res": 2,
-      "mr": 2,
-      "beats": "地"
-    },
-    {
-      "code": "water3",
-      "name": "海嘯",
-      "ele": "水",
-      "tier": 3,
-      "fix": 3,
-      "counter": 9,
-      "res": 2,
-      "mr": 2,
-      "beats": "火"
-    },
-    {
-      "code": "wind3",
-      "name": "暴風",
-      "ele": "風",
-      "tier": 3,
-      "fix": 3,
-      "counter": 9,
-      "res": 2,
-      "mr": 2,
-      "beats": "水"
-    },
-    {
-      "code": "earth3",
-      "name": "崩裂",
-      "ele": "地",
-      "tier": 3,
-      "fix": 3,
-      "counter": 9,
-      "res": 2,
-      "mr": 2,
-      "beats": "風"
-    },
-    {
-      "code": "fire5",
-      "name": "火靈",
-      "ele": "火",
-      "tier": 5,
-      "fix": 5,
-      "counter": 12,
-      "res": 3,
-      "mr": 3,
-      "beats": "地"
-    },
-    {
-      "code": "water5",
-      "name": "水靈",
-      "ele": "水",
-      "tier": 5,
-      "fix": 5,
-      "counter": 12,
-      "res": 3,
-      "mr": 3,
-      "beats": "火"
-    },
-    {
-      "code": "wind5",
-      "name": "風靈",
-      "ele": "風",
-      "tier": 5,
-      "fix": 5,
-      "counter": 12,
-      "res": 3,
-      "mr": 3,
-      "beats": "水"
-    },
-    {
-      "code": "earth5",
-      "name": "地靈",
-      "ele": "地",
-      "tier": 5,
-      "fix": 5,
-      "counter": 12,
-      "res": 3,
-      "mr": 3,
-      "beats": "風"
+     "name": "吸取魔力量提升",
+     "values": [
+      0,
+      2,
+      4,
+      10,
+      14,
+      20
+     ]
     }
+   ]
+  },
+  {
+   "key": "summon",
+   "name": "召喚精通",
+   "cls": "法師",
+   "cap": 5,
+   "desc": "突破吃「魔法書(召喚術)」與強化瑪那魔杖;啟用光環後提升召喚獸的命中與傷害。",
+   "auraCost": "依等級 2~6 萬金幣/小時",
+   "auraNote": "每次 +1 小時、最多累計 12 小時、離線照常倒數;**突破後光環與累計時間歸零**,需重新啟用。餵養／突破道具**上鎖不計**。",
+   "levels": [
+    {
+     "from": 0,
+     "to": 1,
+     "mats": [
+      {
+       "item": "bk_summon",
+       "en": -1,
+       "n": 1
+      },
+      {
+       "item": "wpn_manawand",
+       "en": 7,
+       "n": 1
+      }
+     ]
+    },
+    {
+     "from": 1,
+     "to": 2,
+     "mats": [
+      {
+       "item": "bk_summon",
+       "en": -1,
+       "n": 1
+      },
+      {
+       "item": "panacea_cha",
+       "en": -1,
+       "n": 2
+      }
+     ]
+    },
+    {
+     "from": 2,
+     "to": 3,
+     "mats": [
+      {
+       "item": "bk_summon",
+       "en": -1,
+       "n": 2
+      },
+      {
+       "item": "panacea_cha",
+       "en": -1,
+       "n": 5
+      }
+     ]
+    },
+    {
+     "from": 3,
+     "to": 4,
+     "mats": [
+      {
+       "item": "bk_summon",
+       "en": -1,
+       "n": 1
+      },
+      {
+       "item": "wpn_manawand",
+       "en": 9,
+       "n": 1
+      }
+     ]
+    },
+    {
+     "from": 4,
+     "to": 5,
+     "mats": [
+      {
+       "item": "bk_summon",
+       "en": -1,
+       "n": 3
+      },
+      {
+       "item": "wpn_manawand",
+       "en": 9,
+       "n": 1
+      },
+      {
+       "item": "panacea_cha",
+       "en": -1,
+       "n": 10
+      }
+     ]
+    }
+   ],
+   "effects": [
+    {
+     "name": "召喚獸命中/傷害提升",
+     "values": [
+      0,
+      4,
+      8,
+      12,
+      16,
+      25
+     ]
+    }
+   ]
+  },
+  {
+   "key": "mhit",
+   "name": "精準打擊",
+   "cls": "法師",
+   "cap": 3,
+   "desc": "純材料突破(強化鎖子甲破壞者、強化瑪那魔杖、魔法書(通暢氣脈術));啟用光環後提升近距離命中,讓法師拿武器吸魔打得到怪。",
+   "auraCost": "等級 ×1 萬金幣/小時",
+   "auraNote": "每次 +1 小時、最多累計 12 小時、離線照常倒數;**突破後光環與累計時間歸零**,需重新啟用。餵養／突破道具**上鎖不計**。",
+   "levels": [
+    {
+     "from": 0,
+     "to": 1,
+     "mats": [
+      {
+       "item": "wpn_mailbreaker",
+       "en": 6,
+       "n": 1
+      },
+      {
+       "item": "wpn_manawand",
+       "en": 6,
+       "n": 1
+      },
+      {
+       "item": "bk_dex_up",
+       "en": -1,
+       "n": 10
+      }
+     ]
+    },
+    {
+     "from": 1,
+     "to": 2,
+     "mats": [
+      {
+       "item": "wpn_mailbreaker",
+       "en": 7,
+       "n": 1
+      },
+      {
+       "item": "wpn_manawand",
+       "en": 7,
+       "n": 1
+      },
+      {
+       "item": "bk_dex_up",
+       "en": -1,
+       "n": 50
+      }
+     ]
+    },
+    {
+     "from": 2,
+     "to": 3,
+     "mats": [
+      {
+       "item": "wpn_mailbreaker",
+       "en": 9,
+       "n": 1
+      },
+      {
+       "item": "wpn_manawand",
+       "en": 8,
+       "n": 1
+      },
+      {
+       "item": "bk_dex_up",
+       "en": -1,
+       "n": 80
+      }
+     ]
+    }
+   ],
+   "effects": [
+    {
+     "name": "近距離命中提升",
+     "values": [
+      0,
+      2,
+      5,
+      10
+     ]
+    }
+   ]
+  },
+  {
+   "key": "windgod",
+   "name": "願風神護佑你",
+   "cls": "妖精",
+   "cap": 5,
+   "desc": "捐獻米索莉塊累積經驗(每個 +1),突破吃精靈水晶與強化十字弓;能力加成套在「遠距離」。",
+   "auraCost": "等級 × 1 萬金幣/小時",
+   "auraNote": "每次 +1 小時、最多累計 12 小時、離線照常倒數;**突破後光環與累計時間歸零**,需重新啟用。餵養／突破道具**上鎖不計**。",
+   "levels": [
+    {
+     "from": 0,
+     "to": 1,
+     "needs": [
+      {
+       "item": "new_item_164",
+       "en": -1,
+       "n": 2000
+      }
+     ],
+     "mats": [
+      {
+       "item": "bk_elf_stormshot",
+       "en": -1,
+       "n": 2
+      }
+     ]
+    },
+    {
+     "from": 1,
+     "to": 2,
+     "needs": [
+      {
+       "item": "new_item_180",
+       "en": -1,
+       "n": 2000
+      }
+     ],
+     "mats": [
+      {
+       "item": "bk_elf_triple",
+       "en": -1,
+       "n": 3
+      }
+     ]
+    },
+    {
+     "from": 2,
+     "to": 3,
+     "needs": [
+      {
+       "item": "new_item_164",
+       "en": -1,
+       "n": 5000
+      }
+     ],
+     "mats": [
+      {
+       "item": "wpn_31",
+       "en": 8,
+       "n": 2
+      }
+     ]
+    },
+    {
+     "from": 3,
+     "to": 4,
+     "needs": [
+      {
+       "item": "new_item_180",
+       "en": -1,
+       "n": 5000
+      }
+     ],
+     "mats": [
+      {
+       "item": "bk_elf_stormshot",
+       "en": -1,
+       "n": 3
+      },
+      {
+       "item": "bk_elf_triple",
+       "en": -1,
+       "n": 2
+      }
+     ]
+    },
+    {
+     "from": 4,
+     "to": 5,
+     "needs": [
+      {
+       "item": "new_item_164",
+       "en": -1,
+       "n": 10000
+      }
+     ],
+     "mats": [
+      {
+       "item": "wpn_31",
+       "en": 9,
+       "n": 2
+      }
+     ]
+    }
+   ],
+   "abilities": {
+    "balance": [
+     0,
+     1,
+     2,
+     3,
+     5,
+     9
+    ],
+    "dmg": [
+     0,
+     3,
+     5,
+     7,
+     10,
+     15
+    ],
+    "hit": [
+     0,
+     3,
+     5,
+     7,
+     10,
+     15
+    ]
+   },
+   "abilNote": "突破後可重選(或用「精通洗鍊卡」重選);需開啟光環才生效。"
+  },
+  {
+   "key": "firewill",
+   "name": "火之意志",
+   "cls": "妖精",
+   "cap": 5,
+   "desc": "風神的近戰版:捐獻同素材,突破改吃強化武士刀／鎖子甲破壞者;能力加成套在「近距離」。",
+   "auraCost": "等級 × 1 萬金幣/小時",
+   "auraNote": "每次 +1 小時、最多累計 12 小時、離線照常倒數;**突破後光環與累計時間歸零**,需重新啟用。餵養／突破道具**上鎖不計**。",
+   "levels": [
+    {
+     "from": 0,
+     "to": 1,
+     "needs": [
+      {
+       "item": "new_item_164",
+       "en": -1,
+       "n": 2000
+      }
+     ],
+     "mats": [
+      {
+       "item": "wpn_katana",
+       "en": 7,
+       "n": 2
+      }
+     ]
+    },
+    {
+     "from": 1,
+     "to": 2,
+     "needs": [
+      {
+       "item": "new_item_180",
+       "en": -1,
+       "n": 2000
+      }
+     ],
+     "mats": [
+      {
+       "item": "wpn_mailbreaker",
+       "en": 7,
+       "n": 2
+      }
+     ]
+    },
+    {
+     "from": 2,
+     "to": 3,
+     "needs": [
+      {
+       "item": "new_item_164",
+       "en": -1,
+       "n": 5000
+      }
+     ],
+     "mats": [
+      {
+       "item": "wpn_katana",
+       "en": 8,
+       "n": 2
+      }
+     ]
+    },
+    {
+     "from": 3,
+     "to": 4,
+     "needs": [
+      {
+       "item": "new_item_180",
+       "en": -1,
+       "n": 5000
+      }
+     ],
+     "mats": [
+      {
+       "item": "wpn_mailbreaker",
+       "en": 8,
+       "n": 2
+      }
+     ]
+    },
+    {
+     "from": 4,
+     "to": 5,
+     "needs": [
+      {
+       "item": "new_item_164",
+       "en": -1,
+       "n": 10000
+      }
+     ],
+     "mats": [
+      {
+       "item": "wpn_katana",
+       "en": 9,
+       "n": 1
+      },
+      {
+       "item": "wpn_mailbreaker",
+       "en": 9,
+       "n": 1
+      }
+     ]
+    }
+   ],
+   "abilities": {
+    "balance": [
+     0,
+     1,
+     2,
+     3,
+     5,
+     9
+    ],
+    "dmg": [
+     0,
+     3,
+     5,
+     7,
+     10,
+     15
+    ],
+    "hit": [
+     0,
+     3,
+     5,
+     7,
+     10,
+     15
+    ]
+   },
+   "abilNote": "突破後可重選(或用「精通洗鍊卡」重選);需開啟光環才生效。"
+  },
+  {
+   "key": "darkwill",
+   "name": "暗殺之術",
+   "cls": "黑暗妖精",
+   "cap": 5,
+   "desc": "黑暗妖精專屬,突破吃強化黑暗雙刀;能力加成套在「近距離」。",
+   "auraCost": "等級 × 1 萬金幣/小時",
+   "auraNote": "每次 +1 小時、最多累計 12 小時、離線照常倒數;**突破後光環與累計時間歸零**,需重新啟用。餵養／突破道具**上鎖不計**。",
+   "levels": [
+    {
+     "from": 0,
+     "to": 1,
+     "needs": [
+      {
+       "item": "new_item_164",
+       "en": -1,
+       "n": 5000
+      }
+     ],
+     "mats": [
+      {
+       "item": "wpn_dual_dark",
+       "en": 7,
+       "n": 1
+      }
+     ]
+    },
+    {
+     "from": 1,
+     "to": 2,
+     "needs": [
+      {
+       "item": "new_item_180",
+       "en": -1,
+       "n": 5000
+      }
+     ],
+     "mats": [
+      {
+       "item": "wpn_dual_dark",
+       "en": 7,
+       "n": 2
+      }
+     ]
+    },
+    {
+     "from": 2,
+     "to": 3,
+     "needs": [
+      {
+       "item": "new_item_164",
+       "en": -1,
+       "n": 10000
+      }
+     ],
+     "mats": [
+      {
+       "item": "wpn_dual_dark",
+       "en": 8,
+       "n": 1
+      }
+     ]
+    },
+    {
+     "from": 3,
+     "to": 4,
+     "needs": [
+      {
+       "item": "new_item_180",
+       "en": -1,
+       "n": 10000
+      }
+     ],
+     "mats": [
+      {
+       "item": "wpn_dual_dark",
+       "en": 8,
+       "n": 2
+      }
+     ]
+    },
+    {
+     "from": 4,
+     "to": 5,
+     "needs": [
+      {
+       "item": "new_item_164",
+       "en": -1,
+       "n": 15000
+      }
+     ],
+     "mats": [
+      {
+       "item": "wpn_dual_dark",
+       "en": 9,
+       "n": 1
+      }
+     ]
+    }
+   ],
+   "abilities": {
+    "balance": [
+     0,
+     1,
+     2,
+     3,
+     5,
+     9
+    ],
+    "dmg": [
+     0,
+     3,
+     5,
+     7,
+     10,
+     15
+    ],
+    "hit": [
+     0,
+     3,
+     5,
+     7,
+     10,
+     15
+    ]
+   },
+   "abilNote": "突破後可重選(或用「精通洗鍊卡」重選);需開啟光環才生效。"
+  }
+ ],
+ "areaDrops": {
+  "zones": [
+   "zone_01",
+   "zone_15",
+   "zone_16",
+   "zone_17"
+  ],
+  "items": [
+   "new_item_164",
+   "new_item_195",
+   "new_item_165"
   ]
+ },
+ "affixes": [
+  {
+   "item": "blt_titan",
+   "countProb": [
+    0.5,
+    0.45,
+    0.05
+   ],
+   "colorProb": [
+    0.7,
+    0.25,
+    0.05
+   ],
+   "pool": [
+    {
+     "key": "meleeDmg",
+     "name": "近距離傷害",
+     "bands": [
+      {
+       "lo": 1,
+       "hi": 1
+      },
+      {
+       "lo": 2,
+       "hi": 2
+      },
+      {
+       "lo": 3,
+       "hi": 3
+      }
+     ]
+    },
+    {
+     "key": "meleeHit",
+     "name": "近距離命中",
+     "bands": [
+      {
+       "lo": 1,
+       "hi": 1
+      },
+      {
+       "lo": 2,
+       "hi": 2
+      },
+      {
+       "lo": 3,
+       "hi": 3
+      }
+     ]
+    },
+    {
+     "key": "rangedDmg",
+     "name": "遠距離傷害",
+     "bands": [
+      {
+       "lo": 1,
+       "hi": 1
+      },
+      {
+       "lo": 2,
+       "hi": 2
+      },
+      {
+       "lo": 3,
+       "hi": 3
+      }
+     ]
+    },
+    {
+     "key": "rangedHit",
+     "name": "遠距離命中",
+     "bands": [
+      {
+       "lo": 1,
+       "hi": 1
+      },
+      {
+       "lo": 2,
+       "hi": 2
+      },
+      {
+       "lo": 3,
+       "hi": 3
+      }
+     ]
+    },
+    {
+     "key": "extraDmg",
+     "name": "額外傷害",
+     "bands": [
+      {
+       "lo": 1,
+       "hi": 1
+      },
+      {
+       "lo": 2,
+       "hi": 2
+      },
+      {
+       "lo": 3,
+       "hi": 3
+      }
+     ]
+    },
+    {
+     "key": "extraHit",
+     "name": "額外命中",
+     "bands": [
+      {
+       "lo": 1,
+       "hi": 1
+      },
+      {
+       "lo": 2,
+       "hi": 2
+      },
+      {
+       "lo": 3,
+       "hi": 3
+      }
+     ]
+    },
+    {
+     "key": "ac",
+     "name": "防禦",
+     "bands": [
+      {
+       "lo": 1,
+       "hi": 1
+      },
+      {
+       "lo": 2,
+       "hi": 2
+      },
+      {
+       "lo": 3,
+       "hi": 3
+      }
+     ]
+    },
+    {
+     "key": "mr",
+     "name": "魔防",
+     "bands": [
+      {
+       "lo": 1,
+       "hi": 2
+      },
+      {
+       "lo": 3,
+       "hi": 4
+      },
+      {
+       "lo": 5,
+       "hi": 5
+      }
+     ]
+    },
+    {
+     "key": "mhp",
+     "name": "最大HP",
+     "bands": [
+      {
+       "lo": 10,
+       "hi": 19
+      },
+      {
+       "lo": 20,
+       "hi": 29
+      },
+      {
+       "lo": 30,
+       "hi": 30
+      }
+     ]
+    },
+    {
+     "key": "mmp",
+     "name": "最大MP",
+     "bands": [
+      {
+       "lo": 10,
+       "hi": 19
+      },
+      {
+       "lo": 20,
+       "hi": 29
+      },
+      {
+       "lo": 30,
+       "hi": 30
+      }
+     ]
+    },
+    {
+     "key": "mpR",
+     "name": "MP恢復",
+     "bands": [
+      {
+       "lo": 1,
+       "hi": 2
+      },
+      {
+       "lo": 3,
+       "hi": 4
+      },
+      {
+       "lo": 5,
+       "hi": 5
+      }
+     ]
+    },
+    {
+     "key": "extraMp",
+     "name": "額外魔法點數",
+     "bands": [
+      {
+       "lo": 1,
+       "hi": 2
+      },
+      {
+       "lo": 3,
+       "hi": 4
+      },
+      {
+       "lo": 5,
+       "hi": 5
+      }
+     ]
+    },
+    {
+     "key": "dr",
+     "name": "傷害減免",
+     "bands": [
+      {
+       "lo": 1,
+       "hi": 1
+      },
+      {
+       "lo": 2,
+       "hi": 2
+      },
+      {
+       "lo": 3,
+       "hi": 3
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "shopSell": [
+  "amr_plate",
+  "amr_robe",
+  "arm_103",
+  "arm_105",
+  "arm_108",
+  "arm_42",
+  "arm_43",
+  "arm_60",
+  "arm_61",
+  "arm_62",
+  "arm_63",
+  "arm_65",
+  "arm_66",
+  "arm_67",
+  "arm_68",
+  "arm_69",
+  "bk_antidote",
+  "bk_aurora",
+  "bk_bless_wpn",
+  "bk_chill",
+  "bk_cold_shiver",
+  "bk_dark_blind",
+  "bk_elf_earthguard",
+  "bk_elf_eleres",
+  "bk_elf_firewpn",
+  "bk_elf_mind",
+  "bk_elf_mr",
+  "bk_elf_purify",
+  "bk_elf_singleres",
+  "bk_elf_windshot",
+  "bk_elf_worldtree",
+  "bk_ench_wpn",
+  "bk_energy_sense",
+  "bk_firearrow",
+  "bk_fireball",
+  "bk_heal1",
+  "bk_heal_mid",
+  "bk_hell_fang",
+  "bk_holy_wpn",
+  "bk_ice_spike",
+  "bk_icearrow",
+  "bk_lightarrow",
+  "bk_load_up",
+  "bk_poison_curse",
+  "bk_reveal",
+  "bk_rock_prison",
+  "bk_shield",
+  "bk_shield2",
+  "bk_sunlight",
+  "bk_teleport",
+  "bk_thunder",
+  "bk_undead_bane",
+  "bk_vampire",
+  "bk_windblade",
+  "candle",
+  "hlm_mr",
+  "new_item_139",
+  "new_item_140",
+  "new_item_142",
+  "new_item_143",
+  "new_item_187",
+  "new_item_188",
+  "new_item_189",
+  "potion_blue",
+  "potion_brave",
+  "potion_haste",
+  "potion_heal",
+  "potion_strong",
+  "potion_ult",
+  "scroll_magicbarrier",
+  "scroll_poly",
+  "scroll_revive",
+  "scroll_teleport",
+  "wpn_1",
+  "wpn_10",
+  "wpn_12",
+  "wpn_13",
+  "wpn_14",
+  "wpn_15",
+  "wpn_16",
+  "wpn_17",
+  "wpn_18",
+  "wpn_19",
+  "wpn_20",
+  "wpn_21",
+  "wpn_22",
+  "wpn_28",
+  "wpn_2hsword",
+  "wpn_3",
+  "wpn_37",
+  "wpn_38",
+  "wpn_5",
+  "wpn_6",
+  "wpn_7",
+  "wpn_9",
+  "wpn_battleaxe",
+  "wpn_damascus",
+  "wpn_giantaxe",
+  "wpn_halberd",
+  "wpn_invader",
+  "wpn_katana",
+  "wpn_longsword",
+  "wpn_scimitar",
+  "wpn_shortsword",
+  "wpn_silveraxe",
+  "wpn_silversword",
+  "wpn_witchwand"
+ ],
+ "enh": [
+  {
+   "slot": "武器",
+   "kind": "一般卷軸",
+   "steps": [
+    {
+     "off": 0,
+     "succ": 33.3333333,
+     "stay": 0,
+     "destroy": 66.66666670000001
+    },
+    {
+     "off": 1,
+     "succ": 33.3333333,
+     "stay": 0,
+     "destroy": 66.66666670000001
+    },
+    {
+     "off": 2,
+     "succ": 33.3333333,
+     "stay": 0,
+     "destroy": 66.66666670000001
+    },
+    {
+     "off": 3,
+     "succ": 0.9009009,
+     "stay": 32.4324324,
+     "destroy": 66.66666670000001
+    },
+    {
+     "off": 4,
+     "succ": 0.8130081,
+     "stay": 32.5203252,
+     "destroy": 66.6666667
+    },
+    {
+     "off": 5,
+     "succ": 0.7407407,
+     "stay": 32.5925926,
+     "destroy": 66.6666667
+    }
+   ],
+   "note": "第 6 次以後的機率不再變動，一律套用最後一列。"
+  },
+  {
+   "slot": "武器",
+   "kind": "祝福卷軸",
+   "steps": [
+    {
+     "off": 0,
+     "succ": 33.3333333,
+     "stay": 0,
+     "destroy": 66.66666670000001
+    },
+    {
+     "off": 1,
+     "succ": 33.3333333,
+     "stay": 0,
+     "destroy": 66.66666670000001
+    },
+    {
+     "off": 2,
+     "succ": 33.3333333,
+     "stay": 0,
+     "destroy": 66.66666670000001
+    },
+    {
+     "off": 3,
+     "succ": 3.3333333,
+     "stay": 30,
+     "destroy": 66.6666667
+    },
+    {
+     "off": 4,
+     "succ": 3.030303,
+     "stay": 30.3030303,
+     "destroy": 66.6666667
+    },
+    {
+     "off": 5,
+     "succ": 2.7777778,
+     "stay": 30.5555556,
+     "destroy": 66.6666666
+    }
+   ],
+   "note": "第 6 次以後的機率不再變動，一律套用最後一列。 祝福卷成功時會跳級。"
+  },
+  {
+   "slot": "防具",
+   "kind": "一般卷軸",
+   "steps": [
+    {
+     "off": 0,
+     "succ": 25,
+     "stay": 0,
+     "destroy": 75
+    },
+    {
+     "off": 1,
+     "succ": 20,
+     "stay": 0,
+     "destroy": 80
+    },
+    {
+     "off": 2,
+     "succ": 16.6666667,
+     "stay": 0,
+     "destroy": 83.33333329999999
+    },
+    {
+     "off": 3,
+     "succ": 14.2857143,
+     "stay": 0,
+     "destroy": 85.7142857
+    },
+    {
+     "off": 4,
+     "succ": 12.5,
+     "stay": 0,
+     "destroy": 87.5
+    },
+    {
+     "off": 5,
+     "succ": 0.3003003,
+     "stay": 10.8108108,
+     "destroy": 88.8888889
+    },
+    {
+     "off": 6,
+     "succ": 0.2439024,
+     "stay": 9.7560976,
+     "destroy": 90
+    },
+    {
+     "off": 7,
+     "succ": 0.2020202,
+     "stay": 8.8888889,
+     "destroy": 90.9090909
+    }
+   ],
+   "note": "第 8 次以後的機率不再變動，一律套用最後一列。"
+  },
+  {
+   "slot": "防具",
+   "kind": "祝福卷軸",
+   "steps": [
+    {
+     "off": 0,
+     "succ": 25,
+     "stay": 0,
+     "destroy": 75
+    },
+    {
+     "off": 1,
+     "succ": 20,
+     "stay": 0,
+     "destroy": 80
+    },
+    {
+     "off": 2,
+     "succ": 16.6666667,
+     "stay": 0,
+     "destroy": 83.33333329999999
+    },
+    {
+     "off": 3,
+     "succ": 14.2857143,
+     "stay": 0,
+     "destroy": 85.7142857
+    },
+    {
+     "off": 4,
+     "succ": 12.5,
+     "stay": 0,
+     "destroy": 87.5
+    },
+    {
+     "off": 5,
+     "succ": 1.1111111,
+     "stay": 10,
+     "destroy": 88.8888889
+    },
+    {
+     "off": 6,
+     "succ": 0.9090909,
+     "stay": 9.0909091,
+     "destroy": 90
+    },
+    {
+     "off": 7,
+     "succ": 0.7575758,
+     "stay": 8.3333333,
+     "destroy": 90.9090909
+    }
+   ],
+   "note": "第 8 次以後的機率不再變動，一律套用最後一列。 祝福卷成功時會跳級。"
+  },
+  {
+   "slot": "飾品",
+   "kind": "一般卷軸",
+   "steps": [
+    {
+     "off": 0,
+     "succ": 50,
+     "stay": 0,
+     "destroy": 50
+    },
+    {
+     "off": 1,
+     "succ": 40,
+     "stay": 0,
+     "destroy": 60
+    },
+    {
+     "off": 2,
+     "succ": 30,
+     "stay": 0,
+     "destroy": 70
+    },
+    {
+     "off": 3,
+     "succ": 20,
+     "stay": 0,
+     "destroy": 80
+    }
+   ],
+   "note": "飾品沒有安定值，從 +0 就開始賭；失敗一律破壞，沒有「維持」。第 3 次以後固定 20%。祝福卷成功時 +1～+3。"
+  }
+ ],
+ "blessJump": [
+  {
+   "from": 0,
+   "to": 2,
+   "text": "+1 ～ +3"
+  },
+  {
+   "from": 3,
+   "to": 5,
+   "text": "+1 ～ +2"
+  },
+  {
+   "from": 6,
+   "to": 12,
+   "text": "+1 ～ +1"
+  }
+ ],
+ "poly": [
+  {
+   "min": 0,
+   "max": 14,
+   "forms": [
+    {
+     "name": "妖魔",
+     "eff": "近傷+1、近命中+1"
+    },
+    {
+     "name": "骷髏",
+     "eff": "近傷+1、近命中+1"
+    },
+    {
+     "name": "那魯加妖魔",
+     "eff": "近傷+1、近命中+1"
+    },
+    {
+     "name": "妖魔弓箭手",
+     "eff": "遠傷+1、遠命中+1"
+    },
+    {
+     "name": "長者",
+     "eff": "額外MP+2、MP恢復+1"
+    },
+    {
+     "name": "侏儒",
+     "eff": "AC-1、攻速+10%"
+    },
+    {
+     "name": "歐姆",
+     "eff": "額外傷+1、額外命中+1"
+    },
+    {
+     "name": "巨蟻",
+     "eff": "額外命中+1、攻速+10%"
+    },
+    {
+     "name": "奇異鸚鵡",
+     "eff": "額外傷+1、額外MP+1"
+    },
+    {
+     "name": "浣熊",
+     "eff": "額外命中+1、額外MP+1"
+    },
+    {
+     "name": "果凍怪",
+     "eff": "額外MP+1、MR+4"
+    }
+   ]
+  },
+  {
+   "min": 15,
+   "max": 29,
+   "forms": [
+    {
+     "name": "妖魔鬥士",
+     "eff": "近傷+2、近命中+1"
+    },
+    {
+     "name": "狼人",
+     "eff": "近傷+1、近命中+2"
+    },
+    {
+     "name": "食人妖精",
+     "eff": "近傷+2、近命中+2"
+    },
+    {
+     "name": "妖魔巡守",
+     "eff": "遠傷+2、遠命中+1"
+    },
+    {
+     "name": "夏洛伯",
+     "eff": "AC-2、攻速+15%"
+    },
+    {
+     "name": "黑暗妖精運送員",
+     "eff": "遠傷+1、遠命中+2"
+    },
+    {
+     "name": "巨大兵蟻",
+     "eff": "額外傷+2、額外命中+1"
+    },
+    {
+     "name": "紙人",
+     "eff": "額外MP+2、MP恢復+2"
+    },
+    {
+     "name": "雪人",
+     "eff": "魔傷+1"
+    }
+   ]
+  },
+  {
+   "min": 30,
+   "max": 44,
+   "forms": [
+    {
+     "name": "萊肯",
+     "eff": "近傷+2、近命中+2"
+    },
+    {
+     "name": "思克巴",
+     "eff": "魔傷+1、MP恢復+2"
+    },
+    {
+     "name": "食人妖精王",
+     "eff": "近傷+3、近命中+2"
+    },
+    {
+     "name": "黑暗妖精警衛(矛)",
+     "eff": "近傷+1、近命中+3"
+    },
+    {
+     "name": "強盜(弓)",
+     "eff": "遠傷+2、遠命中+2"
+    },
+    {
+     "name": "黑暗妖精盜賊",
+     "eff": "遠傷+2、遠命中+3"
+    },
+    {
+     "name": "黑暗妖精法師",
+     "eff": "額外MP+3、MP恢復+1"
+    },
+    {
+     "name": "亞力安",
+     "eff": "近傷+1、近命中+1、額外MP+2"
+    },
+    {
+     "name": "曼波兔",
+     "eff": "ER+1、攻速+15%"
+    }
+   ]
+  },
+  {
+   "min": 45,
+   "max": 49,
+   "forms": [
+    {
+     "name": "德雷克",
+     "eff": "近傷+3、近命中+3"
+    },
+    {
+     "name": "布雷哲",
+     "eff": "近傷+2、近命中+4"
+    },
+    {
+     "name": "庫曼",
+     "eff": "近傷+1、近命中+1、攻速+15%"
+    },
+    {
+     "name": "黑暗妖精警衛(弓)",
+     "eff": "遠傷+1、遠命中+1、攻速+15%"
+    },
+    {
+     "name": "黑暗妖精巡守",
+     "eff": "遠傷+3、遠命中+3"
+    },
+    {
+     "name": "巴風特",
+     "eff": "魔傷+1、額外MP+2、MP恢復+2"
+    }
+   ]
+  },
+  {
+   "min": 50,
+   "max": 51,
+   "forms": [
+    {
+     "name": "克特",
+     "eff": "近傷+3、近命中+3、攻速+15%"
+    },
+    {
+     "name": "刺客首領",
+     "eff": "近傷+2、近命中+2、攻速+20%"
+    },
+    {
+     "name": "小惡魔",
+     "eff": "遠傷+1、魔傷+1、MP恢復+3、攻速+15%"
+    },
+    {
+     "name": "黑騎士",
+     "eff": "近傷+1、近命中+4、攻速+10%"
+    },
+    {
+     "name": "火焰弓箭手",
+     "eff": "遠傷+3、遠命中+3、攻速+10%"
+    },
+    {
+     "name": "黑法師",
+     "eff": "魔傷+1、額外MP+3、MP恢復+2、攻速+10%"
+    }
+   ]
+  },
+  {
+   "min": 52,
+   "max": 9999,
+   "forms": [
+    {
+     "name": "死亡騎士",
+     "eff": "近傷+3、近命中+3、攻速+20%"
+    },
+    {
+     "name": "狂暴將軍",
+     "eff": "近傷+5、攻速+15%"
+    },
+    {
+     "name": "黑暗精靈",
+     "eff": "遠傷+3、遠命中+3、攻速+20%"
+    },
+    {
+     "name": "黑長者",
+     "eff": "魔傷+2、額外MP+1、MP恢復+2、攻速+15%"
+    },
+    {
+     "name": "巴列斯",
+     "eff": "魔傷+1、額外MP+2、MP恢復+4、攻速+10%"
+    }
+   ]
+  }
+ ],
+ "bianOdds": [
+  {
+   "group": "祝福系",
+   "name": "祝福的",
+   "pct": 16.666666666666668
+  },
+  {
+   "group": "祝福系",
+   "name": "詛咒的",
+   "pct": 16.666666666666668
+  },
+  {
+   "group": "遠古系",
+   "name": "遠古",
+   "pct": 8.333333333333334
+  },
+  {
+   "group": "遠古系",
+   "name": "永恆",
+   "pct": 8.333333333333334
+  },
+  {
+   "group": "遠古系",
+   "name": "不朽",
+   "pct": 8.333333333333334
+  },
+  {
+   "group": "遠古系",
+   "name": "太初",
+   "pct": 8.333333333333334
+  },
+  {
+   "group": "屬性系",
+   "name": "火之",
+   "pct": 5
+  },
+  {
+   "group": "屬性系",
+   "name": "水之",
+   "pct": 5
+  },
+  {
+   "group": "屬性系",
+   "name": "風之",
+   "pct": 5
+  },
+  {
+   "group": "屬性系",
+   "name": "地之",
+   "pct": 5
+  },
+  {
+   "group": "屬性系",
+   "name": "爆炎",
+   "pct": 2.5
+  },
+  {
+   "group": "屬性系",
+   "name": "海嘯",
+   "pct": 2.5
+  },
+  {
+   "group": "屬性系",
+   "name": "暴風",
+   "pct": 2.5
+  },
+  {
+   "group": "屬性系",
+   "name": "崩裂",
+   "pct": 2.5
+  },
+  {
+   "group": "屬性系",
+   "name": "火靈",
+   "pct": 0.8333333333333335
+  },
+  {
+   "group": "屬性系",
+   "name": "水靈",
+   "pct": 0.8333333333333335
+  },
+  {
+   "group": "屬性系",
+   "name": "風靈",
+   "pct": 0.8333333333333335
+  },
+  {
+   "group": "屬性系",
+   "name": "地靈",
+   "pct": 0.8333333333333335
+  }
+ ],
+ "bless": [
+  {
+   "slot": "武器",
+   "key": "true",
+   "name": "祝福的",
+   "eff": [
+    "額外傷害+1",
+    "額外命中+1",
+    "額外魔力 MP+2"
+   ]
+  },
+  {
+   "slot": "武器",
+   "key": "cursed",
+   "name": "詛咒的",
+   "eff": [
+    "額外傷害-1",
+    "額外命中-1",
+    "額外魔力 MP-2"
+   ]
+  },
+  {
+   "slot": "防具",
+   "key": "true",
+   "name": "祝福的",
+   "eff": [
+    "防禦 AC 提升+1",
+    "傷害減免 DR+1"
+   ]
+  },
+  {
+   "slot": "防具",
+   "key": "cursed",
+   "name": "詛咒的",
+   "eff": [
+    "防禦 AC 下降+1",
+    "傷害減免 DR-1"
+   ]
+  },
+  {
+   "slot": "飾品",
+   "key": "true",
+   "name": "祝福的",
+   "eff": [
+    "防禦 AC 提升+1",
+    "魔防 MR+1"
+   ]
+  },
+  {
+   "slot": "飾品",
+   "key": "cursed",
+   "name": "詛咒的",
+   "eff": [
+    "防禦 AC 下降+1",
+    "魔防 MR-1"
+   ]
+  }
+ ],
+ "anc": [
+  {
+   "slot": "武器",
+   "key": "ancient",
+   "name": "遠古",
+   "eff": [
+    "額外傷害+2",
+    "魔法傷害+1"
+   ]
+  },
+  {
+   "slot": "武器",
+   "key": "eternal",
+   "name": "永恆",
+   "eff": [
+    "額外傷害+4"
+   ]
+  },
+  {
+   "slot": "武器",
+   "key": "immortal",
+   "name": "不朽",
+   "eff": [
+    "額外命中+4"
+   ]
+  },
+  {
+   "slot": "武器",
+   "key": "primordial",
+   "name": "太初",
+   "eff": [
+    "魔法傷害+2"
+   ]
+  },
+  {
+   "slot": "防具",
+   "key": "ancient",
+   "name": "遠古",
+   "eff": [
+    "傷害減免 DR+2"
+   ]
+  },
+  {
+   "slot": "防具",
+   "key": "eternal",
+   "name": "永恆",
+   "eff": [
+    "防禦 AC 提升+2"
+   ]
+  },
+  {
+   "slot": "防具",
+   "key": "immortal",
+   "name": "不朽",
+   "eff": [
+    "閃避 ER+2"
+   ]
+  },
+  {
+   "slot": "防具",
+   "key": "primordial",
+   "name": "太初",
+   "eff": [
+    "魔防 MR+4"
+   ]
+  },
+  {
+   "slot": "飾品",
+   "key": "ancient",
+   "name": "遠古",
+   "eff": [
+    "傷害減免 DR+1",
+    "魔防 MR+1"
+   ]
+  },
+  {
+   "slot": "飾品",
+   "key": "eternal",
+   "name": "永恆",
+   "eff": [
+    "防禦 AC 提升+1",
+    "額外傷害+1"
+   ]
+  },
+  {
+   "slot": "飾品",
+   "key": "immortal",
+   "name": "不朽",
+   "eff": [
+    "額外傷害+1",
+    "額外命中+1"
+   ]
+  },
+  {
+   "slot": "飾品",
+   "key": "primordial",
+   "name": "太初",
+   "eff": [
+    "額外魔力 MP+2",
+    "魔防 MR+2"
+   ]
+  }
+ ],
+ "attrAffix": [
+  {
+   "code": "fire1",
+   "name": "火之",
+   "ele": "火",
+   "tier": 1,
+   "fix": 1,
+   "counter": 6,
+   "res": 1,
+   "mr": 1,
+   "beats": "地"
+  },
+  {
+   "code": "water1",
+   "name": "水之",
+   "ele": "水",
+   "tier": 1,
+   "fix": 1,
+   "counter": 6,
+   "res": 1,
+   "mr": 1,
+   "beats": "火"
+  },
+  {
+   "code": "wind1",
+   "name": "風之",
+   "ele": "風",
+   "tier": 1,
+   "fix": 1,
+   "counter": 6,
+   "res": 1,
+   "mr": 1,
+   "beats": "水"
+  },
+  {
+   "code": "earth1",
+   "name": "地之",
+   "ele": "地",
+   "tier": 1,
+   "fix": 1,
+   "counter": 6,
+   "res": 1,
+   "mr": 1,
+   "beats": "風"
+  },
+  {
+   "code": "fire3",
+   "name": "爆炎",
+   "ele": "火",
+   "tier": 3,
+   "fix": 3,
+   "counter": 9,
+   "res": 2,
+   "mr": 2,
+   "beats": "地"
+  },
+  {
+   "code": "water3",
+   "name": "海嘯",
+   "ele": "水",
+   "tier": 3,
+   "fix": 3,
+   "counter": 9,
+   "res": 2,
+   "mr": 2,
+   "beats": "火"
+  },
+  {
+   "code": "wind3",
+   "name": "暴風",
+   "ele": "風",
+   "tier": 3,
+   "fix": 3,
+   "counter": 9,
+   "res": 2,
+   "mr": 2,
+   "beats": "水"
+  },
+  {
+   "code": "earth3",
+   "name": "崩裂",
+   "ele": "地",
+   "tier": 3,
+   "fix": 3,
+   "counter": 9,
+   "res": 2,
+   "mr": 2,
+   "beats": "風"
+  },
+  {
+   "code": "fire5",
+   "name": "火靈",
+   "ele": "火",
+   "tier": 5,
+   "fix": 5,
+   "counter": 12,
+   "res": 3,
+   "mr": 3,
+   "beats": "地"
+  },
+  {
+   "code": "water5",
+   "name": "水靈",
+   "ele": "水",
+   "tier": 5,
+   "fix": 5,
+   "counter": 12,
+   "res": 3,
+   "mr": 3,
+   "beats": "火"
+  },
+  {
+   "code": "wind5",
+   "name": "風靈",
+   "ele": "風",
+   "tier": 5,
+   "fix": 5,
+   "counter": 12,
+   "res": 3,
+   "mr": 3,
+   "beats": "水"
+  },
+  {
+   "code": "earth5",
+   "name": "地靈",
+   "ele": "地",
+   "tier": 5,
+   "fix": 5,
+   "counter": 12,
+   "res": 3,
+   "mr": 3,
+   "beats": "風"
+  }
+ ]
 }
