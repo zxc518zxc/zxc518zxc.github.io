@@ -632,11 +632,11 @@ fs.writeFileSync(path.join(OUT, "pets.html"), page("寵物與召喚", "pets", `
 </tbody></table></div></div>
 
 <div class="mcard"><div class="ttl">🔮 法師「召喚術」召出誰</div>
-<div class="sub">召喚物<b>一次只能有一隻</b>(不管魅力多高,不會變兩隻),佔 1 格名額。召出誰看<b>角色等級</b>,不看魅力。</div>
-<div class="sub" style="margin-top:8px"><b>要多少魅力才召得出來?</b>召喚要有 1 格空名額:名額 = 魅力 ÷ 6,狗先佔位,所以「帶幾隻狗」決定你要多少魅力。</div>
-<div class="wrap" style="margin-top:8px"><table><thead><tr><th>身上帶幾隻狗</th><th>要召喚需要魅力</th></tr></thead><tbody>
-<tr><td>0 隻</td><td>6</td></tr><tr><td>1 隻</td><td>12</td></tr><tr><td>2 隻</td><td>18</td></tr><tr><td>3 隻</td><td>24</td></tr><tr><td>4 隻</td><td>30</td></tr>
+<div class="sub"><b>召出幾隻看魅力</b>:法師召喚術一次召出 <b>魅力 ÷ 6 隻</b>(小數捨去,最少 1 隻);<b>52 級以上改 ÷ 8、60 級以上改 ÷ 10</b>(高階召喚物比較強,所以隻數變少)。整群召喚物只佔魅力名額 <b>1 格</b>,而且要有 1 格空名額才召得出來(名額 = 魅力 ÷ 6,狗先佔位)。</div>
+<div class="wrap" style="margin-top:8px"><table><thead><tr><th>魅力</th><th>51 級以下召出</th><th>52 ~ 59 級召出</th><th>60 級以上召出</th></tr></thead><tbody>
+<tr><td>6 ~ 11</td><td>1 隻</td><td>1 隻</td><td>1 隻</td></tr><tr><td>12 ~ 17</td><td>2 隻</td><td>1 隻(16 起 2 隻)</td><td>1 隻</td></tr><tr><td>18 ~ 23</td><td>3 隻</td><td>2 隻</td><td>1 隻(20 起 2 隻)</td></tr><tr><td>24 ~ 29</td><td>4 隻</td><td>3 隻</td><td>2 隻</td></tr><tr><td>30 ~ 35</td><td>5 隻</td><td>3 隻(32 起 4 隻)</td><td>3 隻</td></tr><tr><td>36 ~ 41</td><td>6 隻</td><td>4 隻(40 起 5 隻)</td><td>3 隻(40 起 4 隻)</td></tr>
 </tbody></table></div>
+<div class="sub" style="margin-top:8px"><b>召出誰</b>看<b>角色等級</b>,不看魅力:</div>
 <div class="wrap" style="margin-top:8px"><table><thead><tr><th>角色等級</th><th>召喚</th></tr></thead><tbody>
 <tr><td>未滿 32</td><td>哈柏哥布林</td></tr><tr><td>32</td><td>甘地妖魔</td></tr><tr><td>40</td><td>食人妖精</td></tr><tr><td>52</td><td>魔狼</td></tr><tr><td>60</td><td>地獄奴隸</td></tr><tr><td>64</td><td>地獄束縛犬</td></tr><tr><td>72</td><td>黑豹</td></tr>
 </tbody></table></div>
