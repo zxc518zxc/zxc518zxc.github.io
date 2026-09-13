@@ -565,7 +565,7 @@ const page = (title, active, body, extra = "") => `<!DOCTYPE html>
    if(t==='—'||t==='')a[i].classList.add('e');else a[i].classList.remove('e');}}
  new MutationObserver(mark).observe(tb,{childList:true});mark();})();
 </script>
-<footer>資料自動同步自遊戲檔 · 產生於 ${new Date().toISOString().slice(0, 10)}</footer>
+<footer>資料自動同步自遊戲檔 · 產生於 ${new Date().toISOString().slice(0, 10)}<br>本站資料僅供參考,阿肥放置天地官方保留最終解釋權。<br>一切贊助皆為玩家自願,款項全數用於伺服器維護與研究開發。</footer>
 ${extra.split("data.js").join("data.js?v=" + DATA_V)}</body></html>`;
 
 
@@ -601,7 +601,12 @@ ${chips([[mobList.length, "怪物"], [items.length, "道具"], [skills.length, "
 <a class="link" href="${LINKS.discord}" target="_blank" rel="noopener"><div class="em">💬</div><div><div class="tt">Discord</div><div class="dd">公告・討論・找隊友</div></div></a>
 <a class="link" href="${LINKS.lineGroup}" target="_blank" rel="noopener"><div class="em">👥</div><div><div class="tt">LINE 社群</div><div class="dd">玩家交流・活動通知</div></div></a>
 <a class="link" href="https://line.me/R/ti/p/${encodeURIComponent(LINKS.lineId)}" target="_blank" rel="noopener"><div class="em">📮</div><div><div class="tt">LINE 官方帳號</div><div class="dd">客服私訊 <span class="lineid">${LINKS.lineId}</span></div></div></a>
-</div>`));
+</div>
+<div class="card" style="display:block;margin-top:16px;font-size:12px;color:#8f8067;line-height:1.8"><b style="color:#b6a684;font-size:13px">免責聲明</b><br>
+一、本遊戲為個人研究與技術學習專案。<br>
+二、玩家的一切贊助皆屬自願行為,無任何強制;贊助所得全數用於伺服器租用、維護與研究開發。<br>
+三、請玩家自行評估經濟能力,理性贊助,勿超出自身負擔。<br>
+四、如遇爭議、異常狀況或違規行為(含外掛、漏洞利用、多開刷榜等),官方保留處置與最終解釋權。</div>`));
 
 // ---- 怪物掉落 ----
 fs.writeFileSync(path.join(OUT, "monsters.html"), page("怪物掉落圖鑑", "mob", `
@@ -719,7 +724,7 @@ const evCard = e => `<div class="mcard"` + (e.over ? ` style="opacity:.55"` : ""
 
 fs.writeFileSync(path.join(OUT, "event.html"), page("活動介紹", "event", `
 ${chips([[EVENTS.filter(e => !e.over).length, "進行中活動"]])}
-<div class="hint">活動規則以本頁公告為準。獎勵一律寄到遊戲內「交易所 →&nbsp;領取」,離線也收得到。</div>
+<div class="hint">活動規則以本頁公告為準。獎勵一律寄到遊戲內「交易所 →&nbsp;領取」,離線也收得到。如遇爭議或違規(含外掛、漏洞、多開刷榜等),官方保留取消資格、調整獎勵與最終解釋權。</div>
 ${EVENTS.map(evCard).join("")}`));
 
 fs.writeFileSync(path.join(OUT, "zones.html"), page("獵場列表", "zone", `
