@@ -543,6 +543,7 @@ const NAV = [
   ["enhance.html", "enh", "⚒️", "強化機率"],
   ["affix.html", "affix", "🌑", "詞條大全"],
   ["poly.html", "poly", "💪", "變身型態"],
+  ["pets.html", "pets", "🐕", "寵物與召喚"],
   ["event.html", "event", "🎉", "活動介紹"],
   ["guide.html", "guide", "🌱", "新手指南"],
   ["changelog.html", "log", "📢", "版本更新"],
@@ -585,6 +586,7 @@ ${chips([[mobList.length, "怪物"], [items.length, "道具"], [skills.length, "
 <a class="tile" href="zones.html"><div class="em">🗺️</div><div class="tt">獵場列表</div><div class="dd">幾等該去哪練・怪在哪出沒</div></a>
 <a class="tile" href="worldboss.html"><div class="em">🐉</div><div class="tt">世界王</div><div class="dd">入場等級・重生間隔・掉落</div></a>
 <a class="tile" href="npc.html"><div class="em">🏘️</div><div class="tt">NPC 一覽</div><div class="dd">誰在哪個村莊・提供什麼服務</div></a>
+<a class="tile" href="pets.html"><div class="em">🐕</div><div class="tt">寵物與召喚</div><div class="dd">魅力能帶幾隻・召喚術・迷魅</div></a>
 <a class="tile" href="guide.html"><div class="em">🌱</div><div class="tt">新手指南</div><div class="dd">第一次玩看這裡</div></a>
 <a class="tile" href="mastery.html"><div class="em">🎓</div><div class="tt">精通升級數據</div><div class="dd">升到滿級要什麼材料</div></a>
 <a class="tile" href="sets.html"><div class="em">🛡️</div><div class="tt">套裝效果</div><div class="dd">湊齊有什麼加成</div></a>
@@ -607,6 +609,41 @@ ${chips([[mobList.length, "怪物"], [items.length, "道具"], [skills.length, "
 二、玩家的一切贊助皆屬自願行為,無任何強制;贊助所得全數用於伺服器租用、維護與研究開發。<br>
 三、請玩家自行評估經濟能力,理性贊助,勿超出自身負擔。<br>
 四、如遇爭議、異常狀況或違規行為(含外掛、漏洞利用、多開刷榜等),官方保留處置與最終解釋權。</div>`));
+
+
+// ---- 🐕 寵物與召喚(2026-09-14 麥哥:玩家一直問客服「魅力能帶幾隻/召喚誰」→ 上官網)----
+// ⚠ 這頁的數字**不在 gamedata**,是引擎常數,對碼自 engine/afk:魅力池 floor(cha/6)(skills.go:387 totalCollarCount 守門)、
+//    四犬 petNames + collarForMobGo(stage3.go)、召喚術階級 summonTierByLevelGo(stage3.go:795)、迷魅 charmedTickGo(stage3.go)。
+//    改了引擎這幾處要同步改這頁(全專案只有這裡是手抄;2026-09-14 對碼)。
+fs.writeFileSync(path.join(OUT, "pets.html"), page("寵物與召喚", "pets", `
+<div class="hint">玩家最常問客服的三個問題:魅力能帶幾隻?召喚術召出誰?迷魅是什麼?這頁一次講完。</div>
+
+<div class="mcard"><div class="ttl">💗 魅力決定「能帶幾隻」</div>
+<div class="sub">寵物(狗)和召喚物<b>共用一個名額池</b>:名額 = <b>魅力 ÷ 6</b>(小數捨去)。每張項圈佔 1 格、活著的召喚物佔 1 格。名額滿了就不能再誘捕、也不能再召喚。</div>
+<div class="wrap" style="margin-top:8px"><table><thead><tr><th>魅力</th><th>名額</th></tr></thead><tbody>
+<tr><td>6 ~ 11</td><td>1</td></tr><tr><td>12 ~ 17</td><td>2</td></tr><tr><td>18 ~ 23</td><td>3</td></tr><tr><td>24 ~ 29</td><td>4</td></tr><tr><td>30 ~ 35</td><td>5</td></tr><tr><td>36 ~ 41</td><td>6</td></tr>
+</tbody></table></div>
+<div class="sub" style="margin-top:8px">・魅力<b>不影響</b>寵物的命中與傷害,那些看狗自己的等級(1~50)。<br>・喝「萬能藥」可永久 +1 魅力,最多 20 瓶。<br>・<b>寵物優先</b>:有召喚物時吹哨子叫狗,召喚物會被收掉。</div></div>
+
+<div class="mcard"><div class="ttl">🐕 四種狗怎麼得到</div>
+<div class="sub">用「肉」啟動<b>誘捕 300 秒</b>(名額滿不能啟動),期間殺到對應的怪 <b>100% 掉項圈</b>,拿到項圈就能吹哨子叫牠出來。項圈不可交易、不可存倉庫。</div>
+<div class="wrap" style="margin-top:8px"><table><thead><tr><th>狗</th><th>誘捕時要殺的怪</th></tr></thead><tbody>
+<tr><td>杜賓狗</td><td>杜賓狗</td></tr><tr><td>狼</td><td>狼</td></tr><tr><td>哈士奇</td><td>哈士奇</td></tr><tr><td>牧羊犬</td><td>牧羊犬</td></tr>
+</tbody></table></div></div>
+
+<div class="mcard"><div class="ttl">🔮 法師「召喚術」召出誰</div>
+<div class="sub">召喚物<b>一次只能有一隻</b>(不管魅力多高),佔 1 格名額。召出誰看<b>角色等級</b>,不看魅力。</div>
+<div class="wrap" style="margin-top:8px"><table><thead><tr><th>角色等級</th><th>召喚</th></tr></thead><tbody>
+<tr><td>未滿 32</td><td>哈柏哥布林</td></tr><tr><td>32</td><td>甘地妖魔</td></tr><tr><td>40</td><td>食人妖精</td></tr><tr><td>52</td><td>魔狼</td></tr><tr><td>60</td><td>地獄奴隸</td></tr><tr><td>64</td><td>地獄束縛犬</td></tr><tr><td>72</td><td>黑豹</td></tr>
+</tbody></table></div>
+<div class="sub" style="margin-top:8px">目前等級上限 55,60 級以上的召喚物要等上限開放。</div></div>
+
+<div class="mcard"><div class="ttl">🧚 妖精「召喚屬性精靈」</div>
+<div class="sub">召喚屬性精靈(敏 40)與召喚強力屬性精靈(敏 50)也是<b>一次一隻</b>,精靈的屬性跟著妖精自己選的屬性走。兩支互斥:勾強力會自動取消普通並換成上級精靈。</div></div>
+
+<div class="mcard"><div class="ttl">💫 法師「迷魅術」</div>
+<div class="sub">把場上一隻怪變成自己的迷魅獸幫忙打(<b>王不行</b>),一次只能有一隻,<b>不佔</b>魅力名額。魅力會加進迷魅獸的命中與傷害。角色死亡時迷魅獸解散。</div></div>
+`));
 
 // ---- 怪物掉落 ----
 fs.writeFileSync(path.join(OUT, "monsters.html"), page("怪物掉落圖鑑", "mob", `
