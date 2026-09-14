@@ -38,7 +38,7 @@ const FEAT = {
   slot:    false, // 肥特
   glory:   false, // 榮光進化(精通)
   potion:  false, // 嗑藥大師(精通)
-  codex:   false, // 圖鑑
+  codex:   false, // 📖 圖鑑登錄(2026-09-14 改版;麥哥:官網只寫 Lv1~39 規則與效果,Lv40+/世界王/加成表不上;feature codex 開放後改 true 生成 codex.html)
   mcard:   false, // 商城:精通洗鍊卡 / 精通轉換卡
 };
 // 🐉 世界王等級上限(對應遊戲的 CMD `wbmax`;0=不限)。超過此等級的王不列出。
@@ -551,6 +551,7 @@ const NAV = [
   ["guide.html", "guide", "🌱", "新手指南"],
   ["changelog.html", "log", "📢", "版本更新"],
 ];
+if (FEAT.codex) NAV.splice(13, 0, ["codex.html", "codex", "📖", "怪物圖鑑登錄"]); // 📖 開放後才進導覽(放在寵物之後)
 
 const page = (title, active, body, extra = "") => `<!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -590,6 +591,7 @@ ${chips([[mobList.length, "怪物"], [items.length, "道具"], [skills.length, "
 <a class="tile" href="worldboss.html"><div class="em">🐉</div><div class="tt">世界王</div><div class="dd">入場等級・重生間隔・掉落</div></a>
 <a class="tile" href="npc.html"><div class="em">🏘️</div><div class="tt">NPC 一覽</div><div class="dd">誰在哪個村莊・提供什麼服務</div></a>
 <a class="tile" href="pets.html"><div class="em">🐕</div><div class="tt">寵物與召喚</div><div class="dd">魅力能帶幾隻・召喚術・迷魅</div></a>
+${FEAT.codex ? '<a class="tile" href="codex.html"><div class="em">📖</div><div class="tt">怪物圖鑑登錄</div><div class="dd">殺幾隻點亮・登錄要多少・給什麼加成</div></a>' : ''}
 <a class="tile" href="guide.html"><div class="em">🌱</div><div class="tt">新手指南</div><div class="dd">第一次玩看這裡</div></a>
 <a class="tile" href="mastery.html"><div class="em">🎓</div><div class="tt">精通升級數據</div><div class="dd">升到滿級要什麼材料</div></a>
 <a class="tile" href="sets.html"><div class="em">🛡️</div><div class="tt">套裝效果</div><div class="dd">湊齊有什麼加成</div></a>
@@ -857,6 +859,38 @@ $("tb").innerHTML=list.map(s=>"<tr><td class='nm'>"+esc(s.n)+"</td><td class='nu
 $("q").oninput=render;render();
 </script>`));
 
+
+// ---- 📖 怪物圖鑑登錄(2026-09-14 改版;FEAT.codex 開放後才生成)----
+// 資料來源:gamedata.codexBonus(伺服器不下發給玩家,這裡直接讀本機檔)+ mobs 等級;規則常數手抄自 engine/afk/codex.go
+//   (50/200 次、等級×2 萬;麥哥拍板官網只寫 Lv1~39:Lv40+ 與世界王的擊殺數/藍鑽費/效果一律不列)。改引擎要同步。
+if (FEAT.codex && GD.codexBonus) {
+  const STAT = { hp: "最大 HP", mp: "最大 MP", hpr: "回血", mpr: "回魔", mh: "近戰命中", rh: "遠程命中", magicHit: "魔法命中", mgd: "魔法傷害",
+    pveDmg: "PvE 傷害", pveDr: "PvE 減傷", pvpDmg: "PvP 傷害", pvpDr: "PvP 減傷", exp: "經驗獲得" };
+  const rows = Object.entries(GD.codexBonus)
+    .map(([k, d]) => ({ k, d, m: GD.mobs[k] }))
+    .filter(r => r.m && r.m.lv <= 39 && mobZones[r.m.n] && STAT[r.d.stat]) // mobZones=玩家進得去的獵場才有的怪(同怪物頁過濾)
+    .sort((a, b) => (a.m.lv - b.m.lv) || a.m.n.localeCompare(b.m.n));
+  const need = lv => lv < 20 ? 50 : 200;
+  const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  const bonusTxt = d => `${STAT[d.stat]} +${d.v}${d.stat === "exp" ? "%" : ""}`;
+  fs.writeFileSync(path.join(OUT, "codex.html"), page("怪物圖鑑登錄", "codex", `
+<div class="hint">「能力 → 圖鑑」:同一隻怪殺到門檻會<b>點亮</b>,再付金幣<b>登錄</b>,就拿到那一格的<b>永久加成</b>。圖鑑是<b>整個帳號共用</b>的:擊殺數四隻角色一起算,登錄後每隻角色都吃得到加成。</div>
+
+<div class="mcard"><div class="ttl">📖 規則</div>
+<div class="wrap"><table><thead><tr><th>怪物等級</th><th>點亮要殺幾次(帳號累計)</th><th>登錄費</th></tr></thead><tbody>
+<tr><td>Lv1 ~ 19</td><td>50 次</td><td>怪物等級 × 2 萬金幣</td></tr>
+<tr><td>Lv20 ~ 39</td><td>200 次</td><td>怪物等級 × 2 萬金幣</td></tr>
+<tr><td>Lv40 以上・世界王</td><td colspan="2">另有規則,遊戲內圖鑑格子上會直接顯示</td></tr>
+</tbody></table></div>
+<div class="sub" style="margin-top:8px">・沒點亮的格子會顯示目前殺了幾次(例:12 / 50)。<br>・登錄是一次性的,登錄後那格永久亮起、效果立即生效。<br>・圖鑑開放之前的擊殺不算,從開放那一刻開始計。<br>・世界王只有「拿到王房結算獎勵」的那一次才算殺過。</div></div>
+
+<div class="mcard"><div class="ttl">🗂 Lv1 ~ 39 各怪登錄效果(共 ${rows.length} 格)</div>
+<div class="wrap"><table><thead><tr><th>等級</th><th>怪物</th><th>點亮</th><th>登錄費</th><th>登錄效果</th></tr></thead><tbody>
+${rows.map(r => `<tr><td>${r.m.lv}</td><td>${esc(r.m.n)}</td><td>${need(r.m.lv)} 次</td><td>${(r.m.lv * 20000).toLocaleString()} 金幣</td><td>${bonusTxt(r.d)}</td></tr>`).join("\n")}
+</tbody></table></div>
+<div class="sub" style="margin-top:8px">Lv1 ~ 39 全部登錄合計:最大 HP +200、最大 MP +100、回血 +15、回魔 +5(依實際登錄的怪為準)。</div></div>
+`));
+}
 
 // ================= 🎓 精通升級數據 =================
 // 資料來自 Go 的精通表(engine/afk/mastery.go + stage3.go),
