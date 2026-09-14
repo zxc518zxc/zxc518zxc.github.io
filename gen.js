@@ -82,6 +82,9 @@ if (!FEAT.mcard) { HIDDEN_ITEM_ID.add("mastery_reset_card"); HIDDEN_ITEM_ID.add(
 // 🪪 更名卡:2026-09-14 中午維修才上線;道具已在 gamedata 裡,上線前不擋會提早出現在資料站。上線當天改成 true。
 const RENAME_CARD_LIVE = true; // 2026-09-11 開服隨 exe 一起上線 → 資料站放出
 if (!RENAME_CARD_LIVE) HIDDEN_ITEM_ID.add("rename_card");
+// 🧪 經驗藥水(potion_exp,2026-09-14 麥哥要的:一瓶 +50 萬經驗):道具已在 gamedata,發放方式與要不要上官網麥哥未拍板 → 先擋。拍板後改 true。
+const EXP_POTION_LIVE = false;
+if (!EXP_POTION_LIVE) HIDDEN_ITEM_ID.add("potion_exp");
 const hiddenItem = (id, v) => {
   if (HIDDEN_ITEM_ID.has(id)) return true;
   const s = (v.n || "") + " " + (v.d || "");
