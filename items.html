@@ -114,6 +114,12 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
   #tb-wrap td.vil .mo{display:inline}
   /* 少數技能效果是一整句話(例:「即死:對不死系怪物判定…」),.tag 的 nowrap 會撐出去 */
   #tb-wrap .tag{white-space:normal}
+  /* 📐 技能頁:逐技能白話細節 + 頁首「數字怎麼算」摺疊區(2026-09-15) */
+  .sknote{color:#d9c48f;font-size:12.5px;margin-top:4px;line-height:1.5}
+  details.how{background:#1f1810;border:1px solid #3a2f1c;border-radius:8px;padding:8px 12px;margin:0 0 12px;font-size:13px;line-height:1.6}
+  details.how summary{cursor:pointer;color:#ffd700;font-weight:600}
+  details.how ul{margin:8px 0 0;padding-left:18px}
+  details.how li{margin:4px 0}
   #tb-wrap td[colspan]{display:block}
   #tb-wrap td[colspan]::before{display:none}
 }
@@ -157,7 +163,7 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
  new MutationObserver(mark).observe(tb,{childList:true});mark();})();
 </script>
 <footer>資料自動同步自遊戲檔 · 產生於 2026-09-15<br>本站資料僅供參考,阿肥放置天地官方保留最終解釋權。<br>一切贊助皆為玩家自願,款項全數用於伺服器維護與研究開發。</footer>
-<script src="data.js?v=846c57f6"></script><script>
+<script src="data.js?v=360a0b3a"></script><script>
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
 const TS=["全部","武器","防具","飾品","藥水","道具","材料","技能書","其他"];let tf="全部";
