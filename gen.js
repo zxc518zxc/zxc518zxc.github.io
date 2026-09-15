@@ -220,6 +220,7 @@ function skillBuff(d) {
     const nm = SK_EFF_N[kk] || kk;
     // ⚠ ac 在引擎裡是**越低越好**(derived.go: e.Ac -= v),所以 +N 的 ac 對玩家而言是「防禦提升 N」;
     //    狂暴術的 ac:-10 = AC 數字 +10 = 更容易被怪打中(2026-09-15 修正,原本印成「提升 -10」)
+    if (kk === "er") return "迴避 ER +" + v + "(僅能力頁數字,戰鬥判定不採用)"; // ER 引擎 combat.go 零引用(2026-09-15 對碼)
     if (kk === "ac") return v >= 0 ? "防禦 AC 提升 " + v : "防禦 AC 降低 " + (-v) + "(更容易被怪物命中)";
     return nm + " " + (v > 0 ? "+" : "") + v + (PCT_KEYS.has(kk) ? "%" : "");
   });
@@ -257,8 +258,25 @@ const SK_STATUS_FX = {
 };
 // 逐技能白話細節(gamedata 沒寫、寫在引擎裡的效果;2026-09-15 對碼,依據見 go端專案/.ai/歷程.md 同日條)。
 // ⚠ 只寫程式裡真的有的;「程式沒效果」的技能(解毒術/聖潔之光/魔法相消術/無所遁形術/隱身術/大地屏障/負重強化/返生術/神聖疾走/迴避提升)
-//    先不寫,等麥哥決定是要標「無效果」還是把技能修好。
+//    2026-09-15 麥哥拍板:標「未實裝」(SK_BADGE)+ 遊戲端設定頁不能勾/不能選(engine/afk/skills.go unimplementedSkills)。
+// 🏷 技能名旁的醒目備註(麥哥 2026-09-15:不會吸血/不會冰凍要備註在技能後面;未實裝的一律標「未實裝」,
+//    遊戲端同日起未實裝技能在設定頁不能勾/不能選,見 engine/afk/skills.go unimplementedSkills —— 兩張名單要一致)
+const SK_BADGE = {
+  sk_cold_shiver: "不會吸血", sk_vampire: "不會吸血", sk_ice_lance: "不會冰凍",
+  sk_antidote: "未實裝", sk_holy_light: "未實裝", sk_cancel: "未實裝", sk_reveal: "未實裝", sk_invisible: "未實裝",
+  sk_elf_earthshield: "未實裝", sk_load_up: "未實裝", sk_resurrection: "未實裝", sk_holy_dash: "未實裝", sk_dark_erup: "未實裝",
+};
 const SK_NOTE = {
+  sk_antidote: "未實裝:目前不會解毒也不會回血。2026-09-16 維護後起,設定頁無法選為治癒魔法。",
+  sk_holy_light: "未實裝:目前沒有任何效果。2026-09-16 維護後起,設定頁無法選為治癒魔法。",
+  sk_cancel: "未實裝:目前不會解除任何狀態。2026-09-16 維護後起,設定頁無法選為治癒魔法。",
+  sk_reveal: "未實裝:目前沒有任何效果,設定頁不會出現、不會施放。",
+  sk_invisible: "未實裝:目前沒有任何效果,設定頁不會出現、不會施放。",
+  sk_elf_earthshield: "未實裝:目前沒有任何效果,設定頁不會出現、不會施放。",
+  sk_load_up: "未實裝:目前沒有任何效果。",
+  sk_resurrection: "未實裝:目前沒有任何效果。",
+  sk_holy_dash: "未實裝:目前只會讓能力頁的迴避數字變大,戰鬥判定不看迴避,實戰沒有效果。2026-09-16 維護後起,設定頁無法勾選。",
+  sk_dark_erup: "未實裝:目前只會讓能力頁的迴避數字變大,戰鬥判定不看迴避,實戰沒有效果。2026-09-16 維護後起,設定頁無法勾選。",
   sk_sunlight: "狩獵場出怪間隔由 4 秒縮短為 2 秒(擁擠地圖的出怪延遲也減 2 秒),等於打怪節奏快一倍。只影響狩獵場。",
   sk_magic_shield: "完整吸收下一次怪物的物理攻擊或一發怪物傷害型魔法(整發歸零),吸收後屏障消失、3 秒內不能再放。不吸收石化/麻痺/中毒這類狀態技。世界王房的「結界」按鈕用的是魔法屏障卷軸,效果相同。",
   sk_haste_spell: "與強力加速術效果完全相同,只差 MP 與持續時間。",
@@ -471,6 +489,7 @@ const skills = Object.entries(GD.skills || {}).map(([id, v]) => ({
   k: v.reqK || 0, m: v.reqM || 0, e: v.reqE || 0, dk: v.reqD || 0,
   d: (typeof v.d === "string" ? v.d : "") || v.msg || "", fx: skillFx(v),
   x: SK_NOTE[id] || "", // 📐 逐技能白話細節(引擎裡的效果;2026-09-15)
+  b: SK_BADGE[id] || "", // 🏷 技能名旁備註(不會吸血/不會冰凍/未實裝)
 })).sort((a, b) => (a.tier - b.tier) || a.n.localeCompare(b.n, "zh-Hant"));
 
 const dataJs = "const WIKI=" + JSON.stringify({ items, mobs: mobList, skills, zones, worldbosses, towns, sets }) + ";";
@@ -836,7 +855,8 @@ $("tb").innerHTML=list.map(s=>{
 const fx=(s.fx||[]).map(x=>"<span class='tag'>"+esc(x)+"</span>").join("");
 const note=s.x?"<div class='sknote'>📐 "+esc(s.x)+"</div>":"";
 const desc=(s.d?"<div style='color:#b6a684;font-size:13px;margin-top:3px'>"+esc(s.d)+"</div>":"")+note;
-return "<tr><td class='nm'>"+esc(s.n)+"</td><td class='num' data-l='類型'>"+esc(s.t)+"</td><td class='num' data-l='階級'>"+(s.tier||"—")+"</td><td class='num' data-l='MP'>"+(s.mp||"—")+"</td>"+
+const badge=s.b?" <span class='tag' style='color:#fbbf24;border-color:#7a5a12;white-space:nowrap'>⚠ "+esc(s.b)+"</span>":"";
+return "<tr><td class='nm'>"+esc(s.n)+badge+"</td><td class='num' data-l='類型'>"+esc(s.t)+"</td><td class='num' data-l='階級'>"+(s.tier||"—")+"</td><td class='num' data-l='MP'>"+(s.mp||"—")+"</td>"+
 "<td class='num' data-l='學習條件' style='font-size:12px'>"+reqStr(s)+"</td>"+
 "<td data-l='效果'>"+(fx||desc?fx+desc:"<span style='color:#6b5f4c'>—</span>")+"</td></tr>";}).join("")||"<tr><td colspan=6 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;$("cls").onchange=render;render();

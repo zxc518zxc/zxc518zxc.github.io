@@ -173,7 +173,7 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
  new MutationObserver(mark).observe(tb,{childList:true});mark();})();
 </script>
 <footer>資料自動同步自遊戲檔 · 產生於 2026-09-15<br>本站資料僅供參考,阿肥放置天地官方保留最終解釋權。<br>一切贊助皆為玩家自願,款項全數用於伺服器維護與研究開發。</footer>
-<script src="data.js?v=360a0b3a"></script><script>
+<script src="data.js?v=ce38cf7a"></script><script>
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
 const TS=["全部","攻擊","治癒","增益","被動","工具","轉換"];let tf="全部";
@@ -188,7 +188,8 @@ $("tb").innerHTML=list.map(s=>{
 const fx=(s.fx||[]).map(x=>"<span class='tag'>"+esc(x)+"</span>").join("");
 const note=s.x?"<div class='sknote'>📐 "+esc(s.x)+"</div>":"";
 const desc=(s.d?"<div style='color:#b6a684;font-size:13px;margin-top:3px'>"+esc(s.d)+"</div>":"")+note;
-return "<tr><td class='nm'>"+esc(s.n)+"</td><td class='num' data-l='類型'>"+esc(s.t)+"</td><td class='num' data-l='階級'>"+(s.tier||"—")+"</td><td class='num' data-l='MP'>"+(s.mp||"—")+"</td>"+
+const badge=s.b?" <span class='tag' style='color:#fbbf24;border-color:#7a5a12;white-space:nowrap'>⚠ "+esc(s.b)+"</span>":"";
+return "<tr><td class='nm'>"+esc(s.n)+badge+"</td><td class='num' data-l='類型'>"+esc(s.t)+"</td><td class='num' data-l='階級'>"+(s.tier||"—")+"</td><td class='num' data-l='MP'>"+(s.mp||"—")+"</td>"+
 "<td class='num' data-l='學習條件' style='font-size:12px'>"+reqStr(s)+"</td>"+
 "<td data-l='效果'>"+(fx||desc?fx+desc:"<span style='color:#6b5f4c'>—</span>")+"</td></tr>";}).join("")||"<tr><td colspan=6 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;$("cls").onchange=render;render();
