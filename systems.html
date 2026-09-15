@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>獵場列表 - 阿肥放置天地 資料站</title><style>
+<title>系統說明 - 阿肥放置天地 資料站</title><style>
 *{box-sizing:border-box}body{background:#1a140c;color:#e8dcc8;font-family:"Microsoft JhengHei",sans-serif;margin:0;padding:0}
 /* ── 頁首與導覽列 ──
    14 個功能鍵,所以做成膠囊按鈕 + 圖示;捲動時固定在頂端(查資料時不用捲回去換頁)。
@@ -129,7 +129,7 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 <a href="monsters.html" class=""><span class="i">👹</span>怪物掉落圖鑑</a>
 <a href="items.html" class=""><span class="i">⚔️</span>道具圖鑑</a>
 <a href="skills.html" class=""><span class="i">✨</span>技能介紹</a>
-<a href="zones.html" class="on"><span class="i">🗺️</span>獵場列表</a>
+<a href="zones.html" class=""><span class="i">🗺️</span>獵場列表</a>
 <a href="worldboss.html" class=""><span class="i">🐉</span>世界王</a>
 <a href="npc.html" class=""><span class="i">🏘️</span>NPC 一覽</a>
 <a href="mastery.html" class=""><span class="i">🎓</span>精通升級數據</a>
@@ -140,14 +140,63 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 <a href="pets.html" class=""><span class="i">🐕</span>寵物與召喚</a>
 <a href="event.html" class=""><span class="i">🎉</span>活動介紹</a>
 <a href="guide.html" class=""><span class="i">🌱</span>新手指南</a>
-<a href="systems.html" class=""><span class="i">📜</span>系統說明</a>
+<a href="systems.html" class="on"><span class="i">📜</span>系統說明</a>
 <a href="changelog.html" class=""><span class="i">📢</span>版本更新</a>
 </nav></header><main>
-<div class="stats"><div class="stat-chip"><b>61</b>獵場</div><div class="stat-chip"><b>21</b>野外</div><div class="stat-chip"><b>40</b>地監</div><div class="stat-chip"><b>10</b>有 AC 門檻</div></div>
-<div class="hint">🛡 <b>AC 門檻</b>:部分獵場對防禦有要求。你的<b>防禦 AC 沒達標</b>時,被怪<b>物理攻擊</b>會多吃傷害——<b>每差 1 點多吃 20%</b>(差 5 點=傷害兩倍)。遊戲裡不會有任何提示,所以先在這裡看清楚再去。<br>※ 只影響怪物的物理攻擊;魔法、中毒、世界王房、玩家對戰都不受影響。AC 是<b>數字越低越強</b>(−60 比 −50 強)。</div>
-<div class="bar"><input id="q" placeholder="🔍 搜獵場名,或輸入「怪物名」找牠出沒的獵場"></div>
-<div class="chips" id="cchips"></div>
-<div class="wrap" id="tb-wrap"><table><thead><tr><th>獵場</th><th>類型</th><th>怪物等級</th><th>🛡 AC 門檻</th><th>出沒怪物</th></tr></thead><tbody id="tb"></tbody></table></div></main>
+<div class="hint">遊戲內各系統的規則整理,數字都對過伺服器程式。想知道某個系統「怎麼算」看這頁;想看數值表看各自的頁面。</div>
+
+<div class="mcard"><div class="ttl">🏪 交易所:一般上架</div>
+<div class="wrap"><table><thead><tr><th>項目</th><th>規則</th></tr></thead><tbody>
+<tr><td>開放等級</td><td>角色 <b>45 級</b>才能上架、購買、下架、出價;「領取」頁全等級都能用</td></tr>
+<tr><td>價格</td><td>金幣 100 ~ 20 億;藍鑽計價 1 ~ 20 萬顆</td></tr>
+<tr><td>同時上架</td><td>每人最多 <b>5 件</b></td></tr>
+<tr><td>上架手續費</td><td>售價的 <b>1%</b>,上架時就扣,<b>賣不掉、下架都不退</b>(藍鑽計價最少 1 顆)</td></tr>
+<tr><td>成交</td><td>賣家拿到售價的 <b>90%</b>(10% 為交易稅);款項與商品都寄到「領取」頁</td></tr>
+<tr><td>浮現時間</td><td>上架後隨機 <b>30 ~ 120 秒</b>才會出現在清單(含賣家自己),防止蹲守秒殺</td></tr>
+<tr><td>賣不掉</td><td>上架滿 <b>12 小時</b>自動下架,商品退回賣家的領取頁</td></tr>
+<tr><td>其他</td><td>不能買自己的商品;鎖定中的道具不能上架;清單順序隨機、每個人看到的一樣</td></tr>
+</tbody></table></div></div>
+
+<div class="mcard"><div class="ttl">💎 交易所:指定交易</div>
+<div class="sub">上架時填「指定給誰」(角色名),這件商品<b>只有你和被指定的人看得到</b>,而且會排在對方清單的<b>第一位</b>。</div>
+<div class="wrap" style="margin-top:8px"><table><thead><tr><th>項目</th><th>規則</th></tr></thead><tbody>
+<tr><td>費用</td><td>賣家上架付 <b>25 藍鑽</b>;買家購買時也付 <b>25 藍鑽</b>(商品本身的價格另計)</td></tr>
+<tr><td>成交</td><td>雙方的 25 藍鑽都消耗,不退</td></tr>
+<tr><td>下架 / 12 小時沒賣掉</td><td>賣家的 25 藍鑽<b>退回領取頁</b>;1% 上架手續費照舊不退</td></tr>
+<tr><td>限制</td><td>不能指定自己;可以和藍鑽計價疊加;競標單不能指定</td></tr>
+</tbody></table></div></div>
+
+<div class="mcard"><div class="ttl">🔨 交易所:競標</div>
+<div class="wrap"><table><thead><tr><th>項目</th><th>規則</th></tr></thead><tbody>
+<tr><td>計價</td><td>只能用金幣;設起標價,直購價選填(必須高於起標價)</td></tr>
+<tr><td>時長</td><td>3 / 6 / 8 / 12 小時,時間到自動結標</td></tr>
+<tr><td>出價</td><td>每次至少比目前價高 <b>5%</b>,但最多只需加 <b>10 萬</b>;出價時押金先扣,被超越就<b>自動退回領取頁</b></td></tr>
+<tr><td>尾盤保護</td><td>剩不到 5 分鐘時有人出價,結標時間延長到剩 5 分鐘,防最後一秒偷標</td></tr>
+<tr><td>手續費</td><td>上架 1%(以起標價計,流拍不退);成交同一般上架,賣家拿 90%</td></tr>
+<tr><td>流拍</td><td>沒人出價 → 商品退回賣家領取頁</td></tr>
+</tbody></table></div></div>
+
+<div class="mcard"><div class="ttl">📬 領取頁</div>
+<div class="sub">在「交易所 → 領取」。賣出的款項、買到的商品、退回的商品與押金、客服補發、活動獎勵,全部寄到這裡;<b>全等級可領、離線也收得到</b>。同一帳號的角色共用同一個領取頁。</div></div>
+
+<div class="mcard"><div class="ttl">🏦 倉庫</div>
+<div class="wrap"><table><thead><tr><th>項目</th><th>規則</th></tr></thead><tbody>
+<tr><td>在哪</td><td>說話之島 NPC「倉庫保管員」</td></tr>
+<tr><td>共用</td><td><b>整個帳號共用</b>一個倉庫,四隻角色互相搬東西就靠它</td></tr>
+<tr><td>容量</td><td><b>50 格</b>道具 + 金幣 + 藍鑽(金幣藍鑽不佔格)</td></tr>
+<tr><td>合併</td><td>同一款道具(同強化、同祝福、同詞條)存進去會<b>合併成一格</b>;之前分開存的,下次開倉庫會自動整理(9/15 起)</td></tr>
+<tr><td>不能存</td><td>鎖定中的道具;藍鑽請用上方「倉庫藍鑽」存入</td></tr>
+</tbody></table></div></div>
+
+<div class="mcard"><div class="ttl">🌙 月卡</div>
+<div class="sub">・1 ~ 39 級免費完整體驗;<b>滿 40 級起</b>,月卡效期外打怪<b>沒有經驗與金幣</b>(圖鑑擊殺也不計),其餘功能照常。<br>・一張月卡 <b>30 天</b>,可以先用先囤,效期<b>疊加</b>。<br>・月卡透過贊助向客服取得,寄到領取頁,背包點「使用」開通;聊天輸入「月卡」可查剩餘天數。</div></div>
+
+<div class="mcard"><div class="ttl">🐉 世界王:抽獎券</div>
+<div class="sub">世界王死亡結算時,<b>對王造成超過 100 點傷害</b>、或<b>有幫隊友補到血</b>的參戰者,有 <b>20%</b> 機率獲得一次「抽抽樂」(不是每次必得;之前是每次必得,現已調整)。掉落物則另外依貢獻分配,與抽獎券無關。入場等級、重生時間與掉落見<a href="worldboss.html" style="color:#f5c451">世界王</a>頁。</div></div>
+
+<div class="mcard"><div class="ttl">🏆 分身挑戰賽</div>
+<div class="sub">玩法與對局規則見<a href="guide.html" style="color:#f5c451">新手指南</a>的「分身挑戰賽」一列。</div></div>
+</main>
 <script>
 /* 📱 手機卡片式:值是「—」的欄位加 .e 由 CSS 隱藏,免得每張卡都一堆空白列。
    各頁 render 是各自的 innerHTML 賦值,所以用 MutationObserver 統一處理一次就好。 */
@@ -158,14 +207,4 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
  new MutationObserver(mark).observe(tb,{childList:true});mark();})();
 </script>
 <footer>資料自動同步自遊戲檔 · 產生於 2026-09-15<br>本站資料僅供參考,阿肥放置天地官方保留最終解釋權。<br>一切贊助皆為玩家自願,款項全數用於伺服器維護與研究開發。</footer>
-<script src="data.js?v=846c57f6"></script><script>
-const $=id=>document.getElementById(id);
-const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
-const CS=["全部","野外","地監","特殊"];let cf="全部";
-$("cchips").innerHTML=CS.map(t=>'<span class="chip'+(t==="全部"?" on":"")+'" data-t="'+t+'">'+t+'</span>').join("");
-document.querySelectorAll("#cchips .chip").forEach(c=>c.onclick=()=>{document.querySelectorAll("#cchips .chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");cf=c.dataset.t;render();});
-function render(){const q=$("q").value.trim().toLowerCase();
-const list=WIKI.zones.filter(z=>(cf==="全部"||z.cat===cf)&&(!q||z.n.toLowerCase().includes(q)||z.mobs.some(m=>m.toLowerCase().includes(q))));
-$("tb").innerHTML=list.map(z=>"<tr><td class='nm'>"+esc(z.n)+(z.area?"<div style='font-weight:normal;color:#7bd14a;font-size:12px'>⛏ 採集:"+z.area.map(x=>esc(x)).join("、")+"</div>":"")+"</td><td class='num' data-l='類型'>"+z.cat+"</td><td class='num' data-l='怪物等級'>"+(z.lvMin?"Lv"+z.lvMin+"~"+z.lvMax:"—")+"</td><td class='num' data-l='AC門檻'>"+(z.ac?"<b style='color:#f5a97f'>"+z.ac+" 以下</b>":"<span style='color:#6b5f4c'>無</span>")+"</td><td data-l='出沒怪'>"+z.mobs.map(m=>"<span class='tag'>"+esc(m)+"</span>").join("")+"</td></tr>").join("")||"<tr><td colspan=5 style='color:#8f8067'>查無符合</td></tr>";}
-$("q").oninput=render;render();
-</script></body></html>
+</body></html>

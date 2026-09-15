@@ -549,6 +549,7 @@ const NAV = [
   ["pets.html", "pets", "🐕", "寵物與召喚"],
   ["event.html", "event", "🎉", "活動介紹"],
   ["guide.html", "guide", "🌱", "新手指南"],
+  ["systems.html", "sys", "📜", "系統說明"],
   ["changelog.html", "log", "📢", "版本更新"],
 ];
 if (FEAT.codex) NAV.splice(13, 0, ["codex.html", "codex", "📖", "怪物圖鑑登錄"]); // 📖 開放後才進導覽(放在寵物之後)
@@ -593,6 +594,7 @@ ${chips([[mobList.length, "怪物"], [items.length, "道具"], [skills.length, "
 <a class="tile" href="pets.html"><div class="em">🐕</div><div class="tt">寵物與召喚</div><div class="dd">魅力能帶幾隻・召喚術・迷魅</div></a>
 ${FEAT.codex ? '<a class="tile" href="codex.html"><div class="em">📖</div><div class="tt">怪物圖鑑登錄</div><div class="dd">殺幾隻點亮・登錄要多少・給什麼加成</div></a>' : ''}
 <a class="tile" href="guide.html"><div class="em">🌱</div><div class="tt">新手指南</div><div class="dd">第一次玩看這裡</div></a>
+<a class="tile" href="systems.html"><div class="em">📜</div><div class="tt">系統說明</div><div class="dd">交易所・指定交易・競標・倉庫・月卡・世界王抽獎</div></a>
 <a class="tile" href="mastery.html"><div class="em">🎓</div><div class="tt">精通升級數據</div><div class="dd">升到滿級要什麼材料</div></a>
 <a class="tile" href="sets.html"><div class="em">🛡️</div><div class="tt">套裝效果</div><div class="dd">湊齊有什麼加成</div></a>
 <a class="tile" href="enhance.html"><div class="em">⚒️</div><div class="tt">強化機率</div><div class="dd">成功・維持・破壞的實際數字</div></a>
@@ -814,7 +816,7 @@ $("q").oninput=render;render();
 // ---- 世界王 ----
 fs.writeFileSync(path.join(OUT, "worldboss.html"), page("世界王", "wb", `
 ${chips([[worldbosses.length, "世界王"]])}
-<div class="hint">王房會定時重生,參戰有機會取得專屬掉落。以下為目前開放的世界王。</div>
+<div class="hint">王房會定時重生,參戰有機會取得專屬掉落。以下為目前開放的世界王。<br>🎰 <b>抽獎券</b>:對王造成超過 100 點傷害、或有幫隊友補到血的參戰者,王死後有 <b>20%</b> 機率獲得一次「抽抽樂」(不是每次必得)。</div>
 <div class="bar"><input id="q" placeholder="🔍 搜世界王名 或 掉落道具名"></div>
 <div class="wrap" id="tb-wrap"><table><thead><tr><th>世界王</th><th>Lv</th><th>HP</th><th>入場等級</th><th>重生</th><th>掉落</th></tr></thead><tbody id="tb"></tbody></table></div>`,
 `<script src="data.js"></script><script>
@@ -893,6 +895,66 @@ ${rows.map(r => `<tr><td>${r.m.lv}</td><td>${esc(r.m.n)}</td><td>${need(r.m.lv)}
 <div class="sub" style="margin-top:8px">Lv1 ~ 49 全部登錄合計:最大 HP +200、最大 MP +100、回血 +15、回魔 +10、近戰／遠程／魔法命中各 +5、PvE 傷害 +5、PvE 減傷 +3(依實際登錄的怪為準)。</div></div>
 `));
 }
+
+// ---- 📜 系統說明(2026-09-15 麥哥:官網資訊變多,把「規則」集中一頁)----
+// ⚠ 數字手抄自程式:交易所 cmd/goline/market.go 常數(45 級/100~20 億/每人 5 件/浮現 30~120 秒/成交稅 10%/上架費 1%)
+//    + longtail.go 12h 退貨 + afk/bluediamond.go 指定費 25;倉庫 warehouse.go 50 格;月卡 月卡.md(40 級);
+//    世界王抽抽樂 gamedata gachaCfg.wbGachaRate(官網公告 20%,麥哥 9/15 拍板)。改引擎要同步。
+fs.writeFileSync(path.join(OUT, "systems.html"), page("系統說明", "sys", `
+<div class="hint">遊戲內各系統的規則整理,數字都對過伺服器程式。想知道某個系統「怎麼算」看這頁;想看數值表看各自的頁面。</div>
+
+<div class="mcard"><div class="ttl">🏪 交易所:一般上架</div>
+<div class="wrap"><table><thead><tr><th>項目</th><th>規則</th></tr></thead><tbody>
+<tr><td>開放等級</td><td>角色 <b>45 級</b>才能上架、購買、下架、出價;「領取」頁全等級都能用</td></tr>
+<tr><td>價格</td><td>金幣 100 ~ 20 億;藍鑽計價 1 ~ 20 萬顆</td></tr>
+<tr><td>同時上架</td><td>每人最多 <b>5 件</b></td></tr>
+<tr><td>上架手續費</td><td>售價的 <b>1%</b>,上架時就扣,<b>賣不掉、下架都不退</b>(藍鑽計價最少 1 顆)</td></tr>
+<tr><td>成交</td><td>賣家拿到售價的 <b>90%</b>(10% 為交易稅);款項與商品都寄到「領取」頁</td></tr>
+<tr><td>浮現時間</td><td>上架後隨機 <b>30 ~ 120 秒</b>才會出現在清單(含賣家自己),防止蹲守秒殺</td></tr>
+<tr><td>賣不掉</td><td>上架滿 <b>12 小時</b>自動下架,商品退回賣家的領取頁</td></tr>
+<tr><td>其他</td><td>不能買自己的商品;鎖定中的道具不能上架;清單順序隨機、每個人看到的一樣</td></tr>
+</tbody></table></div></div>
+
+<div class="mcard"><div class="ttl">💎 交易所:指定交易</div>
+<div class="sub">上架時填「指定給誰」(角色名),這件商品<b>只有你和被指定的人看得到</b>,而且會排在對方清單的<b>第一位</b>。</div>
+<div class="wrap" style="margin-top:8px"><table><thead><tr><th>項目</th><th>規則</th></tr></thead><tbody>
+<tr><td>費用</td><td>賣家上架付 <b>25 藍鑽</b>;買家購買時也付 <b>25 藍鑽</b>(商品本身的價格另計)</td></tr>
+<tr><td>成交</td><td>雙方的 25 藍鑽都消耗,不退</td></tr>
+<tr><td>下架 / 12 小時沒賣掉</td><td>賣家的 25 藍鑽<b>退回領取頁</b>;1% 上架手續費照舊不退</td></tr>
+<tr><td>限制</td><td>不能指定自己;可以和藍鑽計價疊加;競標單不能指定</td></tr>
+</tbody></table></div></div>
+
+<div class="mcard"><div class="ttl">🔨 交易所:競標</div>
+<div class="wrap"><table><thead><tr><th>項目</th><th>規則</th></tr></thead><tbody>
+<tr><td>計價</td><td>只能用金幣;設起標價,直購價選填(必須高於起標價)</td></tr>
+<tr><td>時長</td><td>3 / 6 / 8 / 12 小時,時間到自動結標</td></tr>
+<tr><td>出價</td><td>每次至少比目前價高 <b>5%</b>,但最多只需加 <b>10 萬</b>;出價時押金先扣,被超越就<b>自動退回領取頁</b></td></tr>
+<tr><td>尾盤保護</td><td>剩不到 5 分鐘時有人出價,結標時間延長到剩 5 分鐘,防最後一秒偷標</td></tr>
+<tr><td>手續費</td><td>上架 1%(以起標價計,流拍不退);成交同一般上架,賣家拿 90%</td></tr>
+<tr><td>流拍</td><td>沒人出價 → 商品退回賣家領取頁</td></tr>
+</tbody></table></div></div>
+
+<div class="mcard"><div class="ttl">📬 領取頁</div>
+<div class="sub">在「交易所 → 領取」。賣出的款項、買到的商品、退回的商品與押金、客服補發、活動獎勵,全部寄到這裡;<b>全等級可領、離線也收得到</b>。同一帳號的角色共用同一個領取頁。</div></div>
+
+<div class="mcard"><div class="ttl">🏦 倉庫</div>
+<div class="wrap"><table><thead><tr><th>項目</th><th>規則</th></tr></thead><tbody>
+<tr><td>在哪</td><td>說話之島 NPC「倉庫保管員」</td></tr>
+<tr><td>共用</td><td><b>整個帳號共用</b>一個倉庫,四隻角色互相搬東西就靠它</td></tr>
+<tr><td>容量</td><td><b>50 格</b>道具 + 金幣 + 藍鑽(金幣藍鑽不佔格)</td></tr>
+<tr><td>合併</td><td>同一款道具(同強化、同祝福、同詞條)存進去會<b>合併成一格</b>;之前分開存的,下次開倉庫會自動整理(9/15 起)</td></tr>
+<tr><td>不能存</td><td>鎖定中的道具;藍鑽請用上方「倉庫藍鑽」存入</td></tr>
+</tbody></table></div></div>
+
+<div class="mcard"><div class="ttl">🌙 月卡</div>
+<div class="sub">・1 ~ 39 級免費完整體驗;<b>滿 40 級起</b>,月卡效期外打怪<b>沒有經驗與金幣</b>(圖鑑擊殺也不計),其餘功能照常。<br>・一張月卡 <b>30 天</b>,可以先用先囤,效期<b>疊加</b>。<br>・月卡透過贊助向客服取得,寄到領取頁,背包點「使用」開通;聊天輸入「月卡」可查剩餘天數。</div></div>
+
+<div class="mcard"><div class="ttl">🐉 世界王:抽獎券</div>
+<div class="sub">世界王死亡結算時,<b>對王造成超過 100 點傷害</b>、或<b>有幫隊友補到血</b>的參戰者,有 <b>20%</b> 機率獲得一次「抽抽樂」(不是每次必得;之前是每次必得,現已調整)。掉落物則另外依貢獻分配,與抽獎券無關。入場等級、重生時間與掉落見<a href="worldboss.html" style="color:#f5c451">世界王</a>頁。</div></div>
+
+<div class="mcard"><div class="ttl">🏆 分身挑戰賽</div>
+<div class="sub">玩法與對局規則見<a href="guide.html" style="color:#f5c451">新手指南</a>的「分身挑戰賽」一列。</div></div>
+`));
 
 // ================= 🎓 精通升級數據 =================
 // 資料來自 Go 的精通表(engine/afk/mastery.go + stage3.go),
@@ -1280,7 +1342,7 @@ fs.writeFileSync(path.join(OUT, "guide.html"), page("新手指南", "guide", `
 <div class="wrap"><table><thead><tr><th>名詞</th><th>意思</th></tr></thead><tbody>
 <tr><td class="nm">安定值</td><td>強化到這個數字以內不會失敗,超過才有風險。</td></tr>
 <tr><td class="nm">精通</td><td>長期養成系統。投入材料升級,開啟「光環」後才會生效,光環要花金幣維持。</td></tr>
-<tr><td class="nm">分身挑戰賽</td><td>41 級起,「聊天 → 排行榜 → 分身挑戰賽」挑戰積分相近玩家的<b>分身</b>(對方離線照打、本人零損失),每天 5 場;週一 09:00 開季、週日 21:00 結算,前三名得一週稱號。戰鬥照你的「設定 → PK設定」自動打,時限 180 秒。<b>對局規則</b>:喝水冷卻 3 秒;60 秒起治療效果每 20 秒 −15%(最低 25%);時間到<b>比剩餘血量 %</b>,差距 5% 以內才算平手。</td></tr>
+<tr><td class="nm">分身挑戰賽</td><td>41 級起,「聊天 → 排行榜 → 分身挑戰賽」挑戰積分相近玩家的<b>分身</b>(對方離線照打、本人零損失),每天 5 場;週一 09:00 開季、週日 21:00 結算,前三名得一週稱號。戰鬥照你的「設定 → PK設定」自動打,時限 180 秒。<b>對局規則</b>(9/15 起):喝水冷卻 3 秒;60 秒起治療效果每 20 秒 −15%(最低 25%);時間到<b>比剩餘血量 %</b>,差距 5% 以內才算平手。</td></tr>
 <tr><td class="nm">光環</td><td>精通的效果開關。花金幣買時數,<b>突破後會歸零要重開</b>。</td></tr>
 <tr><td class="nm">世界王</td><td>定時重生的大王,大家一起打,參戰有機會拿到專屬掉落。</td></tr>
 <tr><td class="nm">血盟</td><td>玩家公會。全盟共享經驗與金幣加成,但要靠成員捐獻維持。</td></tr>
