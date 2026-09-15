@@ -114,6 +114,12 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
   #tb-wrap td.vil .mo{display:inline}
   /* 少數技能效果是一整句話(例:「即死:對不死系怪物判定…」),.tag 的 nowrap 會撐出去 */
   #tb-wrap .tag{white-space:normal}
+  /* 📐 技能頁:逐技能白話細節 + 頁首「數字怎麼算」摺疊區(2026-09-15) */
+  .sknote{color:#d9c48f;font-size:12.5px;margin-top:4px;line-height:1.5}
+  details.how{background:#1f1810;border:1px solid #3a2f1c;border-radius:8px;padding:8px 12px;margin:0 0 12px;font-size:13px;line-height:1.6}
+  details.how summary{cursor:pointer;color:#ffd700;font-weight:600}
+  details.how ul{margin:8px 0 0;padding-left:18px}
+  details.how li{margin:4px 0}
   #tb-wrap td[colspan]{display:block}
   #tb-wrap td[colspan]::before{display:none}
 }
@@ -144,7 +150,17 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 <a href="changelog.html" class=""><span class="i">📢</span>版本更新</a>
 </nav></header><main>
 <div class="stats"><div class="stat-chip"><b>123</b>技能</div><div class="stat-chip"><b>42</b>攻擊</div><div class="stat-chip"><b>12</b>治癒</div><div class="stat-chip"><b>59</b>增益</div><div class="stat-chip"><b>4</b>被動</div><div class="stat-chip"><b>3</b>工具</div><div class="stat-chip"><b>3</b>轉換</div></div>
-<div class="bar"><input id="q" placeholder="🔍 搜技能名稱、效果(例:即死、吸血、暈眩)"><select id="cls"><option value="all">全職業</option><option value="k">騎士</option><option value="m">法師</option><option value="e">妖精</option><option value="dk">黑暗妖精</option></select></div>
+<details class="how"><summary>📐 數字怎麼算(魔法傷害 / 治癒 / 狀態命中 / MP / 增益)— 客服與玩家共用</summary>
+<ul>
+<li><b>魔法攻擊傷害</b>:骰 ×(1 + 3×魔法傷害÷16)×(1 + 技能階級÷3)+ 額外魔法點數 → 扣怪物魔防 → <b>法師再 ×1.5</b>(妖精沒有)。魔法傷害與額外魔法點數都只看 INT(裸裝 INT 25 → 4 / 6,INT 40 → 8 / 10,INT 60 → 15 / 15)。INT 35 起有魔法爆擊(INT 60 為 7%,爆擊骰值 ×1.5)。</li>
+<li><b>怪物魔防 MR</b>:MR ≤ 100 時打 (100 − MR÷2)%,例 MR 10 → 95%、MR 60 → 70%、MR 100 → 50%;MR 超過 100 每 10 點再少 1%。是打折不是免疫。</li>
+<li><b>治癒</b>:回復量 = 技能基礎值 + 係數 × 額外魔法點數,只看 INT、每次固定不擲骰,法師與妖精一樣。自動治癒在 HP 低於你設定的「治癒 HP%」時施放,冷卻 2 秒(加速時 1.34 秒)。</li>
+<li><b>狀態技與即死的命中(異常魔法命中)</b>:命中值 = 自己等級 + 魔法命中 −(怪物等級 − 10)− 怪物 MR÷10,限 0~20;擲 20 面骰 ≤ 命中值即命中(20 必中、1 必失)。換算:命中值 10 → 50%、≥19 → 95%、0 → 5%。魔法命中裸裝只看 INT(INT 25 → 2、INT 40 → 8、INT 60 → 18)。<b>世界王免疫所有狀態與即死</b>;施放就扣 MP,沒中也扣。</li>
+<li><b>MP 消耗</b>:實扣 = 技能 MP ×(1 − INT 減免%),INT 25 減 16%、INT 40 減 26%、INT 45 以上減 30%,最低 1。</li>
+<li><b>增益技能</b>:在自動設定勾選後,到期會自動再放一次(MP 夠才放),同一效果不疊加。世界王房也會自動續放;PK 是開場帶著身上的效果進場,場中不續放。</li>
+<li><b>世界王房手動按鈕</b>:喝水 1 秒冷卻;攻擊技 / 治癒 / 轉換 2 秒冷卻(治癒與轉換共用);結界 = 用 1 張魔法屏障卷軸;聖結界 5 秒冷卻、全房已按攻擊的成員一起套。石化或麻痺中六種全部不能按。</li>
+</ul></details>
+<div class="bar"><input id="q" placeholder="🔍 搜技能名稱、效果(例:即死、暈眩、召喚、×0.7)"><select id="cls"><option value="all">全職業</option><option value="k">騎士</option><option value="m">法師</option><option value="e">妖精</option><option value="dk">黑暗妖精</option></select></div>
 <div class="chips" id="tchips"></div>
 <div class="wrap" id="tb-wrap"><table><thead><tr><th>技能</th><th>類型</th><th>階級</th><th>MP</th><th>學習需求</th><th>效果與說明</th></tr></thead><tbody id="tb"></tbody></table></div></main>
 <script>
@@ -157,7 +173,7 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
  new MutationObserver(mark).observe(tb,{childList:true});mark();})();
 </script>
 <footer>資料自動同步自遊戲檔 · 產生於 2026-09-15<br>本站資料僅供參考,阿肥放置天地官方保留最終解釋權。<br>一切贊助皆為玩家自願,款項全數用於伺服器維護與研究開發。</footer>
-<script src="data.js?v=846c57f6"></script><script>
+<script src="data.js?v=360a0b3a"></script><script>
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
 const TS=["全部","攻擊","治癒","增益","被動","工具","轉換"];let tf="全部";
@@ -167,10 +183,11 @@ document.querySelectorAll("#tchips .chip").forEach(c=>c.onclick=()=>{document.qu
 function reqStr(s){const p=[];if(s.k)p.push("騎士 Lv"+s.k);if(s.m)p.push("法師 Lv"+s.m);if(s.e)p.push("妖精 Lv"+s.e);if(s.dk)p.push("黑暗妖精 Lv"+s.dk);return p.length?p.join("<br>"):"—";}
 function render(){const q=$("q").value.trim().toLowerCase();const c=$("cls").value;
 const list=WIKI.skills.filter(s=>(tf==="全部"||s.t===tf)&&(c==="all"||s[c]>0)&&
-  (!q||s.n.toLowerCase().includes(q)||(s.d||"").toLowerCase().includes(q)||(s.fx||[]).some(x=>x.toLowerCase().includes(q))));
+  (!q||s.n.toLowerCase().includes(q)||(s.d||"").toLowerCase().includes(q)||(s.x||"").toLowerCase().includes(q)||(s.fx||[]).some(x=>x.toLowerCase().includes(q))));
 $("tb").innerHTML=list.map(s=>{
 const fx=(s.fx||[]).map(x=>"<span class='tag'>"+esc(x)+"</span>").join("");
-const desc=s.d?"<div style='color:#b6a684;font-size:13px;margin-top:3px'>"+esc(s.d)+"</div>":"";
+const note=s.x?"<div class='sknote'>📐 "+esc(s.x)+"</div>":"";
+const desc=(s.d?"<div style='color:#b6a684;font-size:13px;margin-top:3px'>"+esc(s.d)+"</div>":"")+note;
 return "<tr><td class='nm'>"+esc(s.n)+"</td><td class='num' data-l='類型'>"+esc(s.t)+"</td><td class='num' data-l='階級'>"+(s.tier||"—")+"</td><td class='num' data-l='MP'>"+(s.mp||"—")+"</td>"+
 "<td class='num' data-l='學習條件' style='font-size:12px'>"+reqStr(s)+"</td>"+
 "<td data-l='效果'>"+(fx||desc?fx+desc:"<span style='color:#6b5f4c'>—</span>")+"</td></tr>";}).join("")||"<tr><td colspan=6 style='color:#8f8067'>查無符合</td></tr>";}

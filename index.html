@@ -114,6 +114,12 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
   #tb-wrap td.vil .mo{display:inline}
   /* 少數技能效果是一整句話(例:「即死:對不死系怪物判定…」),.tag 的 nowrap 會撐出去 */
   #tb-wrap .tag{white-space:normal}
+  /* 📐 技能頁:逐技能白話細節 + 頁首「數字怎麼算」摺疊區(2026-09-15) */
+  .sknote{color:#d9c48f;font-size:12.5px;margin-top:4px;line-height:1.5}
+  details.how{background:#1f1810;border:1px solid #3a2f1c;border-radius:8px;padding:8px 12px;margin:0 0 12px;font-size:13px;line-height:1.6}
+  details.how summary{cursor:pointer;color:#ffd700;font-weight:600}
+  details.how ul{margin:8px 0 0;padding-left:18px}
+  details.how li{margin:4px 0}
   #tb-wrap td[colspan]{display:block}
   #tb-wrap td[colspan]::before{display:none}
 }
@@ -149,7 +155,7 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 <a class="tile" href="event.html"><div class="em">🎉</div><div class="tt">活動介紹</div><div class="dd">開服衝等活動・9/11~9/18</div></a>
 <a class="tile" href="monsters.html"><div class="em">👹</div><div class="tt">怪物掉落圖鑑</div><div class="dd">打什麼掉什麼・可用道具名反查</div></a>
 <a class="tile" href="items.html"><div class="em">⚔️</div><div class="tt">道具圖鑑</div><div class="dd">武器防具飾品的數值與說明</div></a>
-<a class="tile" href="skills.html"><div class="em">✨</div><div class="tt">技能介紹</div><div class="dd">各職業的學習等級與 MP</div></a>
+<a class="tile" href="skills.html"><div class="em">✨</div><div class="tt">技能介紹</div><div class="dd">學習等級、MP、實際效果與傷害/回復數字</div></a>
 <a class="tile" href="zones.html"><div class="em">🗺️</div><div class="tt">獵場列表</div><div class="dd">幾等該去哪練・怪在哪出沒</div></a>
 <a class="tile" href="worldboss.html"><div class="em">🐉</div><div class="tt">世界王</div><div class="dd">入場等級・重生間隔・掉落</div></a>
 <a class="tile" href="npc.html"><div class="em">🏘️</div><div class="tt">NPC 一覽</div><div class="dd">誰在哪個村莊・提供什麼服務</div></a>

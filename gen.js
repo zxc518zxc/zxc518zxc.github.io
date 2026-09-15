@@ -218,11 +218,83 @@ function skillBuff(d) {
   if (!d || typeof d !== "object") return [];
   return Object.entries(d).map(([kk, v]) => {
     const nm = SK_EFF_N[kk] || kk;
-    // ⚠ ac 在引擎裡是**越低越好**(derived.go: e.Ac -= v),所以 +N 的 ac 對玩家而言是「防禦提升 N」
-    if (kk === "ac") return "防禦 AC 提升 " + v;
+    // ⚠ ac 在引擎裡是**越低越好**(derived.go: e.Ac -= v),所以 +N 的 ac 對玩家而言是「防禦提升 N」;
+    //    狂暴術的 ac:-10 = AC 數字 +10 = 更容易被怪打中(2026-09-15 修正,原本印成「提升 -10」)
+    if (kk === "ac") return v >= 0 ? "防禦 AC 提升 " + v : "防禦 AC 降低 " + (-v) + "(更容易被怪物命中)";
     return nm + " " + (v > 0 ? "+" : "") + v + (PCT_KEYS.has(kk) ? "%" : "");
   });
 }
+// ---- 📐 數值範例(2026-09-15 麥哥:官網技能要寫到玩家/客服看得懂的具體數字)----
+// INT 對照表**逐字抄自** engine/tables_generated.go(lookupStep:INT ≤ 門檻 → 值;超過最後一格 → 尾值)。改表要同步。
+const INT_EXTRA_MP = [[11, 2], [15, 3], [19, 4], [23, 5], [27, 6], [31, 7], [35, 8], [39, 9], [43, 10], [47, 11], [51, 12], [55, 13], [59, 14], [63, 15], [67, 16], [71, 17]], INT_EXTRA_MP_TAIL = 18;
+const INT_MAGIC_DMG = [[14, 0], [19, 1], [24, 2], [29, 4], [34, 5], [39, 7], [44, 8], [49, 12], [54, 13], [59, 14], [64, 15], [69, 16], [74, 17]], INT_MAGIC_DMG_TAIL = 18;
+const lookupStep = (v, tbl, tail) => { for (const [k, x] of tbl) if (v <= k) return x; return tail; };
+const extraMp = i => lookupStep(i, INT_EXTRA_MP, INT_EXTRA_MP_TAIL);
+const magicDmg = i => lookupStep(i, INT_MAGIC_DMG, INT_MAGIC_DMG_TAIL);
+const SAMPLE_INT = [25, 40, 60];
+// 治癒:afk/skills.go magicHealAmountGo —— 技能有 ih 就**只用 ih**(healDice/healBase/valDice 是死欄位,九支治癒全有 ih):
+//   回復 = floor(ih[0] + ih[1] × 額外魔法點數(INT)),不擲骰、每次固定,法師妖精一樣。
+const healAt = (ih, i) => Math.max(1, Math.floor(ih[0] + ih[1] * extraMp(i)));
+const healText = ih => "回復量 = " + ih[0] + " + " + ih[1] + " × 額外魔法點數(只看 INT,每次固定):" + SAMPLE_INT.map(i => "INT " + i + " → " + healAt(ih, i)).join("、");
+// 魔法攻擊:afk/skills2b.go magicSkillDmgGo —— 骰 × (1 + 3×魔法傷害/16) × (1 + 階級/3) + 額外魔法點數 → 怪物 MR 減傷 → 法師 ×1.5。
+//   這裡算「平均、裸裝、不含爆擊、未扣 MR」給玩家當量級參考;階級 0 的治盔技能引擎當 1。
+const magicAvg = (dice, tier, i, mage) => { const avg = dice[0] * (dice[1] + 1) / 2, coef = (1 + 3 * magicDmg(i) / 16) * (1 + (tier || 1) / 3); return Math.floor((avg * coef + extraMp(i)) * (mage ? 1.5 : 1)); };
+const magicText = v => "平均傷害(裸裝、未扣怪物 MR、不含爆擊):" + SAMPLE_INT.map(i => "INT " + i + " → 法師約 " + magicAvg(v.dmgDice, v.tier, i, true) + " / 妖精約 " + magicAvg(v.dmgDice, v.tier, i, false)).join("、");
+// 狀態技對怪物的實際效果(afk/skills2b.go applyMobStatusGo + combat.go MobAttack;⚠ gamedata 的 pbase 引擎不讀,命中一律走「異常魔法命中」)
+const SK_STATUS_FX = {
+  poison: s => "中毒:每 " + (s.tick || 3) + " 秒扣 " + dice(s.dmg) + " 固定傷害(命中時擲一次、之後每跳同值),持續 " + s.dur + " 秒",
+  blind: s => "失明:怪物命中 −" + (s.hit || 4) + ",持續 " + s.dur + " 秒",
+  broken: s => "壞物:怪物傷害 −2,持續 " + s.dur + " 秒",
+  slow: s => "緩速:怪物攻擊間隔 +1 秒,持續 " + s.dur + " 秒",
+  stone: s => "石化:怪物完全不能行動 " + s.dur + " 秒",
+  weaken: s => "弱化:怪物命中 −2、傷害 −4,持續 " + s.dur + " 秒",
+  disease: s => "疾病:怪物命中 −4、更容易被你打中(有效 AC +8),持續 " + s.dur + " 秒",
+  vacuum: s => "魔法封印:怪物 " + s.dur + " 秒內不能施法",
+  sleep: s => "沉睡:怪物不能行動 " + s.dur + " 秒,被攻擊即醒",
+  mrhalf: s => "魔防減半:怪物 MR 減半,只對你的下一發魔法攻擊有效(" + s.dur + " 秒內)",
+  magicseal: s => "封印:怪物 " + s.dur + " 秒內不能施法",
+  armorbreak: s => "破甲:怪物受到的所有傷害 ×1.58,持續 " + s.dur + " 秒",
+};
+// 逐技能白話細節(gamedata 沒寫、寫在引擎裡的效果;2026-09-15 對碼,依據見 go端專案/.ai/歷程.md 同日條)。
+// ⚠ 只寫程式裡真的有的;「程式沒效果」的技能(解毒術/聖潔之光/魔法相消術/無所遁形術/隱身術/大地屏障/負重強化/返生術/神聖疾走/迴避提升)
+//    先不寫,等麥哥決定是要標「無效果」還是把技能修好。
+const SK_NOTE = {
+  sk_sunlight: "狩獵場出怪間隔由 4 秒縮短為 2 秒(擁擠地圖的出怪延遲也減 2 秒),等於打怪節奏快一倍。只影響狩獵場。",
+  sk_magic_shield: "完整吸收下一次怪物的物理攻擊或一發怪物傷害型魔法(整發歸零),吸收後屏障消失、3 秒內不能再放。不吸收石化/麻痺/中毒這類狀態技。世界王房的「結界」按鈕用的是魔法屏障卷軸,效果相同。",
+  sk_haste_spell: "與強力加速術效果完全相同,只差 MP 與持續時間。",
+  sk_greater_haste: "與加速術效果完全相同,只差 MP 與持續時間。",
+  sk_holy_barrier: "怪物對你的物理傷害與魔法傷害都 ×0.7(扣完傷害減免後再打七折),不減中毒的每跳傷害。世界王房按「聖結界」= 5 秒冷卻、扣 30 MP、全房已按攻擊的成員一起套 32 秒。PK 時開場帶著,對手的所有傷害也 ×0.7。",
+  sk_soul_up: "最大 HP 與最大 MP 各 ×1.2。",
+  sk_reduction_armor: "傷害減免 DR + 等級÷10(無條件捨去:Lv30 = +3、Lv55 = +5),每次被怪物物理或魔法命中都固定少扣這麼多。",
+  sk_elf_worldtree: "被動。在妖精森林周邊與眠龍洞穴 1~3 樓,每殺一隻怪,粗糙的米索莉塊 / 精靈玉 / 元素石的掉落機率各由 20% 提高到 30%。",
+  sk_elf_singleres: "自己所選妖精屬性的抗性 +50:該屬性的怪物魔法傷害減半(抗性 100 = 免疫)。未選屬性則無效果。",
+  sk_elf_attrfire: "近戰且屬性為火時,每次普攻或物理技命中有 33% 機率整段傷害 ×1.5。遠程武器不觸發。",
+  sk_elf_flamesoul: "近戰時武器骰不再隨機,一律取最大值再 ×1.2(只乘武器骰,不含力量加成)。遠程不吃。",
+  sk_berserk: "AC 變差 10 點 = 怪物更容易命中你,換近戰傷害 +5。",
+  sk_dark_stealth: "怪物對你的下一次物理攻擊 100% 迴避,迴避後效果消失、5 秒內不能再放。對魔法無效。",
+  sk_dark_poisonres: "自己中毒時每跳傷害減半。目前只有傲慢之塔的變種楊果里恩、梅杜莎、奇美拉、扭曲的潔尼斯女王會對玩家上毒。",
+  sk_dark_burn: "每次普攻命中 30% 機率傷害 ×1.5,只作用普攻;可與雙重破壞疊乘。",
+  sk_dark_walkhaste: "實際效果是攻擊間隔 ×0.85,可與加速術(×0.67)疊乘(合計約 ×0.57)。",
+  sk_dark_dodge: "效果中每次怪物物理攻擊命中你時 20% 機率迴避,不消耗效果、無冷卻。對魔法無效。",
+  sk_dark_crit: "施放後 HP 與 MP 都變 1;傷害 = (武器骰最大值 + 近戰傷害 + 額外傷害 − 怪物 DR) × 爆傷 × (施放前 MP ÷ 最大 MP × 5),必中必爆。30 秒冷卻,HP 或 MP 只剩 1 時不會施放;PK 不會施放。",
+  sk_dark_double: "手持鋼爪或雙刀時每次普攻命中 20% 機率傷害 ×2,其他武器無效。",
+  sk_dark_fang: "每次物理命中(普攻/物理技)固定 +5 傷害。",
+  sk_dark_refine: "被動。可在背包提煉黑魔石:每次扣 1 顆 + 5 MP,成功變高一級、失敗化為粉末。1→2 級成功率 = 3.5% + 等級×1% + (WIS−8)×1.25%(WIS 最多算到 35、上限 80%);2→3 級為其一半、3→4 級為 1/4、4→5 級為 1/8。例:Lv30 / WIS 20 → 48.5% / 24% / 12% / 6%。",
+  sk_undead_bane: "成功率 = 32% + (自己等級 − 怪物等級) + 魔法命中 × 2.5 − 怪物 MR ÷ 2,限 1%~95%;成功即秒殺(正常給經驗與掉落),失敗也扣 MP。例:Lv30、INT 25 打骷髏鬥士(Lv29、MR 25)約 25%,打骷髏(Lv10、MR 10)約 52%。世界王免疫。",
+  sk_elf_release: "對元素系怪物(四大精靈王、火蜥蜴、雪人、冰人等)判「異常魔法命中」,成功即秒殺,失敗也扣 MP。世界王免疫。",
+  sk_ice_lance: "只有傷害,沒有冰凍效果。",
+  sk_cold_shiver: "純魔法攻擊,不會吸血。",
+  sk_vampire: "純魔法攻擊,不會吸血。",
+  sk_disintegrate: "PK 時傷害 ×0.6(再吃 PK 的法術減半),打怪不受影響。",
+  sk_mana_drain: "場上有活怪時每 2 秒判一次「異常魔法命中」,成功回復 1 ~ INT÷2 點 MP(INT 25 → 1~12),失敗白扣 50 HP;法師「魔力奪取精通」光環可再加。自動觸發條件同心靈轉換。",
+  sk_elf_mind: "自動觸發條件:HP 高於你設定的「轉換 HP%」且 MP 低於「轉換 MP%」(自動設定面板),扣完 HP 至少剩 1。",
+  sk_elf_soul: "自動觸發條件:HP 高於你設定的「轉換 HP%」且 MP 低於「轉換 MP%」(自動設定面板),扣完 HP 至少剩 1。",
+  sk_zombie: "召喚「人形殭屍」1 小時(到期自動再召、再扣 MP);同時只能有 1 隻召喚物、與寵物互斥、需魅力 ≥ 6。每 2 秒攻擊一輪、每輪打 CHA÷6 下;每下傷害 = 1D12 + CHA÷5 × (1 + 等級÷20)。命中很吃怪物 AC。",
+  sk_summon: "依施放當下等級召喚(1 小時內不換):Lv32 前哈柏哥布林(1D15)、Lv32+ 甘地妖魔(2D8)、Lv40+ 食人妖精(2D11)、Lv52+ 魔狼(2D14,每 1 秒攻擊)。每 2 秒攻擊一輪、每輪 CHA÷6 下(Lv52+ 為 CHA÷8)。同時只能 1 隻召喚物、與寵物互斥、需魅力 ≥ 6;法師召喚精通光環可加傷害。",
+  sk_elf_summon: "召喚你所選屬性的精靈 1 小時,遠程、每 2 秒攻擊 1 次;傷害 = 1D40 + (STR+INT)÷2 × 等級÷1.5 ÷ 10,再吃怪物 MR 減傷,剋制屬性 +6。同時只能 1 隻召喚物、與寵物互斥、需魅力 ≥ 6。例:Lv40、STR 20、INT 25 對 MR 10 的怪每 2 秒約 76。",
+  sk_elf_summon2: "上級精靈:2D40 + (STR+INT)÷2 × 等級÷1.5 ÷ 5,命中 +5;例:Lv50 同上屬性對 MR 10 的怪每 2 秒約 181。與「召喚屬性精靈」同時勾選只放這支。",
+  sk_elf_lifebless: "在世界王房施放時全房參戰者都回復同樣數字;狩獵場為回復自己。",
+};
 const SK_STATUS = { poison: "中毒", blind: "黑暗", broken: "防禦破壞", slow: "緩速", stone: "石化",
   weaken: "衰弱", disease: "疾病", vacuum: "真空", sleep: "沉睡", mrhalf: "魔防減半",
   magicseal: "魔法封印", armorbreak: "破甲" };
@@ -230,22 +302,23 @@ const SK_STATUS = { poison: "中毒", blind: "黑暗", broken: "防禦破壞", s
 const dice = d => Array.isArray(d) && d.length === 2 ? `${d[0]}D${d[1]}(${d[0]}~${d[0] * d[1]})` : "";
 function skillFx(v) {
   const t = [];
-  if (v.dmgDice) t.push((v.dmgType === "magic" ? "魔法傷害 " : "傷害 ") + dice(v.dmgDice));
-  if (v.ele && v.ele !== "none") t.push("屬性:" + (SK_ELE[v.ele] || v.ele));
-  if (v.target === "all") t.push("範圍:場上全部敵人");
-  if (v.hits) t.push("連續攻擊 " + v.hits + " 次");
-  if (v.healDice || v.healBase) t.push("治癒 " + (v.healBase ? "基礎 " + v.healBase + " " : "") + dice(v.healDice));
+  // 2026-09-15 對碼後改寫:lifesteal / freeze / healDice / pbase / autoBuff 都是引擎不讀的死欄位,不再照字面翻;
+  //   治癒改用 ih 算實際回復、魔法攻擊給平均傷害範例、狀態技寫實際效果、stun 寫死 6 秒。
+  if (v.dmgDice && v.dmgType === "magic") { t.push("魔法傷害骰 " + dice(v.dmgDice)); t.push(magicText(v)); }
+  else if (v.dmgDice) t.push("傷害 " + dice(v.dmgDice));
+  if (v.ele && v.ele !== "none") t.push("屬性:" + (SK_ELE[v.ele] || v.ele) + "(對被剋制的怪物固定 +6 傷害;火剋地、地剋風、風剋水、水剋火)");
+  if (v.target === "all") t.push("範圍:場上全部敵人(最多 3 隻,每隻各自擲骰、各吃全額,MP 只扣一次)");
+  if (v.hits) t.push("連續 " + v.hits + " 次完整普攻(每一矢各自判命中與爆擊;一次施放只消耗 1 支箭)");
+  if (v.ih && v.hot) t.push("持續回復:施放後每 " + v.hot.interval / 10 + " 秒回一次、共 " + v.hot.ticks + " 次;每次" + healText(v.ih));
+  else if (v.ih) t.push(healText(v.ih));
   if (v.dur) t.push("持續 " + v.dur + " 秒");
-  if (v.hpCost) t.push("消耗 HP " + v.hpCost);
-  if (v.mpGain) t.push("回復 MP " + v.mpGain);
-  if (v.lifesteal) t.push("吸血:造成的傷害轉為自身 HP");
-  if (v.instakill) t.push("即死:對「" + (v.instakill.tag === "undead" ? "不死系" : v.instakill.tag) + "」怪物判定,命中即秒殺(BOSS 免疫)");
-  if (v.stun) t.push("命中後使目標暈眩");
-  if (v.freeze) t.push("冰凍");
-  if (v.haste) t.push("加速");
-  if (v.drain) t.push("吸取");
-  if (v.summon) t.push("召喚夥伴協助作戰");
-  if (v.status && SK_STATUS[v.status.kind]) t.push("附加狀態:" + SK_STATUS[v.status.kind] + (v.status.dur ? "(" + v.status.dur + " 秒)" : ""));
+  if (v.hpCost && v.mpGain) t.push("每次 −" + v.hpCost + " HP → +" + v.mpGain + " MP,冷卻 " + v.autoCd + " 秒(每秒約 −" + Math.round(v.hpCost / v.autoCd) + " HP / +" + Math.round(v.mpGain / v.autoCd) + " MP)");
+  else if (v.hpCost) t.push("消耗 HP " + v.hpCost + (v.autoCd ? ",冷卻 " + v.autoCd + " 秒" : ""));
+  if (v.instakill) t.push("即死:對「" + (v.instakill.tag === "undead" ? "不死系" : v.instakill.tag === "element" ? "元素系" : v.instakill.tag) + "」怪物判定,成功即秒殺(世界王免疫)");
+  if (v.stun) t.push("先打 1 次普攻,怪物存活時再判「異常魔法命中」,成功使目標暈眩 6 秒(世界王免疫)");
+  if (v.haste) t.push("攻擊速度提升:攻擊間隔 ×0.67、技能冷卻同步縮短;與加速藥水不疊加、與勇敢藥水可疊加");
+  if (v.status && SK_STATUS_FX[v.status.kind]) t.push(SK_STATUS_FX[v.status.kind](v.status) + ";命中率看「異常魔法命中」(見頁首說明),世界王免疫");
+  else if (v.status && SK_STATUS[v.status.kind]) t.push("附加狀態:" + SK_STATUS[v.status.kind] + (v.status.dur ? "(" + v.status.dur + " 秒)" : ""));
   if (v.reqWpn && SK_WPN[v.reqWpn]) t.push(SK_WPN[v.reqWpn]);
   if (v.reqShield) t.push("需裝備盾牌");
   if (v.reqEle) t.push("需妖精屬性:" + (SK_ELE[v.reqEle] || v.reqEle));
@@ -253,7 +326,6 @@ function skillFx(v) {
   if (v.ranged) t.push("遠距離");
   if (v.mEff && SK_MEFF[v.mEff]) t.push(SK_MEFF[v.mEff]);
   t.push(...skillBuff(v.d)); // 增益技能的實際數值
-  if (v.autoCd) t.push("自動施放冷卻 " + v.autoCd + " 秒");
   return t;
 }
 
@@ -398,6 +470,7 @@ const skills = Object.entries(GD.skills || {}).map(([id, v]) => ({
   id, n: v.n || id, t: SK_TYPE[v.type] || v.type || "", tier: v.tier || 0, mp: v.mp || 0,
   k: v.reqK || 0, m: v.reqM || 0, e: v.reqE || 0, dk: v.reqD || 0,
   d: (typeof v.d === "string" ? v.d : "") || v.msg || "", fx: skillFx(v),
+  x: SK_NOTE[id] || "", // 📐 逐技能白話細節(引擎裡的效果;2026-09-15)
 })).sort((a, b) => (a.tier - b.tier) || a.n.localeCompare(b.n, "zh-Hant"));
 
 const dataJs = "const WIKI=" + JSON.stringify({ items, mobs: mobList, skills, zones, worldbosses, towns, sets }) + ";";
@@ -523,6 +596,12 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
   #tb-wrap td.vil .mo{display:inline}
   /* 少數技能效果是一整句話(例:「即死:對不死系怪物判定…」),.tag 的 nowrap 會撐出去 */
   #tb-wrap .tag{white-space:normal}
+  /* 📐 技能頁:逐技能白話細節 + 頁首「數字怎麼算」摺疊區(2026-09-15) */
+  .sknote{color:#d9c48f;font-size:12.5px;margin-top:4px;line-height:1.5}
+  details.how{background:#1f1810;border:1px solid #3a2f1c;border-radius:8px;padding:8px 12px;margin:0 0 12px;font-size:13px;line-height:1.6}
+  details.how summary{cursor:pointer;color:#ffd700;font-weight:600}
+  details.how ul{margin:8px 0 0;padding-left:18px}
+  details.how li{margin:4px 0}
   #tb-wrap td[colspan]{display:block}
   #tb-wrap td[colspan]::before{display:none}
 }
@@ -587,7 +666,7 @@ ${chips([[mobList.length, "怪物"], [items.length, "道具"], [skills.length, "
 <a class="tile" href="event.html"><div class="em">🎉</div><div class="tt">活動介紹</div><div class="dd">開服衝等活動・9/11~9/18</div></a>
 <a class="tile" href="monsters.html"><div class="em">👹</div><div class="tt">怪物掉落圖鑑</div><div class="dd">打什麼掉什麼・可用道具名反查</div></a>
 <a class="tile" href="items.html"><div class="em">⚔️</div><div class="tt">道具圖鑑</div><div class="dd">武器防具飾品的數值與說明</div></a>
-<a class="tile" href="skills.html"><div class="em">✨</div><div class="tt">技能介紹</div><div class="dd">各職業的學習等級與 MP</div></a>
+<a class="tile" href="skills.html"><div class="em">✨</div><div class="tt">技能介紹</div><div class="dd">學習等級、MP、實際效果與傷害/回復數字</div></a>
 <a class="tile" href="zones.html"><div class="em">🗺️</div><div class="tt">獵場列表</div><div class="dd">幾等該去哪練・怪在哪出沒</div></a>
 <a class="tile" href="worldboss.html"><div class="em">🐉</div><div class="tt">世界王</div><div class="dd">入場等級・重生間隔・掉落</div></a>
 <a class="tile" href="npc.html"><div class="em">🏘️</div><div class="tt">NPC 一覽</div><div class="dd">誰在哪個村莊・提供什麼服務</div></a>
@@ -729,7 +808,17 @@ $("q").oninput=render;render();
 // ---- 技能 ----
 fs.writeFileSync(path.join(OUT, "skills.html"), page("技能介紹", "skill", `
 ${chips([[skills.length, "技能"], ...["攻擊", "治癒", "增益", "被動", "工具", "轉換"].map(t => [skills.filter(s => s.t === t).length, t])])}
-<div class="bar"><input id="q" placeholder="🔍 搜技能名稱、效果(例:即死、吸血、暈眩)"><select id="cls"><option value="all">全職業</option><option value="k">騎士</option><option value="m">法師</option><option value="e">妖精</option><option value="dk">黑暗妖精</option></select></div>
+<details class="how"><summary>📐 數字怎麼算(魔法傷害 / 治癒 / 狀態命中 / MP / 增益)— 客服與玩家共用</summary>
+<ul>
+<li><b>魔法攻擊傷害</b>:骰 ×(1 + 3×魔法傷害÷16)×(1 + 技能階級÷3)+ 額外魔法點數 → 扣怪物魔防 → <b>法師再 ×1.5</b>(妖精沒有)。魔法傷害與額外魔法點數都只看 INT(裸裝 INT 25 → 4 / 6,INT 40 → 8 / 10,INT 60 → 15 / 15)。INT 35 起有魔法爆擊(INT 60 為 7%,爆擊骰值 ×1.5)。</li>
+<li><b>怪物魔防 MR</b>:MR ≤ 100 時打 (100 − MR÷2)%,例 MR 10 → 95%、MR 60 → 70%、MR 100 → 50%;MR 超過 100 每 10 點再少 1%。是打折不是免疫。</li>
+<li><b>治癒</b>:回復量 = 技能基礎值 + 係數 × 額外魔法點數,只看 INT、每次固定不擲骰,法師與妖精一樣。自動治癒在 HP 低於你設定的「治癒 HP%」時施放,冷卻 2 秒(加速時 1.34 秒)。</li>
+<li><b>狀態技與即死的命中(異常魔法命中)</b>:命中值 = 自己等級 + 魔法命中 −(怪物等級 − 10)− 怪物 MR÷10,限 0~20;擲 20 面骰 ≤ 命中值即命中(20 必中、1 必失)。換算:命中值 10 → 50%、≥19 → 95%、0 → 5%。魔法命中裸裝只看 INT(INT 25 → 2、INT 40 → 8、INT 60 → 18)。<b>世界王免疫所有狀態與即死</b>;施放就扣 MP,沒中也扣。</li>
+<li><b>MP 消耗</b>:實扣 = 技能 MP ×(1 − INT 減免%),INT 25 減 16%、INT 40 減 26%、INT 45 以上減 30%,最低 1。</li>
+<li><b>增益技能</b>:在自動設定勾選後,到期會自動再放一次(MP 夠才放),同一效果不疊加。世界王房也會自動續放;PK 是開場帶著身上的效果進場,場中不續放。</li>
+<li><b>世界王房手動按鈕</b>:喝水 1 秒冷卻;攻擊技 / 治癒 / 轉換 2 秒冷卻(治癒與轉換共用);結界 = 用 1 張魔法屏障卷軸;聖結界 5 秒冷卻、全房已按攻擊的成員一起套。石化或麻痺中六種全部不能按。</li>
+</ul></details>
+<div class="bar"><input id="q" placeholder="🔍 搜技能名稱、效果(例:即死、暈眩、召喚、×0.7)"><select id="cls"><option value="all">全職業</option><option value="k">騎士</option><option value="m">法師</option><option value="e">妖精</option><option value="dk">黑暗妖精</option></select></div>
 <div class="chips" id="tchips"></div>
 <div class="wrap" id="tb-wrap"><table><thead><tr><th>技能</th><th>類型</th><th>階級</th><th>MP</th><th>學習需求</th><th>效果與說明</th></tr></thead><tbody id="tb"></tbody></table></div>`,
 `<script src="data.js"></script><script>
@@ -742,10 +831,11 @@ document.querySelectorAll("#tchips .chip").forEach(c=>c.onclick=()=>{document.qu
 function reqStr(s){const p=[];if(s.k)p.push("騎士 Lv"+s.k);if(s.m)p.push("法師 Lv"+s.m);if(s.e)p.push("妖精 Lv"+s.e);if(s.dk)p.push("黑暗妖精 Lv"+s.dk);return p.length?p.join("<br>"):"—";}
 function render(){const q=$("q").value.trim().toLowerCase();const c=$("cls").value;
 const list=WIKI.skills.filter(s=>(tf==="全部"||s.t===tf)&&(c==="all"||s[c]>0)&&
-  (!q||s.n.toLowerCase().includes(q)||(s.d||"").toLowerCase().includes(q)||(s.fx||[]).some(x=>x.toLowerCase().includes(q))));
+  (!q||s.n.toLowerCase().includes(q)||(s.d||"").toLowerCase().includes(q)||(s.x||"").toLowerCase().includes(q)||(s.fx||[]).some(x=>x.toLowerCase().includes(q))));
 $("tb").innerHTML=list.map(s=>{
 const fx=(s.fx||[]).map(x=>"<span class='tag'>"+esc(x)+"</span>").join("");
-const desc=s.d?"<div style='color:#b6a684;font-size:13px;margin-top:3px'>"+esc(s.d)+"</div>":"";
+const note=s.x?"<div class='sknote'>📐 "+esc(s.x)+"</div>":"";
+const desc=(s.d?"<div style='color:#b6a684;font-size:13px;margin-top:3px'>"+esc(s.d)+"</div>":"")+note;
 return "<tr><td class='nm'>"+esc(s.n)+"</td><td class='num' data-l='類型'>"+esc(s.t)+"</td><td class='num' data-l='階級'>"+(s.tier||"—")+"</td><td class='num' data-l='MP'>"+(s.mp||"—")+"</td>"+
 "<td class='num' data-l='學習條件' style='font-size:12px'>"+reqStr(s)+"</td>"+
 "<td data-l='效果'>"+(fx||desc?fx+desc:"<span style='color:#6b5f4c'>—</span>")+"</td></tr>";}).join("")||"<tr><td colspan=6 style='color:#8f8067'>查無符合</td></tr>";}
