@@ -869,6 +869,29 @@ $("q").oninput=render;$("cls").onchange=render;render();
 //    活動結束把該筆的 over 改成 true(會自動變灰並標「已結束」)。
 const EVENTS = [
   {
+    title: "🎬 錄影推廣大作戰",
+    rewardHead: "項目",
+    when: "2026/09/16(三) ～ 2026/09/19(六)　每日可領一次",
+    over: false,
+    intro: "把你的遊戲畫面錄下來發到社群,天天都能領獎勵。掛機、打王、開箱、炫裝備,拍什麼都可以。",
+    rewards: [
+      ["每日回報成功", "🎁 錄影推廣禮包 ×1"],
+      ["禮包內容", "💎 藍鑽 ×50、對武器施法的卷軸 ×5、對盔甲施法的卷軸 ×5、💰 金幣 200,000"],
+    ],
+    rules: [
+      "<b>錄製遊戲畫面 15 秒以上</b>(建議 15 到 30 秒),內容不限。",
+      "發布到 <b>抖音 / Instagram / Threads(脆)</b> 其中一個平台,<b>必須是公開貼文或 Reels</b>;限時動態會在 24 小時後消失、無法查核,<b>不列入計算</b>(歡迎另外分享,但領獎仍以貼文為準)。",
+      "貼文文案必須包含:<b>當天日期</b>(例如 2026/09/16)、<b>遊戲連結 afei.gg 或官方 LINE @068ivpaq</b>,並帶上標籤 <b>#放置天地 #阿肥放置</b>。",
+      "把<b>貼文連結</b>私訊官方 LINE @068ivpaq,附上你的<b>遊戲帳號</b>與<b>角色名稱</b>。",
+      "<b>每個 LINE 帳號每天只能回報一次、領取一次</b>(以每日 00:00 到 23:59 計算)。",
+      "每天的影片必須是<b>新錄製的內容</b>,重複投遞舊影片不予發放。",
+      "貼文需<b>保留至少 7 天</b>,提前刪除或改為私人將取消該次資格。",
+      "獎勵於審核通過後發放,寄到遊戲內<b>交易所 →「領取」</b>頁,離線也收得到。",
+      "影片內容不得含有不雅、攻擊他人或與本遊戲無關的內容;查證造假者取消資格。",
+      "官方保留活動修改與最終判定之權利。",
+    ],
+  },
+  {
     title: "🏁 開服衝等大賽",
     when: "2026/09/11(五)20:00 ～ 2026/09/18(五)20:00",
     over: false,
@@ -895,7 +918,7 @@ const evCard = e => `<div class="mcard"` + (e.over ? ` style="opacity:.55"` : ""
   <div class="sub" style="color:#f5a97f;font-weight:bold">🗓️ ${e.when}</div>
   <div class="sub" style="margin-top:6px">${e.intro}</div>
   <div class="sub" style="margin-top:12px;color:#f5c451;font-weight:bold">🎁 獎勵</div>
-  <div class="wrap"><table><thead><tr><th>名次</th><th>獎勵</th></tr></thead><tbody>${e.rewards.map(([k, v]) => `<tr><td class="nm">${k}</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">${v}</td></tr>`).join("")}</tbody></table></div>
+  <div class="wrap"><table><thead><tr><th>${e.rewardHead || "名次"}</th><th>獎勵</th></tr></thead><tbody>${e.rewards.map(([k, v]) => `<tr><td class="nm">${k}</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">${v}</td></tr>`).join("")}</tbody></table></div>
   <div class="sub" style="margin-top:12px;color:#f5c451;font-weight:bold">📋 規則</div>
   <ul style="color:#b6a684;font-size:14px;line-height:1.9;margin:4px 0 0;padding-left:20px">${e.rules.map(r => `<li>${r}</li>`).join("")}</ul>
 </div>`;
