@@ -1194,6 +1194,13 @@ if (MASTERY.length) {
   const cell = arr => (arr && arr.length) ? arr.map(matStr).join("<br>") : "—";
   const lvCols = cap => Array.from({ length: cap }, (_, i) => i + 1);
 
+  // 🚩 精通狀態註記(麥哥 2026-09-16:玩家一直問黑妖藥水恢復沒效果 → 名稱後直接標出來)。
+  //    ⚠ 寫在這裡而非 mastery.json —— 後者是 wikidump 產物,重跑合併會被蓋掉。
+  //    修好上線後把該筆刪掉即可。
+  const MASTERY_NOTE = {
+    darkpot: "(未實裝9/17修正)",
+  };
+
   const secs = MASTERY.map(ms => {
     const rows = ms.levels.map(l => {
       const need = [];
@@ -1229,7 +1236,7 @@ if (MASTERY.length) {
       </tbody></table></div>` : "";
 
     return `<div class="mcard" data-cls="${ms.cls || "全職業"}" data-n="${ms.name}">
-      <div class="ttl">${ms.name} <span class="tag">${ms.cls || "全職業"}</span> <span class="tag">上限 Lv${ms.cap}</span></div>
+      <div class="ttl">${ms.name}${MASTERY_NOTE[ms.key] ? `<span style="color:#ff8a8a;font-size:14px;font-weight:bold">${MASTERY_NOTE[ms.key]}</span>` : ""} <span class="tag">${ms.cls || "全職業"}</span> <span class="tag">上限 Lv${ms.cap}</span></div>
       <div class="sub" style="margin:4px 0 8px">${md(ms.desc)}</div>
       <div style="color:#f5c451;font-size:14px;margin:10px 0 4px">升級表</div>
       <div class="wrap"><table><thead><tr><th>升級</th><th>所需累積</th><th>突破消耗</th><th>指定狩獵區／備註</th></tr></thead><tbody>${rows}</tbody></table></div>
