@@ -40,6 +40,8 @@ const FEAT = {
   potion:  false, // 嗑藥大師(精通)
   codex:   true, // 📖 圖鑑登錄(2026-09-14 改版;麥哥:官網只寫 Lv1~39 規則與效果,Lv40+/世界王/加成表不上;feature codex 開放後改 true 生成 codex.html)
   mcard:   false, // 商城:精通洗鍊卡 / 精通轉換卡
+  trial50: false, // 📜 50 級試煉(燃柳村 迪嘉勒廷)——麥哥 2026-09-16 拍板收起,遊戲內 NPC 也一起收
+                  //    ⚠ 必須與遊戲的 `feature trial50` 同步:那邊開放了,這裡才改 true 重發布
 };
 // 🐉 世界王等級上限(對應遊戲的 CMD `wbmax`;0=不限)。超過此等級的王不列出。
 const WB_MAX_LV = 52;
@@ -639,6 +641,7 @@ const NAV = [
   ["zones.html", "zone", "🗺️", "獵場列表"],
   ["worldboss.html", "wb", "🐉", "世界王"],
   ["npc.html", "npc", "🏘️", "NPC 一覽"],
+  ["trials.html", "trial", "📜", "職業試煉"],
   ["mastery.html", "mastery", "🎓", "精通升級數據"],
   ["sets.html", "set", "🛡️", "套裝效果"],
   ["enhance.html", "enh", "⚒️", "強化機率"],
@@ -1006,6 +1009,58 @@ $("tb").innerHTML=rows.join("")||"<tr><td colspan=4 style='color:#8f8067'>查無
 $("q").oninput=render;render();
 </script>`));
 
+// ---- 📜 職業試煉(2026-09-16 麥哥交代上官網)----
+// 資料來源:`trials.json`,由 `cd engine && go run ./cmd/trialdump -json ../玩家資料站/trials.json` 匯出
+//   (真相源=Go 的 afk.TrialRecipes + gamedata 的 towns/items/mobDrops)。
+// 🔴 **改了試煉或掉落就重跑那支工具**,不要手改 trials.json,也**不要為了這件事去跑 wikidump**
+//    (wikidump 會連強化機率一起重寫,那是刻意維持舊值的)。
+// 🎚 FEAT.trial50=false ⇒ 迪嘉勒廷那組不列,改在頁面明白告訴玩家「尚未開放」(與遊戲 `feature trial50` 同步)。
+{
+  let TRIALS = [];
+  try { TRIALS = JSON.parse(fs.readFileSync(path.join(OUT, "trials.json"), "utf8")); } catch (e) { }
+  const CLSN = { knight: "騎士", elf: "妖精", mage: "法師", dark: "黑暗妖精" };
+  const T50 = "npc_digallatin";
+  const shown = TRIALS.filter(t => FEAT.trial50 || t.Id !== T50);
+  const rows = [];
+  for (const t of shown) {
+    for (const ex of (t.ex || [])) {
+      const cls = (ex.cls || []).map(c => CLSN[c] || c).join("/");
+      const lv = ex.minLv ? `Lv ${ex.minLv}` : "不限";
+      const rew = (ex.rewards || []).join(" 或 ");
+      // 材料:有來源就寫「怪(Lv)・獵場」;沒來源=目前拿不到 ⇒ 老實標,不要讓玩家白找
+      // ⚠ 一個材料可能有多個來源(掉率差到 10 倍以上),全部列出來、掉率高的在前,別害玩家打錯怪
+      const mats = (ex.mats || []).map(m => {
+        const head = `${m.n}${m.cnt > 1 ? " ×" + m.cnt : ""}`;
+        const srcs = (m.srcs || []).map(s => ({
+          line: `${s.mob}（Lv${s.mobLv}）${s.rate}%${s.rows > 1 ? "・一次最多掉 " + s.rows + " 個" : ""}`,
+          zones: (s.zones || []).join("、"),
+        }));
+        return { head, srcs, none: srcs.length === 0 };
+      });
+      rows.push({ town: t.Town, npc: t.Npc, cls, lv, rew, mats });
+    }
+  }
+  fs.writeFileSync(path.join(OUT, "trials.html"), page("職業試煉", "trial", `
+${chips([[shown.length, "試煉 NPC"], [rows.length, "可換獎勵"]])}
+<div class="hint">找對應村莊的 NPC 對話，交出材料就能換裝備。<b style="color:#f5c451">材料再湊齊一次就能再換一次</b>，沒有次數限制。</div>
+${FEAT.trial50 ? "" : `<div class="hint" style="border-color:#8a3b2e;background:#241a16">📜 <b style="color:#ff8a70">50 級試煉（燃柳村・迪嘉勒廷）目前尚未開放</b>，遊戲中暫時看不到這位 NPC，開放時間另行公告。</div>`}
+<div class="bar"><input id="q" placeholder="🔍 搜職業、村莊、NPC、獎勵 或 材料"></div>
+<div class="wrap" id="tb-wrap"><table><thead><tr><th>職業</th><th>村莊 / NPC</th><th>等級</th><th>獎勵</th><th>需要的材料（哪裡打）</th></tr></thead><tbody id="tb"></tbody></table></div>`,
+    `<script>const ROWS=${JSON.stringify(rows)};</script><script>
+const $=id=>document.getElementById(id);
+${ESC}
+function matHtml(m){
+  if(m.none) return "<div style='margin-bottom:8px'><b>"+esc(m.head)+"</b><br><span style='color:#ff8a70;font-size:12px'>目前尚無取得管道</span></div>";
+  return "<div style='margin-bottom:8px'><b>"+esc(m.head)+"</b>"+m.srcs.map(s=>
+    "<br><span style='color:#b6a684;font-size:12px'>"+esc(s.line)+"</span><br><span style='color:#8f8067;font-size:12px'>"+esc(s.zones)+"</span>").join("")+"</div>";
+}
+function render(){const q=$("q").value.trim().toLowerCase();
+const list=ROWS.filter(r=>!q||[r.cls,r.town,r.npc,r.rew].join(" ").toLowerCase().includes(q)||r.mats.some(m=>m.head.toLowerCase().includes(q)));
+$("tb").innerHTML=list.map(r=>"<tr><td class='nm'>"+esc(r.cls)+"</td><td data-l='NPC'>"+esc(r.town)+"<br><span style='color:#b6a684;font-size:12px'>"+esc(r.npc)+"</span></td><td class='num' data-l='等級'>"+esc(r.lv)+"</td><td data-l='獎勵' style='color:#f5c451'>"+esc(r.rew)+"</td><td data-l='材料'>"+r.mats.map(matHtml).join("")+"</td></tr>").join("")||"<tr><td colspan=5 style='color:#8f8067'>查無符合</td></tr>";}
+$("q").oninput=render;render();
+</script>`));
+}
+
 // ---- 套裝 ----
 fs.writeFileSync(path.join(OUT, "sets.html"), page("套裝效果", "set", `
 ${chips([[sets.length, "套裝"]])}
@@ -1259,6 +1314,15 @@ cards.forEach(c=>{const hit=!q||c.dataset.n.toLowerCase().includes(q)||c.dataset
 // ================= 📢 版本更新 =================
 let CHANGES = [];
 try { CHANGES = JSON.parse(fs.readFileSync(path.join(OUT, "changelog.json"), "utf8")); } catch (e) { }
+// 🔴 **未來日期的區塊不發布**(2026-09-16 加):我們的流程是「改動先寫好 changelog、等第二台部署完才發布」,
+//    但 gen.js 可能為了別的事先跑一次(例如今晚只想上試煉頁)⇒ 沒這道閘就會把明天才生效的改動提早公告,
+//    玩家看到公告卻找不到功能。到了當天日期自然就會被印出來,不用手動搬。
+{
+  const today = new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD(本地時區)
+  const future = CHANGES.filter(d => d.date > today);
+  if (future.length) console.log(`⏳ 跳過未來日期的更新日誌 ${future.length} 區塊:${future.map(d => d.date).join(", ")}(到當天才會發布)`);
+  CHANGES = CHANGES.filter(d => d.date <= today);
+}
 {
   const TCOL = { "新增": "#7bd14a", "調整": "#5b9bff", "修復": "#f5c451" };
   // **粗體** → <b>(內容用 Markdown 寫,HTML 不會自己渲染)

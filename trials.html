@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>套裝效果 - 阿肥放置天地 資料站</title><style>
+<title>職業試煉 - 阿肥放置天地 資料站</title><style>
 *{box-sizing:border-box}body{background:#1a140c;color:#e8dcc8;font-family:"Microsoft JhengHei",sans-serif;margin:0;padding:0}
 /* ── 頁首與導覽列 ──
    14 個功能鍵,所以做成膠囊按鈕 + 圖示;捲動時固定在頂端(查資料時不用捲回去換頁)。
@@ -138,9 +138,9 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 <a href="zones.html" class=""><span class="i">🗺️</span>獵場列表</a>
 <a href="worldboss.html" class=""><span class="i">🐉</span>世界王</a>
 <a href="npc.html" class=""><span class="i">🏘️</span>NPC 一覽</a>
-<a href="trials.html" class=""><span class="i">📜</span>職業試煉</a>
+<a href="trials.html" class="on"><span class="i">📜</span>職業試煉</a>
 <a href="mastery.html" class=""><span class="i">🎓</span>精通升級數據</a>
-<a href="sets.html" class="on"><span class="i">🛡️</span>套裝效果</a>
+<a href="sets.html" class=""><span class="i">🛡️</span>套裝效果</a>
 <a href="enhance.html" class=""><span class="i">⚒️</span>強化機率</a>
 <a href="affix.html" class=""><span class="i">🌑</span>詞條大全</a>
 <a href="poly.html" class=""><span class="i">💪</span>變身型態</a>
@@ -151,10 +151,11 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 <a href="systems.html" class=""><span class="i">📜</span>系統說明</a>
 <a href="changelog.html" class=""><span class="i">📢</span>版本更新</a>
 </nav></header><main>
-<div class="stats"><div class="stat-chip"><b>12</b>套裝</div></div>
-<div class="hint">湊齊整套裝備即可獲得額外加成。</div>
-<div class="bar"><input id="q" placeholder="🔍 搜套裝名 或 裝備名"></div>
-<div class="wrap" id="tb-wrap"><table><thead><tr><th>套裝</th><th>湊齊加成</th><th>組成裝備</th></tr></thead><tbody id="tb"></tbody></table></div></main>
+<div class="stats"><div class="stat-chip"><b>10</b>試煉 NPC</div><div class="stat-chip"><b>14</b>可換獎勵</div></div>
+<div class="hint">找對應村莊的 NPC 對話，交出材料就能換裝備。<b style="color:#f5c451">材料再湊齊一次就能再換一次</b>，沒有次數限制。</div>
+<div class="hint" style="border-color:#8a3b2e;background:#241a16">📜 <b style="color:#ff8a70">50 級試煉（燃柳村・迪嘉勒廷）目前尚未開放</b>，遊戲中暫時看不到這位 NPC，開放時間另行公告。</div>
+<div class="bar"><input id="q" placeholder="🔍 搜職業、村莊、NPC、獎勵 或 材料"></div>
+<div class="wrap" id="tb-wrap"><table><thead><tr><th>職業</th><th>村莊 / NPC</th><th>等級</th><th>獎勵</th><th>需要的材料（哪裡打）</th></tr></thead><tbody id="tb"></tbody></table></div></main>
 <script>
 /* 📱 手機卡片式:值是「—」的欄位加 .e 由 CSS 隱藏,免得每張卡都一堆空白列。
    各頁 render 是各自的 innerHTML 賦值,所以用 MutationObserver 統一處理一次就好。 */
@@ -165,11 +166,16 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
  new MutationObserver(mark).observe(tb,{childList:true});mark();})();
 </script>
 <footer>資料自動同步自遊戲檔 · 產生於 2026-09-16<br>本站資料僅供參考,阿肥放置天地官方保留最終解釋權。<br>一切贊助皆為玩家自願,款項全數用於伺服器維護與研究開發。</footer>
-<script src="data.js?v=b40f2412"></script><script>
+<script>const ROWS=[{"town":"沉默洞穴","npc":"布魯迪卡","cls":"黑暗妖精","lv":"不限","rew":"影子長靴","mats":[{"head":"雪怪首級","srcs":[{"line":"雪怪（Lv33）1%","zones":"國境要塞、歐瑞、歐瑞雪原、水晶洞穴1樓、水晶洞穴2樓、水晶洞穴3樓"}],"none":false}]},{"town":"沉默洞穴","npc":"布魯迪卡","cls":"黑暗妖精","lv":"Lv 50","rew":"死亡之指","mats":[{"head":"墮落鑰匙","srcs":[],"none":true}]},{"town":"說話之島","npc":"甘特","cls":"騎士","lv":"不限","rew":"紅騎士之劍","mats":[{"head":"夏洛伯之爪","srcs":[{"line":"夏洛伯（Lv14）0.5%","zones":"古魯丁、古魯丁地監2樓、古魯丁地監4樓、奇岩、沙漠地監1樓、海音、肯特、說話之島周邊、說話之島地監2樓、說話之島港口、鏡子森林"}],"none":false}]},{"town":"說話之島","npc":"甘特","cls":"騎士","lv":"不限","rew":"紅騎士盾牌","mats":[{"head":"蛇女之鱗","srcs":[{"line":"蛇女（Lv22）0.5%","zones":"地下通道1樓、地下通道2樓、地下通道3樓、海音、鏡子森林"}],"none":false}]},{"town":"說話之島","npc":"詹姆","cls":"法師","lv":"不限","rew":"魔法能量之書","mats":[{"head":"食屍鬼的指甲","srcs":[{"line":"食屍鬼（Lv16）0.5%","zones":"古魯丁、古魯丁地監1樓、古魯丁地監2樓、古魯丁地監3樓、古魯丁地監4樓、古魯丁地監5樓、古魯丁地監6樓、古魯丁地監7樓、奇岩地監1樓、奇岩地監2樓、妖魔森林、歐瑞、沙漠地監2樓、沙漠地監3樓、眠龍洞穴3樓、艾爾摩激戰地、銀騎士地區"}],"none":false},{"head":"食屍鬼的牙齒","srcs":[{"line":"食屍鬼（Lv16）0.5%","zones":"古魯丁、古魯丁地監1樓、古魯丁地監2樓、古魯丁地監3樓、古魯丁地監4樓、古魯丁地監5樓、古魯丁地監6樓、古魯丁地監7樓、奇岩地監1樓、奇岩地監2樓、妖魔森林、歐瑞、沙漠地監2樓、沙漠地監3樓、眠龍洞穴3樓、艾爾摩激戰地、銀騎士地區"}],"none":false},{"head":"骷髏頭","srcs":[{"line":"骷髏（Lv10）0.5%","zones":"古魯丁、古魯丁地監1樓、古魯丁地監2樓、古魯丁地監3樓、古魯丁地監4樓、古魯丁地監5樓、沙漠地監1樓、沙漠地監3樓、說話之島周邊、說話之島地監1樓、說話之島地監2樓、銀騎士地區"}],"none":false}]},{"town":"沉默洞穴","npc":"康","cls":"黑暗妖精","lv":"不限","rew":"影子面具","mats":[{"head":"妖魔長老首級","srcs":[{"line":"妖魔法師（Lv12）1%","zones":"古魯丁、妖精森林周邊、妖魔森林、銀騎士地區、風木"}],"none":false}]},{"town":"威頓村","npc":"馬沙","cls":"騎士","lv":"不限","rew":"勇敢皮帶","mats":[{"head":"夜之視野","srcs":[{"line":"強盜頭目（Lv35）5%","zones":"奇岩"}],"none":false},{"head":"古代鑰匙","srcs":[{"line":"鋼鐵高崙（Lv35）0.5%","zones":"國境要塞、歐瑞雪原、水晶洞穴1樓、水晶洞穴2樓、象牙塔4樓、象牙塔5樓"}],"none":false}]},{"town":"威頓村","npc":"馬沙","cls":"妖精","lv":"不限","rew":"保護者手套 或 精靈水晶(召喚強力屬性精靈)","mats":[{"head":"藍色長笛","srcs":[{"line":"黑暗精靈（Lv27）0.5%","zones":"奇岩、奇岩地監4樓、妖魔森林、龍之谷"}],"none":false},{"head":"古代鑰匙","srcs":[{"line":"鋼鐵高崙（Lv35）0.5%","zones":"國境要塞、歐瑞雪原、水晶洞穴1樓、水晶洞穴2樓、象牙塔4樓、象牙塔5樓"}],"none":false}]},{"town":"妖精森林","npc":"迷幻森林之母","cls":"妖精","lv":"不限","rew":"精靈水晶(召喚屬性精靈) 或 精靈T恤","mats":[{"head":"受詛咒的精靈書","srcs":[{"line":"希爾黛斯（Lv24）0.5%","zones":"伊娃王國"}],"none":false}]},{"town":"燃柳村","npc":"歐斯","cls":"妖精","lv":"不限","rew":"精靈敏捷頭盔 或 精靈體質頭盔","mats":[{"head":"都達瑪拉妖魔魔法書","srcs":[{"line":"都達瑪拉妖魔（Lv15）0.5%","zones":"妖精森林周邊、妖魔森林、眠龍洞穴2樓"}],"none":false},{"head":"那魯加妖魔魔法書","srcs":[{"line":"那魯加妖魔（Lv17）0.5%","zones":"妖精森林周邊、妖魔森林、眠龍洞穴3樓"}],"none":false},{"head":"甘地妖魔魔法書","srcs":[{"line":"甘地妖魔（Lv10）0.5%","zones":"妖精森林周邊、妖魔森林、眠龍洞穴2樓"}],"none":false},{"head":"阿吐巴妖魔魔法書","srcs":[{"line":"阿吐巴妖魔（Lv15）0.5%","zones":"妖精森林周邊、妖魔森林、眠龍洞穴3樓"}],"none":false}]},{"town":"銀騎士村","npc":"瑞奇","cls":"騎士","lv":"不限","rew":"紅騎士頭巾","mats":[{"head":"古老的交易文件","srcs":[{"line":"黑騎士（Lv16）0.5%","zones":"說話之島港口、銀騎士地區"}],"none":false},{"head":"黑騎士的誓約","srcs":[{"line":"黑騎士（Lv16）0.5%","zones":"說話之島港口、銀騎士地區"}],"none":false},{"head":"龍龜甲","srcs":[{"line":"龍龜（Lv24）0.5%","zones":"銀騎士地區、鏡子森林"}],"none":false}]},{"town":"沉默洞穴","npc":"倫得","cls":"黑暗妖精","lv":"不限","rew":"影子手套","mats":[{"head":"死亡誓約","srcs":[{"line":"強盜（Lv28）1%","zones":"奇岩"}],"none":false}]},{"town":"象牙塔","npc":"塔拉斯","cls":"法師","lv":"不限","rew":"水晶魔杖","mats":[{"head":"不死族的鑰匙","srcs":[{"line":"骷髏（Lv10）0.5%","zones":"古魯丁、古魯丁地監1樓、古魯丁地監2樓、古魯丁地監3樓、古魯丁地監4樓、古魯丁地監5樓、沙漠地監1樓、沙漠地監3樓、說話之島周邊、說話之島地監1樓、說話之島地監2樓、銀騎士地區"}],"none":false},{"head":"不死族的骨頭","srcs":[{"line":"骷髏神射手（Lv27）0.5%","zones":"龍之谷、龍之谷地監1樓、龍之谷地監2樓、龍之谷地監3樓、龍之谷地監4樓"},{"line":"骷髏警衛（Lv27）0.05%","zones":"龍之谷、龍之谷地監1樓、龍之谷地監2樓、龍之谷地監3樓、龍之谷地監4樓"}],"none":false}]},{"town":"象牙塔","npc":"塔拉斯","cls":"法師","lv":"不限","rew":"瑪那魔杖 或 瑪那斗篷","mats":[{"head":"變形怪的血","srcs":[{"line":"變形怪首領（Lv50）50%","zones":"鏡子森林"},{"line":"變形怪（Lv33）0.5%","zones":"鏡子森林"}],"none":false}]}];</script><script>
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+function matHtml(m){
+  if(m.none) return "<div style='margin-bottom:8px'><b>"+esc(m.head)+"</b><br><span style='color:#ff8a70;font-size:12px'>目前尚無取得管道</span></div>";
+  return "<div style='margin-bottom:8px'><b>"+esc(m.head)+"</b>"+m.srcs.map(s=>
+    "<br><span style='color:#b6a684;font-size:12px'>"+esc(s.line)+"</span><br><span style='color:#8f8067;font-size:12px'>"+esc(s.zones)+"</span>").join("")+"</div>";
+}
 function render(){const q=$("q").value.trim().toLowerCase();
-const list=WIKI.sets.filter(s=>!q||s.n.toLowerCase().includes(q)||s.items.some(i=>i.toLowerCase().includes(q)));
-$("tb").innerHTML=list.map(s=>"<tr><td class='nm'>"+esc(s.n)+"</td><td class='num' data-l='效果'>"+(s.ac?"防禦 +"+s.ac:"—")+"</td><td data-l='組成'>"+s.items.map(i=>"<span class='tag'>"+esc(i)+"</span>").join("")+"</td></tr>").join("")||"<tr><td colspan=3 style='color:#8f8067'>查無符合</td></tr>";}
+const list=ROWS.filter(r=>!q||[r.cls,r.town,r.npc,r.rew].join(" ").toLowerCase().includes(q)||r.mats.some(m=>m.head.toLowerCase().includes(q)));
+$("tb").innerHTML=list.map(r=>"<tr><td class='nm'>"+esc(r.cls)+"</td><td data-l='NPC'>"+esc(r.town)+"<br><span style='color:#b6a684;font-size:12px'>"+esc(r.npc)+"</span></td><td class='num' data-l='等級'>"+esc(r.lv)+"</td><td data-l='獎勵' style='color:#f5c451'>"+esc(r.rew)+"</td><td data-l='材料'>"+r.mats.map(matHtml).join("")+"</td></tr>").join("")||"<tr><td colspan=5 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script></body></html>
