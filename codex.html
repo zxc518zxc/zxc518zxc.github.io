@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>怪物圖鑑登錄 - 阿肥放置天地 資料站</title><style>
+*{box-sizing:border-box}body{background:#1a140c;color:#e8dcc8;font-family:"Microsoft JhengHei",sans-serif;margin:0;padding:0}
+/* ── 頁首與導覽列 ──
+   14 個功能鍵,所以做成膠囊按鈕 + 圖示;捲動時固定在頂端(查資料時不用捲回去換頁)。
+   窄螢幕自動縮小,不做橫向捲動(會藏住後面的鍵)。 */
+header{background:linear-gradient(180deg,#2c2114 0%,#20180d 100%);
+  border-bottom:1px solid #3f331d;box-shadow:0 3px 14px rgba(0,0,0,.45);
+  padding:12px 18px 0;position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+header h1{color:#f5c451;font-size:20px;margin:0;letter-spacing:.5px;
+  text-shadow:0 0 18px rgba(245,196,81,.35)}
+.brand .sub{color:#8a7d63;font-size:12px;letter-spacing:2px}
+nav{display:flex;flex-wrap:wrap;gap:6px;padding-bottom:11px}
+nav a{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:9px;
+  color:#c9b995;text-decoration:none;font-size:14px;white-space:nowrap;line-height:1.2;
+  border:1px solid transparent;background:rgba(255,255,255,.03);
+  transition:background .18s,color .18s,border-color .18s,transform .18s,box-shadow .18s}
+nav a .i{font-size:15px;line-height:1}
+nav a:hover{background:rgba(245,196,81,.11);color:#f5c451;
+  border-color:rgba(245,196,81,.38);transform:translateY(-1px)}
+nav a.on{background:linear-gradient(180deg,#f5c451 0%,#dfa72c 100%);color:#241b0f;
+  font-weight:700;border-color:#f5c451;box-shadow:0 2px 10px rgba(245,196,81,.32)}
+nav a.on .i{filter:saturate(.85)}
+@media(max-width:640px){
+  header{padding:10px 12px 0}
+  header h1{font-size:17px}
+  .brand .sub{display:none}
+  nav{gap:5px;padding-bottom:9px}
+  nav a{padding:6px 9px;font-size:13px;gap:4px}
+  nav a .i{font-size:14px}
+}
+main{max-width:1000px;margin:0 auto;padding:16px}
+input,select{background:#2a2014;border:1px solid #5a4a26;color:#e8dcc8;padding:9px 12px;border-radius:8px;font-size:15px}
+input{width:100%}
+.bar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{padding:6px 14px;border-radius:16px;border:1px solid #5a4a26;background:#2a2014;color:#cbbb9b;cursor:pointer;font-size:14px}
+.chip.on{background:#f5c451;color:#241b0f;font-weight:bold}
+.card{background:#241b0f;border:1px solid #3a2f1c;border-radius:12px;padding:12px 14px;margin-bottom:10px;display:flex;gap:12px}
+.card img{width:48px;height:48px;object-fit:contain;flex-shrink:0}
+.card .ttl{color:#f5c451;font-size:16px;font-weight:bold}
+.card .sub{color:#b6a684;font-size:13px;margin-top:2px}
+.legend{color:#ffd700}
+.dropchip{display:inline-flex;align-items:center;gap:4px;background:#2a2014;border:1px solid #3a2f1c;border-radius:8px;padding:3px 8px;margin:3px 4px 0 0;font-size:13px;color:#cbbb9b}
+.dropchip img{width:20px;height:20px}
+.stat{color:#8f8067;font-size:13px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:8px 10px;border-bottom:1px solid #3a2f1c;text-align:left}
+th{color:#f5c451;position:sticky;top:0;background:#1a140c}
+footer{text-align:center;color:#6b5f4c;font-size:12px;padding:24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.tile{background:#241b0f;border:1px solid #5a4a26;border-radius:14px;padding:22px;text-align:center;text-decoration:none;display:block}
+.tile:hover{border-color:#f5c451}
+.tile .em{font-size:34px}.tile .tt{color:#f5c451;font-size:18px;font-weight:bold;margin:8px 0 4px}.tile .dd{color:#b6a684;font-size:13px}
+/* 社群入口(首頁最下方):遊戲本體 + Discord + LINE。用 .link 區隔於資料頁磁磚 */
+.sechd{text-align:center;color:#f5c451;font-size:17px;font-weight:bold;margin:34px 0 4px}
+.sechd+.sub{text-align:center;color:#8a7d63;font-size:13px;margin-bottom:14px}
+.links{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.link{background:#241b0f;border:1px solid #5a4a26;border-radius:14px;padding:18px 16px;
+  text-decoration:none;display:flex;align-items:center;gap:13px}
+.link:hover{border-color:#f5c451}
+.link .em{font-size:29px;flex:none;line-height:1}
+.link .tt{color:#f5c451;font-size:16px;font-weight:bold}
+.link .dd{color:#b6a684;font-size:12.5px;margin-top:2px;word-break:break-all}
+.link.play{background:linear-gradient(180deg,#33260f,#241b0f);border-color:#f5c451}
+.link.play .tt{font-size:17px}
+.lineid{color:#e8dcc8;font-family:Consolas,monospace;background:#1a1409;
+  border:1px solid #3a2f1c;border-radius:6px;padding:1px 7px;font-size:13px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:10px 0 16px}
+.stat-chip{background:#241b0f;border:1px solid #5a4a26;border-radius:10px;padding:7px 14px;font-size:14px;color:#b6a684}
+.stat-chip b{color:#f5c451;font-size:16px;margin-right:4px}
+table{border-collapse:collapse;width:100%;font-size:14px;background:#241b0f;border-radius:10px;overflow:hidden}
+th,td{padding:8px 10px;border-bottom:1px solid #3a2f1c;text-align:left;vertical-align:top}
+th{color:#f5c451;position:sticky;top:0;background:#2a2014;white-space:nowrap;font-size:13px}
+tr:hover td{background:#2a2014}
+td.nm{color:#e8dcc8;font-weight:bold;white-space:nowrap}
+td.vil{color:#e8dcc8;font-weight:bold;white-space:nowrap}
+td.vil .mo{display:none}   /* 手機卡片式才顯示,見 @media(max-width:640px) */
+td.vil .de{display:inline}
+td.num{text-align:right;white-space:nowrap;color:#b6a684}
+.tag{display:inline-block;background:#2a2014;border:1px solid #3a2f1c;border-radius:6px;padding:1px 7px;margin:2px 3px 0 0;font-size:12px;color:#cbbb9b;white-space:nowrap}
+.tag.lg{color:#ffd700;border-color:#6b5a20}
+.tag.zn{color:#7bd14a;border-color:#2f4a24}
+.tag.wb{color:#f5a97f;border-color:#6b3f28;background:rgba(245,169,127,.08)}
+.wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* ── 📱 手機:大表格改成「一筆一張卡」──
+   原本靠 .wrap 橫向捲動,技術上沒有溢出(body 仍是 375),但表格寬 512px,
+   玩家要左右滑才看得完整列,而且不會發現可以滑 ⇒ 改成堆疊卡片,欄位名用
+   data-l 屬性帶進來(td::before),完全不需要橫滑。
+   ⚠ 只套在有 #tb 的主資料表;.mcard 內的小表格欄位少,維持原樣照常橫捲。 */
+@media(max-width:640px){
+  #tb-wrap{overflow-x:visible}
+  #tb-wrap table{display:block;background:transparent;border-radius:0;font-size:14px}
+  #tb-wrap thead{display:none}
+  #tb-wrap tbody{display:block}
+  #tb-wrap tr{display:block;background:#241b0f;border:1px solid #3a2f1c;border-radius:10px;
+    padding:10px 12px;margin-bottom:10px}
+  /* ⚠ td 必須是 block(不能用 flex/grid):像「出沒怪」那種一格塞十幾個 <span class=tag>,
+     flex 會把它們排成不換行的一列而被切掉。block + 絕對定位的標籤才能自然換行。 */
+  #tb-wrap td{display:block;border:0;padding:3px 0 3px 76px;position:relative;
+    text-align:left;min-height:20px}
+  #tb-wrap td::before{content:attr(data-l);position:absolute;left:0;top:5px;width:70px;
+    color:#8a7d63;font-size:12px;line-height:1.3}
+  #tb-wrap td.nm{padding:0 0 7px;margin-bottom:5px;font-size:16px;
+    border-bottom:1px solid #33291a;white-space:normal}
+  #tb-wrap td.nm::before{display:none}
+  #tb-wrap td.num{text-align:left;white-space:normal}
+  #tb-wrap td.e{display:none}          /* 值是「—」的欄位在手機上不佔位 */
+  /* NPC:桌機版村莊名只印在該村第一列(表格分組),手機每張卡都要有 → 兩份切換 */
+  #tb-wrap td.vil .de{display:none}
+  #tb-wrap td.vil .mo{display:inline}
+  /* 少數技能效果是一整句話(例:「即死:對不死系怪物判定…」),.tag 的 nowrap 會撐出去 */
+  #tb-wrap .tag{white-space:normal}
+  /* 📐 技能頁:逐技能白話細節 + 頁首「數字怎麼算」摺疊區(2026-09-15) */
+  .sknote{color:#d9c48f;font-size:12.5px;margin-top:4px;line-height:1.5}
+  details.how{background:#1f1810;border:1px solid #3a2f1c;border-radius:8px;padding:8px 12px;margin:0 0 12px;font-size:13px;line-height:1.6}
+  details.how summary{cursor:pointer;color:#ffd700;font-weight:600}
+  details.how ul{margin:8px 0 0;padding-left:18px}
+  details.how li{margin:4px 0}
+  #tb-wrap td[colspan]{display:block}
+  #tb-wrap td[colspan]::before{display:none}
+}
+.hint{color:#8f8067;font-size:12px;margin:-6px 0 12px}
+.mcard{background:#241b0f;border:1px solid #3a2f1c;border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.mcard .ttl{color:#f5c451;font-size:17px;font-weight:bold;margin-bottom:2px}
+.mcard .sub{color:#b6a684;font-size:14px;line-height:1.75}
+.mcard table{margin-top:6px}
+</style></head><body>
+<header>
+<div class="brand"><h1>🏰 阿肥放置天地</h1><span class="sub">玩家資料站</span></div>
+<nav><a href="index.html" class=""><span class="i">🏠</span>首頁</a>
+<a href="monsters.html" class=""><span class="i">👹</span>怪物掉落圖鑑</a>
+<a href="items.html" class=""><span class="i">⚔️</span>道具圖鑑</a>
+<a href="skills.html" class=""><span class="i">✨</span>技能介紹</a>
+<a href="zones.html" class=""><span class="i">🗺️</span>獵場列表</a>
+<a href="worldboss.html" class=""><span class="i">🐉</span>世界王</a>
+<a href="npc.html" class=""><span class="i">🏘️</span>NPC 一覽</a>
+<a href="mastery.html" class=""><span class="i">🎓</span>精通升級數據</a>
+<a href="sets.html" class=""><span class="i">🛡️</span>套裝效果</a>
+<a href="enhance.html" class=""><span class="i">⚒️</span>強化機率</a>
+<a href="affix.html" class=""><span class="i">🌑</span>詞條大全</a>
+<a href="poly.html" class=""><span class="i">💪</span>變身型態</a>
+<a href="pets.html" class=""><span class="i">🐕</span>寵物與召喚</a>
+<a href="codex.html" class="on"><span class="i">📖</span>怪物圖鑑登錄</a>
+<a href="event.html" class=""><span class="i">🎉</span>活動介紹</a>
+<a href="guide.html" class=""><span class="i">🌱</span>新手指南</a>
+<a href="systems.html" class=""><span class="i">📜</span>系統說明</a>
+<a href="changelog.html" class=""><span class="i">📢</span>版本更新</a>
+</nav></header><main>
+<div class="hint">「能力 → 圖鑑」(<b>角色 41 級</b>起開放):同一隻怪殺到門檻會<b>點亮</b>,再付費<b>登錄</b>,就拿到那一格的<b>永久加成</b>。圖鑑是<b>整個帳號共用</b>的:擊殺數四隻角色一起算,登錄後每隻角色都吃得到加成。</div>
+
+<div class="mcard"><div class="ttl">📖 規則</div>
+<div class="wrap"><table><thead><tr><th>怪物等級</th><th>點亮要殺幾次(帳號累計)</th><th>登錄費</th></tr></thead><tbody>
+<tr><td>Lv1 ~ 19</td><td>50 次</td><td>怪物等級 × 2 萬金幣</td></tr>
+<tr><td>Lv20 ~ 39</td><td>200 次</td><td>怪物等級 × 2 萬金幣</td></tr>
+<tr><td>Lv40 ~ 49</td><td>500 次</td><td>怪物等級 × 2 萬金幣 <b>+ 10 藍鑽</b></td></tr>
+<tr><td>Lv50 以上・世界王</td><td colspan="2">尚未開放</td></tr>
+</tbody></table></div>
+<div class="sub" style="margin-top:8px">・只有 <b>41 級以上</b>的角色打怪才會計入擊殺數(40 級以下不計)。<br>・沒點亮的格子會顯示目前殺了幾次(例:12 / 50)。<br>・登錄是一次性的,登錄後那格永久亮起、效果立即生效。<br>・圖鑑開放之前的擊殺不算,從開放那一刻開始計;尚未開放的等級帶也不會累積。<br>・世界王只有「拿到王房結算獎勵」的那一次才算殺過。</div></div>
+
+<div class="mcard"><div class="ttl">🗂 Lv1 ~ 49 各怪登錄效果(共 153 格)</div>
+<div class="wrap"><table><thead><tr><th>等級</th><th>怪物</th><th>點亮</th><th>登錄費</th><th>登錄效果</th></tr></thead><tbody>
+<tr><td>2</td><td>妖魔</td><td>50 次</td><td>40,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>2</td><td>哥布林</td><td>50 次</td><td>40,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>3</td><td>地靈</td><td>50 次</td><td>60,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>3</td><td>妖魔弓箭手</td><td>50 次</td><td>60,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>4</td><td>狼</td><td>50 次</td><td>80,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>4</td><td>蘑菇</td><td>50 次</td><td>80,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>5</td><td>侏儒</td><td>50 次</td><td>100,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>5</td><td>牧羊犬</td><td>50 次</td><td>100,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>5</td><td>哈士奇</td><td>50 次</td><td>100,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>5</td><td>熊</td><td>50 次</td><td>100,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>6</td><td>人形殭屍</td><td>50 次</td><td>120,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>6</td><td>安普長老</td><td>50 次</td><td>120,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>6</td><td>污染的安特</td><td>50 次</td><td>120,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>6</td><td>杜賓狗</td><td>50 次</td><td>120,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>7</td><td>漂浮之眼</td><td>50 次</td><td>140,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>8</td><td>冰原狼人</td><td>50 次</td><td>160,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>8</td><td>妖魔鬥士</td><td>50 次</td><td>160,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>8</td><td>怪手</td><td>50 次</td><td>160,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>9</td><td>侏儒戰士</td><td>50 次</td><td>180,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>9</td><td>狼人</td><td>50 次</td><td>180,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>10</td><td>甘地妖魔</td><td>50 次</td><td>200,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>10</td><td>冰之女王侍女</td><td>50 次</td><td>200,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>10</td><td>污染的潘</td><td>50 次</td><td>200,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>10</td><td>妖魔殭屍</td><td>50 次</td><td>200,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>10</td><td>骷髏</td><td>50 次</td><td>200,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>10</td><td>鱷魚</td><td>50 次</td><td>200,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>12</td><td>巨蟻</td><td>50 次</td><td>240,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>12</td><td>妖魔法師</td><td>50 次</td><td>240,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>12</td><td>骷髏弓箭手</td><td>50 次</td><td>240,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>12</td><td>蟑螂人</td><td>50 次</td><td>240,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>13</td><td>石頭高崙</td><td>50 次</td><td>260,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>13</td><td>骷髏斧手</td><td>50 次</td><td>260,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>13</td><td>骷髏槍兵</td><td>50 次</td><td>260,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>13</td><td>羅孚妖魔</td><td>50 次</td><td>260,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>14</td><td>妖魔巡守</td><td>50 次</td><td>280,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>14</td><td>哈柏哥布林</td><td>50 次</td><td>280,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>14</td><td>夏洛伯</td><td>50 次</td><td>280,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>15</td><td>穴居人</td><td>50 次</td><td>300,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>15</td><td>阿吐巴妖魔</td><td>50 次</td><td>300,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>15</td><td>都達瑪拉妖魔</td><td>50 次</td><td>300,000 金幣</td><td>最大 HP +2</td></tr>
+<tr><td>15</td><td>蜥蜴人</td><td>50 次</td><td>300,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>15</td><td>歐熊</td><td>50 次</td><td>300,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>16</td><td>人魚</td><td>50 次</td><td>320,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>16</td><td>史巴托</td><td>50 次</td><td>320,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>16</td><td>食屍鬼</td><td>50 次</td><td>320,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>16</td><td>黑騎士</td><td>50 次</td><td>320,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>16</td><td>黑騎士搜索隊</td><td>50 次</td><td>320,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>16</td><td>鯊魚</td><td>50 次</td><td>320,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>17</td><td>那魯加妖魔</td><td>50 次</td><td>340,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>17</td><td>萊肯</td><td>50 次</td><td>340,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>18</td><td>楊果里恩</td><td>50 次</td><td>360,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>18</td><td>蟹人</td><td>50 次</td><td>360,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>20</td><td>巨大兵蟻</td><td>200 次</td><td>400,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>20</td><td>海星</td><td>200 次</td><td>400,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>20</td><td>鼠人</td><td>200 次</td><td>400,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>20</td><td>遺忘之島蜥蜴人</td><td>200 次</td><td>400,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>20</td><td>遺忘之島鱷魚</td><td>200 次</td><td>400,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>21</td><td>卡司特</td><td>200 次</td><td>420,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>21</td><td>長老</td><td>200 次</td><td>420,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>22</td><td>食人妖精</td><td>200 次</td><td>440,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>22</td><td>蛇女</td><td>200 次</td><td>440,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>24</td><td>地獄犬</td><td>200 次</td><td>480,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>24</td><td>希爾黛斯</td><td>200 次</td><td>480,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>24</td><td>龍龜</td><td>200 次</td><td>480,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>26</td><td>哈維</td><td>200 次</td><td>520,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>26</td><td>毒蠍</td><td>200 次</td><td>520,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>27</td><td>黑暗精靈</td><td>200 次</td><td>540,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>27</td><td>骷髏神射手</td><td>200 次</td><td>540,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>27</td><td>骷髏警衛</td><td>200 次</td><td>540,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>28</td><td>伊萊克頓</td><td>200 次</td><td>560,000 金幣</td><td>最大 HP +4</td></tr>
+<tr><td>28</td><td>多羅</td><td>200 次</td><td>560,000 金幣</td><td>最大 MP +2</td></tr>
+<tr><td>28</td><td>紙人</td><td>200 次</td><td>560,000 金幣</td><td>最大 MP +2</td></tr>
+<tr><td>28</td><td>強盜</td><td>200 次</td><td>560,000 金幣</td><td>最大 MP +2</td></tr>
+<tr><td>28</td><td>雪人</td><td>200 次</td><td>560,000 金幣</td><td>最大 MP +2</td></tr>
+<tr><td>28</td><td>歐吉</td><td>200 次</td><td>560,000 金幣</td><td>最大 MP +2</td></tr>
+<tr><td>29</td><td>奎斯坦修</td><td>200 次</td><td>580,000 金幣</td><td>最大 MP +2</td></tr>
+<tr><td>29</td><td>骷髏鬥士</td><td>200 次</td><td>580,000 金幣</td><td>最大 MP +2</td></tr>
+<tr><td>29</td><td>爆彈花</td><td>200 次</td><td>580,000 金幣</td><td>最大 MP +2</td></tr>
+<tr><td>30</td><td>冰人</td><td>200 次</td><td>600,000 金幣</td><td>最大 MP +2</td></tr>
+<tr><td>30</td><td>艾爾摩士兵</td><td>200 次</td><td>600,000 金幣</td><td>最大 MP +2</td></tr>
+<tr><td>30</td><td>食人妖精王</td><td>200 次</td><td>600,000 金幣</td><td>最大 MP +2</td></tr>
+<tr><td>30</td><td>莫妮亞</td><td>200 次</td><td>600,000 金幣</td><td>最大 MP +2</td></tr>
+<tr><td>30</td><td>夢幻之島鬼火</td><td>200 次</td><td>600,000 金幣</td><td>最大 MP +2</td></tr>
+<tr><td>30</td><td>夢幻之島蘑菇</td><td>200 次</td><td>600,000 金幣</td><td>最大 MP +2</td></tr>
+<tr><td>31</td><td>艾爾摩法師</td><td>200 次</td><td>620,000 金幣</td><td>最大 MP +2</td></tr>
+<tr><td>31</td><td>格利芬</td><td>200 次</td><td>620,000 金幣</td><td>最大 MP +2</td></tr>
+<tr><td>31</td><td>密密</td><td>200 次</td><td>620,000 金幣</td><td>最大 MP +2</td></tr>
+<tr><td>32</td><td>巨大鱷魚</td><td>200 次</td><td>640,000 金幣</td><td>最大 MP +2</td></tr>
+<tr><td>32</td><td>冰石高崙</td><td>200 次</td><td>640,000 金幣</td><td>最大 MP +2</td></tr>
+<tr><td>33</td><td>卡司特王</td><td>200 次</td><td>660,000 金幣</td><td>最大 MP +2</td></tr>
+<tr><td>33</td><td>冰原老虎</td><td>200 次</td><td>660,000 金幣</td><td>最大 MP +4</td></tr>
+<tr><td>33</td><td>多眼怪</td><td>200 次</td><td>660,000 金幣</td><td>最大 MP +4</td></tr>
+<tr><td>33</td><td>活鎧甲</td><td>200 次</td><td>660,000 金幣</td><td>最大 MP +4</td></tr>
+<tr><td>33</td><td>雪怪</td><td>200 次</td><td>660,000 金幣</td><td>最大 MP +4</td></tr>
+<tr><td>33</td><td>龍蠅</td><td>200 次</td><td>660,000 金幣</td><td>最大 MP +4</td></tr>
+<tr><td>33</td><td>變形怪</td><td>200 次</td><td>660,000 金幣</td><td>最大 MP +4</td></tr>
+<tr><td>34</td><td>亞力安</td><td>200 次</td><td>680,000 金幣</td><td>最大 MP +4</td></tr>
+<tr><td>34</td><td>遺忘之島夏洛伯</td><td>200 次</td><td>680,000 金幣</td><td>最大 MP +4</td></tr>
+<tr><td>34</td><td>遺忘之島狼人</td><td>200 次</td><td>680,000 金幣</td><td>最大 MP +4</td></tr>
+<tr><td>35</td><td>火焰戰士</td><td>200 次</td><td>700,000 金幣</td><td>最大 MP +4</td></tr>
+<tr><td>35</td><td>艾爾摩將軍</td><td>200 次</td><td>700,000 金幣</td><td>最大 MP +4</td></tr>
+<tr><td>35</td><td>阿魯巴</td><td>200 次</td><td>700,000 金幣</td><td>最大 MP +4</td></tr>
+<tr><td>35</td><td>強盜頭目</td><td>200 次</td><td>700,000 金幣</td><td>最大 MP +4</td></tr>
+<tr><td>35</td><td>遺忘之島黑暗精靈</td><td>200 次</td><td>700,000 金幣</td><td>最大 MP +4</td></tr>
+<tr><td>35</td><td>遺忘之島歐熊</td><td>200 次</td><td>700,000 金幣</td><td>最大 MP +4</td></tr>
+<tr><td>35</td><td>鋼鐵高崙</td><td>200 次</td><td>700,000 金幣</td><td>回血 +1</td></tr>
+<tr><td>36</td><td>火焰弓箭手</td><td>200 次</td><td>720,000 金幣</td><td>回血 +1</td></tr>
+<tr><td>36</td><td>邪惡蜥蜴</td><td>200 次</td><td>720,000 金幣</td><td>回血 +1</td></tr>
+<tr><td>36</td><td>遺忘之島卡司特</td><td>200 次</td><td>720,000 金幣</td><td>回血 +1</td></tr>
+<tr><td>37</td><td>思克巴</td><td>200 次</td><td>740,000 金幣</td><td>回血 +1</td></tr>
+<tr><td>37</td><td>遺忘之島巨斧牛人</td><td>200 次</td><td>740,000 金幣</td><td>回血 +1</td></tr>
+<tr><td>37</td><td>遺忘之島食人妖精</td><td>200 次</td><td>740,000 金幣</td><td>回血 +1</td></tr>
+<tr><td>37</td><td>遺忘之島蛇女</td><td>200 次</td><td>740,000 金幣</td><td>回血 +1</td></tr>
+<tr><td>37</td><td>遺忘之島萊肯</td><td>200 次</td><td>740,000 金幣</td><td>回血 +1</td></tr>
+<tr><td>38</td><td>火蜥蜴</td><td>200 次</td><td>760,000 金幣</td><td>回血 +1</td></tr>
+<tr><td>38</td><td>夢幻之島火蜥蜴</td><td>200 次</td><td>760,000 金幣</td><td>回血 +1</td></tr>
+<tr><td>38</td><td>夢幻之島冰人</td><td>200 次</td><td>760,000 金幣</td><td>回血 +1</td></tr>
+<tr><td>38</td><td>夢幻之島殺人蜂</td><td>200 次</td><td>760,000 金幣</td><td>回血 +1</td></tr>
+<tr><td>38</td><td>夢幻之島暴走兔</td><td>200 次</td><td>760,000 金幣</td><td>回血 +1</td></tr>
+<tr><td>38</td><td>遺忘之島楊果里恩</td><td>200 次</td><td>760,000 金幣</td><td>回血 +1</td></tr>
+<tr><td>39</td><td>火炎蛋</td><td>200 次</td><td>780,000 金幣</td><td>回魔 +1</td></tr>
+<tr><td>39</td><td>夢幻之島火炎蛋</td><td>200 次</td><td>780,000 金幣</td><td>回魔 +1</td></tr>
+<tr><td>39</td><td>夢幻之島冰石高崙</td><td>200 次</td><td>780,000 金幣</td><td>回魔 +1</td></tr>
+<tr><td>39</td><td>夢幻之島閃電球</td><td>200 次</td><td>780,000 金幣</td><td>回魔 +1</td></tr>
+<tr><td>39</td><td>夢幻之島鎧甲守衛</td><td>200 次</td><td>780,000 金幣</td><td>回魔 +1</td></tr>
+<tr><td>40</td><td>夢幻之島大鬼火</td><td>500 次</td><td>800,000 金幣 + 10 藍鑽</td><td>回魔 +1</td></tr>
+<tr><td>40</td><td>夢魘</td><td>500 次</td><td>800,000 金幣 + 10 藍鑽</td><td>回魔 +1</td></tr>
+<tr><td>40</td><td>獨眼巨人</td><td>500 次</td><td>800,000 金幣 + 10 藍鑽</td><td>回魔 +1</td></tr>
+<tr><td>41</td><td>思克巴女皇</td><td>500 次</td><td>820,000 金幣 + 10 藍鑽</td><td>回魔 +1</td></tr>
+<tr><td>41</td><td>影魔</td><td>500 次</td><td>820,000 金幣 + 10 藍鑽</td><td>回魔 +1</td></tr>
+<tr><td>41</td><td>遺忘之島哈維</td><td>500 次</td><td>820,000 金幣 + 10 藍鑽</td><td>近戰命中 +1</td></tr>
+<tr><td>41</td><td>遺忘之島格利芬</td><td>500 次</td><td>820,000 金幣 + 10 藍鑽</td><td>近戰命中 +1</td></tr>
+<tr><td>41</td><td>遺忘之島鏈鎚牛人</td><td>500 次</td><td>820,000 金幣 + 10 藍鑽</td><td>近戰命中 +1</td></tr>
+<tr><td>42</td><td>巫師</td><td>500 次</td><td>840,000 金幣 + 10 藍鑽</td><td>近戰命中 +1</td></tr>
+<tr><td>42</td><td>鬼魂</td><td>500 次</td><td>840,000 金幣 + 10 藍鑽</td><td>近戰命中 +1</td></tr>
+<tr><td>42</td><td>遺忘之島卡司特王</td><td>500 次</td><td>840,000 金幣 + 10 藍鑽</td><td>遠程命中 +1</td></tr>
+<tr><td>42</td><td>遺忘之島巨大鱷魚</td><td>500 次</td><td>840,000 金幣 + 10 藍鑽</td><td>遠程命中 +1</td></tr>
+<tr><td>42</td><td>遺忘之島變形怪</td><td>500 次</td><td>840,000 金幣 + 10 藍鑽</td><td>遠程命中 +1</td></tr>
+<tr><td>43</td><td>水精靈王</td><td>500 次</td><td>860,000 金幣 + 10 藍鑽</td><td>遠程命中 +1</td></tr>
+<tr><td>43</td><td>火精靈王</td><td>500 次</td><td>860,000 金幣 + 10 藍鑽</td><td>遠程命中 +1</td></tr>
+<tr><td>43</td><td>地精靈王</td><td>500 次</td><td>860,000 金幣 + 10 藍鑽</td><td>魔法命中 +1</td></tr>
+<tr><td>43</td><td>紅鬼魂</td><td>500 次</td><td>860,000 金幣 + 10 藍鑽</td><td>魔法命中 +1</td></tr>
+<tr><td>43</td><td>風精靈王</td><td>500 次</td><td>860,000 金幣 + 10 藍鑽</td><td>魔法命中 +1</td></tr>
+<tr><td>43</td><td>熔岩高崙</td><td>500 次</td><td>860,000 金幣 + 10 藍鑽</td><td>魔法命中 +1</td></tr>
+<tr><td>43</td><td>獨角獸</td><td>500 次</td><td>860,000 金幣 + 10 藍鑽</td><td>魔法命中 +1</td></tr>
+<tr><td>43</td><td>遺忘之島多羅</td><td>500 次</td><td>860,000 金幣 + 10 藍鑽</td><td>PvE 傷害 +1</td></tr>
+<tr><td>45</td><td>死神</td><td>500 次</td><td>900,000 金幣 + 10 藍鑽</td><td>PvE 傷害 +1</td></tr>
+<tr><td>45</td><td>阿西塔基奧</td><td>500 次</td><td>900,000 金幣 + 10 藍鑽</td><td>PvE 傷害 +1</td></tr>
+<tr><td>45</td><td>遺忘之島阿魯巴</td><td>500 次</td><td>900,000 金幣 + 10 藍鑽</td><td>PvE 傷害 +1</td></tr>
+<tr><td>45</td><td>遺忘之島食人妖精王</td><td>500 次</td><td>900,000 金幣 + 10 藍鑽</td><td>PvE 傷害 +1</td></tr>
+<tr><td>47</td><td>遺忘之島亞力安</td><td>500 次</td><td>940,000 金幣 + 10 藍鑽</td><td>PvE 減傷 +1</td></tr>
+<tr><td>48</td><td>烈炎獸</td><td>500 次</td><td>960,000 金幣 + 10 藍鑽</td><td>PvE 減傷 +1</td></tr>
+<tr><td>48</td><td>遺忘之島邪惡蜥蜴</td><td>500 次</td><td>960,000 金幣 + 10 藍鑽</td><td>PvE 減傷 +1</td></tr>
+</tbody></table></div>
+<div class="sub" style="margin-top:8px">Lv1 ~ 49 全部登錄合計:最大 HP +200、最大 MP +100、回血 +15、回魔 +10、近戰／遠程／魔法命中各 +5、PvE 傷害 +5、PvE 減傷 +3(依實際登錄的怪為準)。</div></div>
+</main>
+<script>
+/* 📱 手機卡片式:值是「—」的欄位加 .e 由 CSS 隱藏,免得每張卡都一堆空白列。
+   各頁 render 是各自的 innerHTML 賦值,所以用 MutationObserver 統一處理一次就好。 */
+(function(){var tb=document.getElementById('tb');if(!tb)return;
+ function mark(){var a=tb.querySelectorAll('td');for(var i=0;i<a.length;i++){
+   var t=(a[i].textContent||'').trim();
+   if(t==='—'||t==='')a[i].classList.add('e');else a[i].classList.remove('e');}}
+ new MutationObserver(mark).observe(tb,{childList:true});mark();})();
+</script>
+<footer>資料自動同步自遊戲檔 · 產生於 2026-09-16<br>本站資料僅供參考,阿肥放置天地官方保留最終解釋權。<br>一切贊助皆為玩家自願,款項全數用於伺服器維護與研究開發。</footer>
+</body></html>

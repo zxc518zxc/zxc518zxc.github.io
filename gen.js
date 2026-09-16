@@ -38,7 +38,7 @@ const FEAT = {
   slot:    false, // 肥特
   glory:   false, // 榮光進化(精通)
   potion:  false, // 嗑藥大師(精通)
-  codex:   false, // 📖 圖鑑登錄(2026-09-14 改版;麥哥:官網只寫 Lv1~39 規則與效果,Lv40+/世界王/加成表不上;feature codex 開放後改 true 生成 codex.html)
+  codex:   true, // 📖 圖鑑登錄(2026-09-14 改版;麥哥:官網只寫 Lv1~39 規則與效果,Lv40+/世界王/加成表不上;feature codex 開放後改 true 生成 codex.html)
   mcard:   false, // 商城:精通洗鍊卡 / 精通轉換卡
 };
 // 🐉 世界王等級上限(對應遊戲的 CMD `wbmax`;0=不限)。超過此等級的王不列出。
