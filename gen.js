@@ -222,7 +222,9 @@ function skillBuff(d) {
     const nm = SK_EFF_N[kk] || kk;
     // ⚠ ac 在引擎裡是**越低越好**(derived.go: e.Ac -= v),所以 +N 的 ac 對玩家而言是「防禦提升 N」;
     //    狂暴術的 ac:-10 = AC 數字 +10 = 更容易被怪打中(2026-09-15 修正,原本印成「提升 -10」)
-    if (kk === "er") return "迴避 ER +" + v + "(僅能力頁數字,戰鬥判定不採用)"; // ER 引擎 combat.go 零引用(2026-09-15 對碼)
+    // 🛡 2026-09-17 上線:迴避 ER 已實裝(combat.go 的怪命中判定會扣 ER)。原本這裡寫「僅能力頁數字,
+    //    戰鬥判定不採用」已過時。🔒 麥哥拍板:**只寫效果,不公開換算式與除數**。
+    if (kk === "er") return "迴避 ER +" + v + "(降低怪物命中你的機率)";
     if (kk === "ac") return v >= 0 ? "防禦 AC 提升 " + v : "防禦 AC 降低 " + (-v) + "(更容易被怪物命中)";
     return nm + " " + (v > 0 ? "+" : "") + v + (PCT_KEYS.has(kk) ? "%" : "");
   });
@@ -266,7 +268,9 @@ const SK_STATUS_FX = {
 const SK_BADGE = {
   sk_cold_shiver: "不會吸血", sk_vampire: "不會吸血", sk_ice_lance: "不會冰凍",
   sk_antidote: "未實裝", sk_holy_light: "未實裝", sk_cancel: "未實裝", sk_reveal: "未實裝", sk_invisible: "未實裝",
-  sk_elf_earthshield: "未實裝", sk_load_up: "未實裝", sk_resurrection: "未實裝", sk_holy_dash: "未實裝", sk_dark_erup: "未實裝",
+  sk_elf_earthshield: "未實裝", sk_load_up: "未實裝", sk_resurrection: "未實裝",
+  // 🛡 2026-09-17:神聖疾走 sk_holy_dash / 迴避提升 sk_dark_erup 隨「迴避 ER 實裝」上線 ⇒ 已從未實裝名單移除。
+  //    ⚠ 遊戲端 engine/afk/skills.go 的 unimplementedSkills 同日移除,**兩張名單必須一致**。
 };
 const SK_NOTE = {
   sk_antidote: "未實裝:目前不會解毒也不會回血。2026-09-16 維護後起,設定頁無法選為治癒魔法。",
@@ -277,8 +281,8 @@ const SK_NOTE = {
   sk_elf_earthshield: "未實裝:目前沒有任何效果,設定頁不會出現、不會施放。",
   sk_load_up: "未實裝:目前沒有任何效果。",
   sk_resurrection: "未實裝:目前沒有任何效果。",
-  sk_holy_dash: "未實裝:目前只會讓能力頁的迴避數字變大,戰鬥判定不看迴避,實戰沒有效果。2026-09-16 維護後起,設定頁無法勾選。",
-  sk_dark_erup: "未實裝:目前只會讓能力頁的迴避數字變大,戰鬥判定不看迴避,實戰沒有效果。2026-09-16 維護後起,設定頁無法勾選。",
+  // 🛡 2026-09-17「迴避 ER 實裝」上線 ⇒ 神聖疾走 / 迴避提升的「未實裝」說明已移除,
+  //    效果文字改由 fx 的 er 分支輸出「迴避 ER +N(降低怪物命中你的機率)」。🔒 不公開換算式。
   sk_sunlight: "狩獵場出怪間隔由 4 秒縮短為 2 秒(擁擠地圖的出怪延遲也減 2 秒),等於打怪節奏快一倍。只影響狩獵場。",
   sk_magic_shield: "完整吸收下一次怪物的物理攻擊或一發怪物傷害型魔法(整發歸零),吸收後屏障消失、3 秒內不能再放。不吸收石化/麻痺/中毒這類狀態技。世界王房的「結界」按鈕用的是魔法屏障卷軸,效果相同。",
   sk_haste_spell: "與強力加速術效果完全相同,只差 MP 與持續時間。",
@@ -1252,9 +1256,9 @@ if (MASTERY.length) {
   // 🚩 精通狀態註記(麥哥 2026-09-16:玩家一直問黑妖藥水恢復沒效果 → 名稱後直接標出來)。
   //    ⚠ 寫在這裡而非 mastery.json —— 後者是 wikidump 產物,重跑合併會被蓋掉。
   //    修好上線後把該筆刪掉即可。
-  const MASTERY_NOTE = {
-    darkpot: "(未實裝9/17修正)",
-  };
+  // 精通名稱後面的紅字註記(通常是「未實裝」之類的暫時提示)。修好上線後就把該筆刪掉。
+  // 2026-09-17:darkpot(暗夜秘藥)的「(未實裝9/17修正)」已隨當日維護上線修好 ⇒ 移除。
+  const MASTERY_NOTE = {};
 
   const secs = MASTERY.map(ms => {
     const rows = ms.levels.map(l => {
