@@ -298,7 +298,7 @@ const SK_NOTE = {
   sk_dark_stealth: "怪物對你的下一次物理攻擊 100% 迴避,迴避後效果消失、5 秒內不能再放。對魔法無效。",
   sk_dark_poisonres: "自己中毒時每跳傷害減半。目前只有傲慢之塔的變種楊果里恩、梅杜莎、奇美拉、扭曲的潔尼斯女王會對玩家上毒。",
   sk_dark_burn: "每次普攻命中 30% 機率傷害 ×1.5,只作用普攻;可與雙重破壞疊乘。",
-  sk_dark_walkhaste: "實際效果是攻擊間隔 ×0.85,可與加速術(×0.67)疊乘(合計約 ×0.57)。",
+  sk_dark_walkhaste: "⚠ 名字叫「行走加速」,實際加的是「攻擊速度」(攻擊間隔 ×0.85)。很多人以為它跟綠水(自我加速藥水)、加速術是同一種加速、開了會互相取消——不會:它們是兩套獨立的效果,同時開會相乘(0.85 × 0.67 ≈ 0.57,大約等於攻擊次數 1.76 倍),黑暗妖精兩個一起開才是最快的。",
   sk_dark_dodge: "效果中每次怪物物理攻擊命中你時 20% 機率迴避,不消耗效果、無冷卻。對魔法無效。",
   sk_dark_crit: "施放後 HP 與 MP 都變 1;傷害 = (武器骰最大值 + 近戰傷害 + 額外傷害 − 怪物 DR) × 爆傷 × (施放前 MP ÷ 最大 MP × 5),必中必爆。30 秒冷卻,HP 或 MP 只剩 1 時不會施放;PK 不會施放。",
   sk_dark_double: "手持鋼爪或雙刀時每次普攻命中 20% 機率傷害 ×2,其他武器無效。",
@@ -341,6 +341,9 @@ function skillFx(v) {
   if (v.instakill) t.push("即死:對「" + (v.instakill.tag === "undead" ? "不死系" : v.instakill.tag === "element" ? "元素系" : v.instakill.tag) + "」怪物判定,成功即秒殺(世界王免疫)");
   if (v.stun) t.push("先打 1 次普攻,怪物存活時再判「異常魔法命中」,成功使目標暈眩 6 秒(世界王免疫)");
   if (v.haste) t.push("攻擊速度提升:攻擊間隔 ×0.67、技能冷卻同步縮短;與加速藥水不疊加、與勇敢藥水可疊加");
+  // 🌑 行走加速(sk_dark_walkhaste):名字只寫「行走」,但引擎裡它是**攻擊速度**乘數(derived.go sbWalkHaste ×0.85),
+  //    而且與 haste(綠水/加速術)是兩個獨立旗標 ⇒ **可以疊乘**。玩家一直誤以為兩者衝突,所以效果欄要寫清楚。
+  if (v.darkWalkHaste) t.push("攻擊速度提升:攻擊間隔 ×0.85、技能冷卻同步縮短;與加速藥水(綠水)、加速術「可以同時生效並且相乘」,不會互相取消(合計約 ×0.57)");
   if (v.status && SK_STATUS_FX[v.status.kind]) t.push(SK_STATUS_FX[v.status.kind](v.status) + ";命中率看「異常魔法命中」(見頁首說明),世界王免疫");
   else if (v.status && SK_STATUS[v.status.kind]) t.push("附加狀態:" + SK_STATUS[v.status.kind] + (v.status.dur ? "(" + v.status.dur + " 秒)" : ""));
   if (v.reqWpn && SK_WPN[v.reqWpn]) t.push(SK_WPN[v.reqWpn]);
