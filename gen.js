@@ -1012,6 +1012,21 @@ const EVENTS = [
       ["🔮 法師 等級第一名", "💎 2000 藍鑽"],
       ["🌑 黑暗妖精 等級第一名", "💎 2000 藍鑽"],
     ],
+    // 🏆 得獎名單(2026-09-18 20:00 結算快照;獎勵同日已發放)。
+    // ⚠ 只放<b>角色名</b>,帳號絕不上官網(玩家個資不進 git)。
+    result: {
+      head: "🏆 得獎名單（2026/09/18 20:00 結算）",
+      note: "名次以結算當下的等級為準（同等級比經驗），與遊戲內「排行榜」同一套排法。獎勵已發放至遊戲內<b>交易所 →&nbsp;領取</b>頁。恭喜以上五位,也謝謝這一週一起衝的每一位冒險者 🎉",
+      cols: ["獎項", "角色", "職業", "等級", "獎勵"],
+      rows: [
+        ["🥇 全職業 第一名", "潘朵拉之吻", "妖精", "Lv54", "💎 5000"],
+        ["🏹 妖精 第一名", "煙雨蘭軒", "妖精", "Lv54", "💎 2000"],
+        ["🔮 法師 第一名", "Gandalf", "法師", "Lv54", "💎 2000"],
+        ["🛡️ 騎士 第一名", "發財", "騎士", "Lv53", "💎 2000"],
+        ["🌑 黑暗妖精 第一名", "大牛比較懶", "黑妖", "Lv53", "💎 2000"],
+      ],
+      foot: "※ 妖精組第一名<b>潘朵拉之吻</b>同時是全職業第一名,依「獎項不重複領取」規則只領 5000 藍鑽,妖精組的 2000 藍鑽<b>順延給第二名煙雨蘭軒</b>。",
+    },
     rules: [
       "名次以<b>活動結束當下</b>的等級為準;同等級時經驗值高的排前面 —— 與遊戲內「排行榜」完全相同的排法,你隨時都能自己查。",
       "<b>獎項不重複領取</b>:全職業第一名只領 5000 藍鑽那一份,<b>不再領自己職業的 2000</b>;該職業的第一名獎<b>順延給同職業第二名</b>。也就是說,五個獎項會由五位不同的玩家獲得。",
@@ -1022,10 +1037,15 @@ const EVENTS = [
   },
 ];
 
-const evCard = e => `<div class="mcard"` + (e.over ? ` style="opacity:.55"` : "") + `
+// ⚠ 有 result(得獎名單)的活動**不淡化** —— 這張卡會被截圖發到社群,灰掉整張很難看。
+const evCard = e => `<div class="mcard"` + (e.over && !e.result ? ` style="opacity:.55"` : "") + `
   <div class="ttl">${e.title}${e.over ? "（已結束）" : ""}</div>
   <div class="sub" style="color:#f5a97f;font-weight:bold">🗓️ ${e.when}</div>
   <div class="sub" style="margin-top:6px">${e.intro}</div>
+  ${e.result ? `<div class="sub" style="margin-top:14px;color:#f5c451;font-weight:bold;font-size:16px">${e.result.head}</div>
+  <div class="wrap"><table><thead><tr>${e.result.cols.map(c => `<th>${c}</th>`).join("")}</tr></thead><tbody>${e.result.rows.map(r => `<tr><td class="nm">${r[0]}</td><td class="nm" style="color:#f5c451">${r[1]}</td><td class="num" data-l="職業">${r[2]}</td><td class="num" data-l="等級">${r[3]}</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">${r[4]}</td></tr>`).join("")}</tbody></table></div>
+  <div class="sub" style="margin-top:6px;font-size:13px">${e.result.foot}</div>
+  <div class="sub" style="margin-top:6px;font-size:13px">${e.result.note}</div>` : ""}
   <div class="sub" style="margin-top:12px;color:#f5c451;font-weight:bold">🎁 獎勵</div>
   <div class="wrap"><table><thead><tr><th>${e.rewardHead || "名次"}</th><th>獎勵</th></tr></thead><tbody>${e.rewards.map(([k, v]) => `<tr><td class="nm">${k}</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">${v}</td></tr>`).join("")}</tbody></table></div>
   ${e.steps ? `<div class="sub" style="margin-top:12px;color:#f5c451;font-weight:bold">📌 參加方式</div>
