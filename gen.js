@@ -682,6 +682,7 @@ const NAV_GROUPS = [
     ["sets.html", "set", "🛡️", "套裝效果", "湊齊有什麼加成"],
   ]],
   ["角色變強", "✨", [
+    ["stats.html", "stat", "📊", "能力值加成表", "力量敏捷體質智力精神魅力各加多少"],
     ["skills.html", "skill", "✨", "技能介紹", "學習等級、MP、實際效果與傷害/回復數字"],
     ["mastery.html", "mastery", "🎓", "精通升級數據", "升到滿級要什麼材料"],
     ["poly.html", "poly", "💪", "變身型態", "46 種變身的加成一次看完"],
@@ -702,6 +703,7 @@ const ASK = [
   ["強化會不會破?", "enhance.html"],
   ["第一次玩怎麼開始?", "guide.html"],
   ["月卡・倉庫・交易所怎麼用?", "systems.html"],
+  ["加一點力量會加多少傷害?", "stats.html"],
   ["最近改了什麼?", "changelog.html"],
 ];
 
@@ -1415,6 +1417,9 @@ cards.forEach(c=>{const hit=!q||c.dataset.n.toLowerCase().includes(q)||c.dataset
 // ================= 📢 版本更新 =================
 let CHANGES = [];
 try { CHANGES = JSON.parse(fs.readFileSync(path.join(OUT, "changelog.json"), "utf8")); } catch (e) { }
+// 📊 能力值加成表:由 `engine/cmd/statdump -json` 匯出,**不准手改**(數字一律從程式出)。
+let STATS = [];
+try { STATS = JSON.parse(fs.readFileSync(path.join(OUT, "stats.json"), "utf8")); } catch (e) { }
 // 🔴 **未來日期的區塊不發布**(2026-09-16 加):我們的流程是「改動先寫好 changelog、等第二台部署完才發布」,
 //    但 gen.js 可能為了別的事先跑一次(例如今晚只想上試煉頁)⇒ 沒這道閘就會把明天才生效的改動提早公告,
 //    玩家看到公告卻找不到功能。到了當天日期自然就會被印出來,不用手動搬。
@@ -1442,6 +1447,80 @@ try { CHANGES = JSON.parse(fs.readFileSync(path.join(OUT, "changelog.json"), "ut
 ${body}`));
 }
 
+// ================= 📊 能力值加成表 =================
+// 玩家問最多的一題:「加一點力量會多幾點傷害」「跟天堂 PC 版一不一樣」。
+// 數字全部來自 `engine/cmd/statdump -json`(直接呼叫遊戲實際在跑的函式)⇒ 不可能抄錯,
+// 改了平衡只要重跑那支再跑 gen.js 就同步。**不要手改 stats.json**。
+if (STATS.length) {
+  // 每個能力一張表:[鍵, 名稱, 圖示, 一句話, [[欄名, 欄位, 說明], ...]]
+  const SD = [
+    ["str", "力量", "💪", "近距離戰鬥。騎士與黑暗妖精主要靠它。", [
+      ["近距離傷害", "strDmg", "平砍與近戰技能的傷害加值"],
+      ["近距離命中", "strHit", "打得到近戰目標的能力"],
+      ["近距離爆擊率", "strCrit", "%"],
+    ]],
+    ["dex", "敏捷", "🏹", "遠距離戰鬥與閃避。妖精與黑暗妖精主要靠它。", [
+      ["遠距離傷害", "dexDmg", "弓箭與遠程技能的傷害加值"],
+      ["遠距離命中", "dexHit", "射得中目標的能力"],
+      ["防禦 AC", "dexAc", "數字<b>越低越強</b>"],
+      ["迴避 ER", "dexEr", "= 敏捷 ÷ 2(無條件捨去)"],
+      ["遠距離爆擊率", "dexCrit", "%"],
+    ]],
+    ["con", "體質", "❤", "血量與回血。每升 1 級長多少 HP 由它決定,職業係數不同。", [
+      ["騎士 每級 HP", "conHpKnight", "(體質−8)×1.5"],
+      ["妖精/法師 每級 HP", "conHpOther", "(體質−8)×0.8"],
+      ["黑暗妖精 每級 HP", "conHpDark", "(體質−8)×0.5"],
+      ["HP 自然回復上限", "conRegen", "體質 11 以下沒有加成"],
+    ]],
+    ["int", "智力", "🧠", "魔法攻擊。法師主要靠它。", [
+      ["魔法傷害", "intDmg", "攻擊魔法的傷害加值"],
+      ["魔法命中", "intHit", "魔法打得中目標的能力"],
+      ["額外魔法點數", "intExtraMp", "上限 MP 加值"],
+      ["消耗魔力減少", "intMpReduce", "%"],
+      ["魔法爆擊率", "intCrit", "%"],
+    ]],
+    ["wis", "精神", "🔮", "魔法防禦與魔力。被魔法打到痛不痛看它。", [
+      ["魔法防禦 MR", "wisMr", "=(精神−10)×4,精神 10 以下沒有"],
+      ["MP 自然回復", "wisMpRegen", ""],
+      ["藍水回復加成", "wisBluePotion", "喝藍水多回這麼多 MP"],
+      ["每級 MP 成長", "wisMpGrowth", "=(精神−9)×0.5"],
+    ]],
+    ["cha", "魅力", "✨", "能帶幾隻夥伴。項圈(寵物)與召喚獸共用同一個池。", [
+      ["可帶夥伴數", "chaPets", "= 魅力 ÷ 6(無條件捨去)"],
+    ]],
+  ];
+  const MINV = 8, MAXV = STATS[STATS.length - 1].v;
+  fs.writeFileSync(path.join(OUT, "stats.html"), page("能力值加成表", "stat", `
+${chips([[6, "項能力"], [60, "自然值上限"], [75, "加成封頂"]])}
+<div class="hint">六大能力各自加什麼、加多少,<b>這裡的數字就是遊戲裡實際在算的那一份</b>(直接從程式匯出,不是人工抄的)。<br>
+❓ <b>跟天堂 PC 版一樣嗎?</b> <b>骨架一樣</b> —— 力量管近戰、敏捷管遠程與閃避、體質管血、智力管魔法、精神管魔防與魔力、魅力管夥伴數。
+但<b>數值階梯是本服自己這一套</b>,為了平衡有調整過,<b>請以本頁與遊戲內「能力」頁的數字為準</b>。<br>
+📌 <b>兩個上限要知道</b>:①<b>自然值最高 60</b>(升級配點與萬能藥加起來算,超過就加不上去);
+②<b>加成表到 75 封頂</b>,靠裝備把能力堆過 75 之後,上面這些加成<b>不會再增加</b>
+(例外:<b>迴避 ER</b> 與 <b>魔防 MR</b> 是公式算的,會一直往上加)。</div>
+<div class="chips" id="schips"></div>
+<div class="sub" id="sdesc" style="margin:6px 2px 10px"></div>
+<div class="wrap" id="tb-wrap"><table><thead id="th"></thead><tbody id="tb"></tbody></table></div>
+<div class="hint" style="margin-top:12px">※ 表格只列到 ${MAXV};灰色的列表示<b>加成已經封頂、再加也不會變</b>。<br>
+※ 這頁的數字由工具從遊戲程式直接匯出,遊戲改平衡時會跟著更新。</div>`,
+`<script>
+const SD=${JSON.stringify(SD)};const ST=${JSON.stringify(STATS)};const MINV=${MINV};
+const $=id=>document.getElementById(id);
+let cur="str";
+$("schips").innerHTML=SD.map(d=>'<span class="chip'+(d[0]===cur?" on":"")+'" data-k="'+d[0]+'">'+d[2]+" "+d[1]+"</span>").join("");
+document.querySelectorAll("#schips .chip").forEach(c=>c.onclick=()=>{document.querySelectorAll("#schips .chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");cur=c.dataset.k;render();});
+function render(){const d=SD.find(x=>x[0]===cur);const cols=d[4];
+$("sdesc").innerHTML="<b style='color:#f5c451'>"+d[2]+" "+d[1]+"</b>　"+d[3];
+$("th").innerHTML="<tr><th>"+d[1]+"</th>"+cols.map(c=>"<th>"+c[0]+(c[2]?"<div style='font-weight:normal;color:#8f8067;font-size:11px'>"+c[2]+"</div>":"")+"</th>").join("")+"</tr>";
+const rows=ST.filter(r=>r.v>=MINV);
+const last=rows[rows.length-1];
+$("tb").innerHTML=rows.map(r=>{
+  const capped=cols.every(c=>r[c[1]]===last[c[1]]) && r.v!==last.v;
+  return "<tr"+(capped?" style='opacity:.45'":"")+"><td class='nm'>"+r.v+"</td>"+cols.map(c=>"<td class='num' data-l='"+c[0]+"'>"+r[c[1]]+"</td>").join("")+"</tr>";
+}).join("");}
+render();
+</script>`));
+}
 // ================= 🔮 碧恩詞條(祝福/詛咒・遠古・屬性)=================
 // 🔴 效果數值由 cmd/wikidump **實跑 applyBless/applyAnc/attrAffixes** 匯出;
 //    機率對齊 engine/afk/bian.go 的 BianBless 三分支 + engine/affixroll.go。
