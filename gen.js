@@ -751,7 +751,7 @@ const RULES = [
     ["多開", "本服不禁止多開,只要不使用腳本或外掛。"],
   ]],
 ];
-const BAN_NOTE = "以下為因使用腳本/外掛,或交易所詐騙而遭停權的帳號。名單由營運人工核實後公布。";
+const BAN_NOTE = "以下為因使用腳本/外掛,或交易所詐騙而遭停權的帳號。名單由營運人工核實後公布;帳號與角色名<b>部分遮蔽</b>,完整資料僅保留於官方紀錄。";
 const rulesBody = [
   '<div class="asktt">違規處理以官方判定為準;有疑問請透過 LINE 官方帳號申訴。</div>',
   RULES.map(([head, items]) =>
@@ -764,8 +764,8 @@ const rulesBody = [
   '<div class="sub">最後更新:' + BAN.updated + '</div>',
   '<div class="mcard"><div style="color:#cbbb9b;font-size:13px;margin-bottom:10px">' + BAN_NOTE + '</div>' +
   (BAN.list.length
-    ? '<table><thead><tr><th>帳號</th><th>原因</th><th>日期</th></tr></thead><tbody>' +
-      BAN.list.map(b => '<tr><td>' + b.acct + '</td><td>' + b.reason + '</td><td class="num">' + b.date + '</td></tr>').join("") +
+    ? '<table><thead><tr><th>帳號</th><th>角色</th><th>原因</th><th>日期</th></tr></thead><tbody>' +
+      BAN.list.map(b => '<tr><td>' + b.acct + '</td><td>' + b.name + '</td><td>' + b.reason + '</td><td class="num">' + b.date + '</td></tr>').join("") +
       '</tbody></table>'
     : '<div style="color:#8a7d63;padding:6px 0">目前沒有公布中的停權紀錄。</div>') + '</div>',
   '<div class="sechd">📮 申訴管道</div>',
