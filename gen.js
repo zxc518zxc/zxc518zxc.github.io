@@ -533,6 +533,25 @@ nav a:hover{background:rgba(245,196,81,.11);color:#f5c451;
 nav a.on{background:linear-gradient(180deg,#f5c451 0%,#dfa72c 100%);color:#241b0f;
   font-weight:700;border-color:#f5c451;box-shadow:0 2px 10px rgba(245,196,81,.32)}
 nav a.on .i{filter:saturate(.85)}
+/* 🗂 導覽分組下拉(2026-09-18):用 <details> 做,零 JS;手機桌機同一套行為 */
+nav details.ng{position:relative}
+nav details.ng>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px;
+  padding:7px 12px;border-radius:9px;color:#cbbb9b;font-size:14px;border:1px solid transparent}
+nav details.ng>summary::-webkit-details-marker{display:none}
+nav details.ng>summary::after{content:'▾';margin-left:2px;font-size:11px;opacity:.7}
+nav details.ng>summary:hover{background:rgba(245,196,81,.11);color:#f5c451}
+nav details.ng.here>summary{background:linear-gradient(180deg,#f5c451 0%,#dfa72c 100%);color:#241b0f;font-weight:bold}
+nav details.ng .ngm{position:absolute;z-index:20;top:100%;left:0;margin-top:4px;min-width:190px;
+  background:#241b0f;border:1px solid #5a4a26;border-radius:10px;padding:6px;display:flex;flex-direction:column;gap:2px;
+  box-shadow:0 8px 20px rgba(0,0,0,.45)}
+nav details.ng .ngm a{white-space:nowrap}
+@media(max-width:700px){nav details.ng .ngm{position:static;box-shadow:none;min-width:0}}
+/* ❓ 首頁引導區 */
+.ask{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:2px 0 18px}
+.ask a{background:#2a2014;border:1px solid #5a4a26;border-radius:999px;padding:7px 14px;
+  color:#f5d9a0;text-decoration:none;font-size:14px}
+.ask a:hover{border-color:#f5c451;color:#f5c451}
+.asktt{text-align:center;color:#b6a684;font-size:14px;margin:14px 0 8px}
 @media(max-width:640px){
   header{padding:10px 12px 0}
   header h1{font-size:17px}
@@ -639,36 +658,64 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 .mcard .sub{color:#b6a684;font-size:14px;line-height:1.75}
 .mcard table{margin-top:6px}
 `;
-// 導覽列:[網址, active 鍵, 圖示, 名稱]。圖示與首頁磁磚同一套,順序=功能重要度。
-const NAV = [
-  ["index.html", "index", "🏠", "首頁"],
-  ["monsters.html", "mob", "👹", "怪物掉落圖鑑"],
-  ["items.html", "item", "⚔️", "道具圖鑑"],
-  ["skills.html", "skill", "✨", "技能介紹"],
-  ["zones.html", "zone", "🗺️", "獵場列表"],
-  ["worldboss.html", "wb", "🐉", "世界王"],
-  ["npc.html", "npc", "🏘️", "NPC 一覽"],
-  ["trials.html", "trial", "📜", "職業試煉"],
-  ["mastery.html", "mastery", "🎓", "精通升級數據"],
-  ["sets.html", "set", "🛡️", "套裝效果"],
-  ["enhance.html", "enh", "⚒️", "強化機率"],
-  ["affix.html", "affix", "🌑", "詞條大全"],
-  ["poly.html", "poly", "💪", "變身型態"],
-  ["pets.html", "pets", "🐕", "寵物與召喚"],
-  ["event.html", "event", "🎉", "活動介紹"],
-  ["guide.html", "guide", "🌱", "新手指南"],
-  ["systems.html", "sys", "📜", "系統說明"],
-  ["changelog.html", "log", "📢", "版本更新"],
+// 🗂 導覽分組(2026-09-18 麥哥:「資訊有點多有點雜,幫他們歸類、設置引導」)。
+// 分法刻意照「玩家當下想做什麼」,不是照資料類型——玩家不會想「這是道具資料還是怪物資料」,
+// 只會想「我幾等該去哪練」「這把武器哪裡掉」。
+// 每組:[組名, 圖示, [[網址, active鍵, 圖示, 名稱, 首頁磁磚的一句話], ...]]
+const NAV_GROUPS = [
+  ["新手上路", "🌱", [
+    ["guide.html", "guide", "🌱", "新手指南", "第一次玩看這裡"],
+    ["systems.html", "sys", "📜", "系統說明", "交易所・倉庫・月卡・血盟・組隊・離線掛機・經驗・潘朵拉"],
+    ["event.html", "event", "🎉", "活動介紹", "目前進行中的活動"],
+    ["rules.html", "rules", "⚖️", "遊戲規章", "什麼行為會被停權・封鎖名單"],
+  ]],
+  ["練功打怪", "⚔️", [
+    ["zones.html", "zone", "🗺️", "獵場列表", "幾等該去哪練・怪在哪出沒"],
+    ["monsters.html", "mob", "👹", "怪物掉落圖鑑", "打什麼掉什麼・可用道具名反查"],
+    ["worldboss.html", "wb", "🐉", "世界王", "入場等級・重生間隔・掉落"],
+    ["trials.html", "trial", "📜", "職業試煉", "各職業的專屬任務與獎勵"],
+  ]],
+  ["裝備養成", "🎒", [
+    ["items.html", "item", "⚔️", "道具圖鑑", "武器防具飾品的數值與說明"],
+    ["enhance.html", "enh", "⚒️", "強化機率", "成功・維持・破壞的實際數字"],
+    ["affix.html", "affix", "🌑", "詞條大全", "碧恩祝福・遠古・屬性・暗黑詞條"],
+    ["sets.html", "set", "🛡️", "套裝效果", "湊齊有什麼加成"],
+  ]],
+  ["角色變強", "✨", [
+    ["skills.html", "skill", "✨", "技能介紹", "學習等級、MP、實際效果與傷害/回復數字"],
+    ["mastery.html", "mastery", "🎓", "精通升級數據", "升到滿級要什麼材料"],
+    ["poly.html", "poly", "💪", "變身型態", "46 種變身的加成一次看完"],
+    ["pets.html", "pets", "🐕", "寵物與召喚", "魅力能帶幾隻・召喚術・迷魅"],
+  ]],
+  ["查資料", "🏘️", [
+    ["npc.html", "npc", "🏘️", "NPC 一覽", "誰在哪個村莊・提供什麼服務"],
+    ["changelog.html", "log", "📢", "版本更新", "最近改了什麼"],
+  ]],
 ];
-if (FEAT.codex) NAV.splice(13, 0, ["codex.html", "codex", "📖", "怪物圖鑑登錄"]); // 📖 開放後才進導覽(放在寵物之後)
+// 📖 圖鑑登錄:內容開關開了才進導覽(放在「練功打怪」的世界王之後)
+if (FEAT.codex) NAV_GROUPS[1][2].splice(3, 0, ["codex.html", "codex", "📖", "怪物圖鑑登錄", "殺幾隻點亮・登錄要多少・給什麼加成"]);
+
+// ❓ 首頁引導:用玩家會問的話當入口(不用先猜分類)。[問題, 連結]
+const ASK = [
+  ["我幾等該去哪練?", "zones.html"],
+  ["這把武器哪裡掉?", "monsters.html"],
+  ["強化會不會破?", "enhance.html"],
+  ["第一次玩怎麼開始?", "guide.html"],
+  ["月卡・倉庫・交易所怎麼用?", "systems.html"],
+  ["最近改了什麼?", "changelog.html"],
+];
 
 const page = (title, active, body, extra = "") => `<!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${title} - 阿肥放置天地 資料站</title><style>${CSS}</style></head><body>
 <header>
 <div class="brand"><h1>🏰 阿肥放置天地</h1><span class="sub">玩家資料站</span></div>
-<nav>${NAV.map(([href, key, icon, label]) =>
-  `<a href="${href}" class="${active === key ? "on" : ""}"><span class="i">${icon}</span>${label}</a>`).join("\n")}
+<nav><a href="index.html" class="${active === "index" ? "on" : ""}"><span class="i">🏠</span>首頁</a>
+${NAV_GROUPS.map(([gname, gicon, links]) => {
+  const here = links.some(([, key]) => key === active);   // 目前這頁在這組 → 該組預設展開並highlight
+  return `<details class="ng${here ? " here" : ""}"${here ? " open" : ""}><summary><span class="i">${gicon}</span>${gname}</summary><div class="ngm">` +
+    links.map(([href, key, icon, label]) => `<a href="${href}" class="${active === key ? "on" : ""}"><span class="i">${icon}</span>${label}</a>`).join("") + `</div></details>`;
+}).join("")}
 </nav></header><main>${body}</main>
 <script>
 /* 📱 手機卡片式:值是「—」的欄位加 .e 由 CSS 隱藏,免得每張卡都一堆空白列。
@@ -687,29 +734,56 @@ ${extra.split("data.js").join("data.js?v=" + DATA_V)}</body></html>`;
 const chips = arr => `<div class="stats">${arr.map(([n, t]) => `<div class="stat-chip"><b>${n}</b>${t}</div>`).join("")}</div>`;
 const ESC = `const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");`;
 
+// ---- ⚖️ 遊戲規章(2026-09-18 麥哥:「腳本、交易所詐騙永久封號,再加一個封鎖名單區」)----
+// ⚠ 條文是**對玩家的承諾**,改之前先跟麥哥確認;停權名單的資料在 banlist.json(營運手動維護,不自動匯出)。
+const BAN = JSON.parse(fs.readFileSync(path.join(__dirname, "banlist.json"), "utf8"));
+const RULES = [
+  ["🚫 嚴重違規:一經查證,永久停權,不退還任何儲值與道具", [
+    ["使用腳本、外掛、修改程式或封包自動遊戲", "包含自動打怪、自動點擊、自動交易等任何非官方提供的自動化工具。"],
+    ["交易所詐騙", "以假交易、誘騙匯款、謊稱代購代刷等方式,取得他人金幣、道具或現金。"],
+    ["利用程式漏洞(BUG)獲利", "發現漏洞請通報客服並停止使用;繼續利用或散布方法者一律停權,不當得利全數回收。"],
+    ["盜用他人帳號", "包含騙取帳號密碼、未經同意登入他人帳號。"],
+  ]],
+  ["⚠️ 其他規範", [
+    ["帳號共用、借帳號給他人", "官方不禁止,但因此造成的損失(道具遺失、被盜、被停權)一律自行承擔,客服不受理回復。"],
+    ["現金交易遊戲內物品", "官方不經手、不承認、不受理任何糾紛;若伴隨詐騙行為,依上方嚴重違規處理。"],
+    ["聊天室辱罵、洗版、散布不實消息", "視情節禁言;情節重大或屢勸不聽者停權。"],
+    ["多開", "本服不禁止多開,只要不使用腳本或外掛。"],
+  ]],
+];
+const BAN_NOTE = "以下為因使用腳本/外掛,或交易所詐騙而遭停權的帳號。名單由營運人工核實後公布。";
+const rulesBody = [
+  '<div class="asktt">違規處理以官方判定為準;有疑問請透過 LINE 官方帳號申訴。</div>',
+  RULES.map(([head, items]) =>
+    '<div class="sechd">' + head + '</div><div class="mcard">' +
+    items.map(([t, d]) =>
+      '<div style="margin:10px 0"><div style="color:#f5c451;font-weight:bold">' + t + '</div>' +
+      '<div style="color:#cbbb9b;font-size:13px;margin-top:3px">' + d + '</div></div>').join("") +
+    '</div>').join(""),
+  '<div class="sechd">🔒 停權名單</div>',
+  '<div class="sub">最後更新:' + BAN.updated + '</div>',
+  '<div class="mcard"><div style="color:#cbbb9b;font-size:13px;margin-bottom:10px">' + BAN_NOTE + '</div>' +
+  (BAN.list.length
+    ? '<table><thead><tr><th>帳號</th><th>原因</th><th>日期</th></tr></thead><tbody>' +
+      BAN.list.map(b => '<tr><td>' + b.acct + '</td><td>' + b.reason + '</td><td class="num">' + b.date + '</td></tr>').join("") +
+      '</tbody></table>'
+    : '<div style="color:#8a7d63;padding:6px 0">目前沒有公布中的停權紀錄。</div>') + '</div>',
+  '<div class="sechd">📮 申訴管道</div>',
+  '<div class="mcard"><div style="color:#cbbb9b;font-size:13px">認為處置有誤,請透過 LINE 官方帳號 <span class="lineid">' +
+  LINKS.lineId + '</span> 私訊客服,附上帳號與說明;官方會複查紀錄後回覆。</div></div>',
+].join("\n");
+fs.writeFileSync(path.join(OUT, "rules.html"), page("遊戲規章", "rules", rulesBody));
+
+
 // ---- 首頁 ----
 fs.writeFileSync(path.join(OUT, "index.html"), page("首頁", "index", `
 <div style="text-align:center;padding:10px 0 4px"><div style="font-size:15px;color:#b6a684">掛機練功・打寶強化・世界王討伐</div></div>
 ${chips([[mobList.length, "怪物"], [items.length, "道具"], [skills.length, "技能"], [zones.length, "獵場"], [worldbosses.length, "世界王"], [towns.reduce((s, t) => s + t.npcs.length, 0), "NPC"], [sets.length, "套裝"]])}
-<div class="grid">
-<a class="tile" href="event.html"><div class="em">🎉</div><div class="tt">活動介紹</div><div class="dd">開服衝等活動・9/11~9/18</div></a>
-<a class="tile" href="monsters.html"><div class="em">👹</div><div class="tt">怪物掉落圖鑑</div><div class="dd">打什麼掉什麼・可用道具名反查</div></a>
-<a class="tile" href="items.html"><div class="em">⚔️</div><div class="tt">道具圖鑑</div><div class="dd">武器防具飾品的數值與說明</div></a>
-<a class="tile" href="skills.html"><div class="em">✨</div><div class="tt">技能介紹</div><div class="dd">學習等級、MP、實際效果與傷害/回復數字</div></a>
-<a class="tile" href="zones.html"><div class="em">🗺️</div><div class="tt">獵場列表</div><div class="dd">幾等該去哪練・怪在哪出沒</div></a>
-<a class="tile" href="worldboss.html"><div class="em">🐉</div><div class="tt">世界王</div><div class="dd">入場等級・重生間隔・掉落</div></a>
-<a class="tile" href="npc.html"><div class="em">🏘️</div><div class="tt">NPC 一覽</div><div class="dd">誰在哪個村莊・提供什麼服務</div></a>
-<a class="tile" href="pets.html"><div class="em">🐕</div><div class="tt">寵物與召喚</div><div class="dd">魅力能帶幾隻・召喚術・迷魅</div></a>
-${FEAT.codex ? '<a class="tile" href="codex.html"><div class="em">📖</div><div class="tt">怪物圖鑑登錄</div><div class="dd">殺幾隻點亮・登錄要多少・給什麼加成</div></a>' : ''}
-<a class="tile" href="guide.html"><div class="em">🌱</div><div class="tt">新手指南</div><div class="dd">第一次玩看這裡</div></a>
-<a class="tile" href="systems.html"><div class="em">📜</div><div class="tt">系統說明</div><div class="dd">交易所・倉庫・月卡・血盟・組隊・離線掛機・經驗・潘朵拉</div></a>
-<a class="tile" href="mastery.html"><div class="em">🎓</div><div class="tt">精通升級數據</div><div class="dd">升到滿級要什麼材料</div></a>
-<a class="tile" href="sets.html"><div class="em">🛡️</div><div class="tt">套裝效果</div><div class="dd">湊齊有什麼加成</div></a>
-<a class="tile" href="enhance.html"><div class="em">⚒️</div><div class="tt">強化機率</div><div class="dd">成功・維持・破壞的實際數字</div></a>
-<a class="tile" href="affix.html"><div class="em">🌑</div><div class="tt">詞條大全</div><div class="dd">碧恩祝福・遠古・屬性・暗黑詞條</div></a>
-<a class="tile" href="poly.html"><div class="em">💪</div><div class="tt">變身型態</div><div class="dd">46 種變身的加成一次看完</div></a>
-<a class="tile" href="changelog.html"><div class="em">📢</div><div class="tt">版本更新</div><div class="dd">最近改了什麼</div></a>
-</div>
+<div class="asktt">❓ 想知道什麼,直接點:</div>
+<div class="ask">${ASK.map(([q, href]) => `<a href="${href}">${q}</a>`).join("")}</div>
+${NAV_GROUPS.map(([gname, gicon, links]) => `<div class="sechd">${gicon} ${gname}</div><div class="grid">` +
+  links.map(([href, , icon, label, desc]) => `<a class="tile" href="${href}"><div class="em">${icon}</div><div class="tt">${label}</div><div class="dd">${desc}</div></a>`).join("") +
+  `</div>`).join("")}
 
 <div class="sechd">💬 開始遊戲 & 加入社群</div>
 <div class="sub">有問題到社群問,或加官方帳號私訊客服</div>

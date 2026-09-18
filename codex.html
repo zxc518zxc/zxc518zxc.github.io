@@ -23,6 +23,25 @@ nav a:hover{background:rgba(245,196,81,.11);color:#f5c451;
 nav a.on{background:linear-gradient(180deg,#f5c451 0%,#dfa72c 100%);color:#241b0f;
   font-weight:700;border-color:#f5c451;box-shadow:0 2px 10px rgba(245,196,81,.32)}
 nav a.on .i{filter:saturate(.85)}
+/* 🗂 導覽分組下拉(2026-09-18):用 <details> 做,零 JS;手機桌機同一套行為 */
+nav details.ng{position:relative}
+nav details.ng>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px;
+  padding:7px 12px;border-radius:9px;color:#cbbb9b;font-size:14px;border:1px solid transparent}
+nav details.ng>summary::-webkit-details-marker{display:none}
+nav details.ng>summary::after{content:'▾';margin-left:2px;font-size:11px;opacity:.7}
+nav details.ng>summary:hover{background:rgba(245,196,81,.11);color:#f5c451}
+nav details.ng.here>summary{background:linear-gradient(180deg,#f5c451 0%,#dfa72c 100%);color:#241b0f;font-weight:bold}
+nav details.ng .ngm{position:absolute;z-index:20;top:100%;left:0;margin-top:4px;min-width:190px;
+  background:#241b0f;border:1px solid #5a4a26;border-radius:10px;padding:6px;display:flex;flex-direction:column;gap:2px;
+  box-shadow:0 8px 20px rgba(0,0,0,.45)}
+nav details.ng .ngm a{white-space:nowrap}
+@media(max-width:700px){nav details.ng .ngm{position:static;box-shadow:none;min-width:0}}
+/* ❓ 首頁引導區 */
+.ask{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:2px 0 18px}
+.ask a{background:#2a2014;border:1px solid #5a4a26;border-radius:999px;padding:7px 14px;
+  color:#f5d9a0;text-decoration:none;font-size:14px}
+.ask a:hover{border-color:#f5c451;color:#f5c451}
+.asktt{text-align:center;color:#b6a684;font-size:14px;margin:14px 0 8px}
 @media(max-width:640px){
   header{padding:10px 12px 0}
   header h1{font-size:17px}
@@ -132,24 +151,7 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 <header>
 <div class="brand"><h1>🏰 阿肥放置天地</h1><span class="sub">玩家資料站</span></div>
 <nav><a href="index.html" class=""><span class="i">🏠</span>首頁</a>
-<a href="monsters.html" class=""><span class="i">👹</span>怪物掉落圖鑑</a>
-<a href="items.html" class=""><span class="i">⚔️</span>道具圖鑑</a>
-<a href="skills.html" class=""><span class="i">✨</span>技能介紹</a>
-<a href="zones.html" class=""><span class="i">🗺️</span>獵場列表</a>
-<a href="worldboss.html" class=""><span class="i">🐉</span>世界王</a>
-<a href="npc.html" class=""><span class="i">🏘️</span>NPC 一覽</a>
-<a href="trials.html" class=""><span class="i">📜</span>職業試煉</a>
-<a href="mastery.html" class=""><span class="i">🎓</span>精通升級數據</a>
-<a href="sets.html" class=""><span class="i">🛡️</span>套裝效果</a>
-<a href="enhance.html" class=""><span class="i">⚒️</span>強化機率</a>
-<a href="affix.html" class=""><span class="i">🌑</span>詞條大全</a>
-<a href="poly.html" class=""><span class="i">💪</span>變身型態</a>
-<a href="codex.html" class="on"><span class="i">📖</span>怪物圖鑑登錄</a>
-<a href="pets.html" class=""><span class="i">🐕</span>寵物與召喚</a>
-<a href="event.html" class=""><span class="i">🎉</span>活動介紹</a>
-<a href="guide.html" class=""><span class="i">🌱</span>新手指南</a>
-<a href="systems.html" class=""><span class="i">📜</span>系統說明</a>
-<a href="changelog.html" class=""><span class="i">📢</span>版本更新</a>
+<details class="ng"><summary><span class="i">🌱</span>新手上路</summary><div class="ngm"><a href="guide.html" class=""><span class="i">🌱</span>新手指南</a><a href="systems.html" class=""><span class="i">📜</span>系統說明</a><a href="event.html" class=""><span class="i">🎉</span>活動介紹</a><a href="rules.html" class=""><span class="i">⚖️</span>遊戲規章</a></div></details><details class="ng here" open><summary><span class="i">⚔️</span>練功打怪</summary><div class="ngm"><a href="zones.html" class=""><span class="i">🗺️</span>獵場列表</a><a href="monsters.html" class=""><span class="i">👹</span>怪物掉落圖鑑</a><a href="worldboss.html" class=""><span class="i">🐉</span>世界王</a><a href="codex.html" class="on"><span class="i">📖</span>怪物圖鑑登錄</a><a href="trials.html" class=""><span class="i">📜</span>職業試煉</a></div></details><details class="ng"><summary><span class="i">🎒</span>裝備養成</summary><div class="ngm"><a href="items.html" class=""><span class="i">⚔️</span>道具圖鑑</a><a href="enhance.html" class=""><span class="i">⚒️</span>強化機率</a><a href="affix.html" class=""><span class="i">🌑</span>詞條大全</a><a href="sets.html" class=""><span class="i">🛡️</span>套裝效果</a></div></details><details class="ng"><summary><span class="i">✨</span>角色變強</summary><div class="ngm"><a href="skills.html" class=""><span class="i">✨</span>技能介紹</a><a href="mastery.html" class=""><span class="i">🎓</span>精通升級數據</a><a href="poly.html" class=""><span class="i">💪</span>變身型態</a><a href="pets.html" class=""><span class="i">🐕</span>寵物與召喚</a></div></details><details class="ng"><summary><span class="i">🏘️</span>查資料</summary><div class="ngm"><a href="npc.html" class=""><span class="i">🏘️</span>NPC 一覽</a><a href="changelog.html" class=""><span class="i">📢</span>版本更新</a></div></details>
 </nav></header><main>
 <div class="hint">「能力 → 圖鑑」(<b>角色 41 級</b>起開放):同一隻怪殺到門檻會<b>點亮</b>,再付費<b>登錄</b>,就拿到那一格的<b>永久加成</b>。圖鑑是<b>整個帳號共用</b>的:擊殺數四隻角色一起算,登錄後每隻角色都吃得到加成。</div>
 
