@@ -1501,7 +1501,7 @@ ${chips([[6, "項能力"], [60, "自然值上限"], [75, "加成封頂"]])}
 <div class="chips" id="schips"></div>
 <div class="sub" id="sdesc" style="margin:6px 2px 10px"></div>
 <div class="wrap" id="tb-wrap"><table><thead id="th"></thead><tbody id="tb"></tbody></table></div>
-<div class="hint" style="margin-top:12px">※ 表格只列到 ${MAXV};灰色的列表示<b>加成已經封頂、再加也不會變</b>。<br>
+<div class="hint" style="margin-top:12px">※ 表格列到 ${MAXV} —— <b>${MAXV} 就是加成的上限</b>,靠裝備把能力堆得更高,上面這些數字<b>不會再增加</b>(例外:迴避 ER 與 魔防 MR 是公式算的,會繼續往上)。<br>
 ※ 這頁的數字由工具從遊戲程式直接匯出,遊戲改平衡時會跟著更新。</div>`,
 `<script>
 const SD=${JSON.stringify(SD)};const ST=${JSON.stringify(STATS)};const MINV=${MINV};
@@ -1511,12 +1511,10 @@ $("schips").innerHTML=SD.map(d=>'<span class="chip'+(d[0]===cur?" on":"")+'" dat
 document.querySelectorAll("#schips .chip").forEach(c=>c.onclick=()=>{document.querySelectorAll("#schips .chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");cur=c.dataset.k;render();});
 function render(){const d=SD.find(x=>x[0]===cur);const cols=d[4];
 $("sdesc").innerHTML="<b style='color:#f5c451'>"+d[2]+" "+d[1]+"</b>　"+d[3];
-$("th").innerHTML="<tr><th>"+d[1]+"</th>"+cols.map(c=>"<th>"+c[0]+(c[2]?"<div style='font-weight:normal;color:#8f8067;font-size:11px'>"+c[2]+"</div>":"")+"</th>").join("")+"</tr>";
+$("th").innerHTML="<tr><th>"+d[1]+"</th>"+cols.map(c=>"<th style='text-align:right'>"+c[0]+(c[2]?"<div style='font-weight:normal;color:#8f8067;font-size:11px'>"+c[2]+"</div>":"")+"</th>").join("")+"</tr>";
 const rows=ST.filter(r=>r.v>=MINV);
-const last=rows[rows.length-1];
 $("tb").innerHTML=rows.map(r=>{
-  const capped=cols.every(c=>r[c[1]]===last[c[1]]) && r.v!==last.v;
-  return "<tr"+(capped?" style='opacity:.45'":"")+"><td class='nm'>"+r.v+"</td>"+cols.map(c=>"<td class='num' data-l='"+c[0]+"'>"+r[c[1]]+"</td>").join("")+"</tr>";
+  return "<tr><td class='nm'>"+r.v+"</td>"+cols.map(c=>"<td class='num' data-l='"+c[0]+"'>"+r[c[1]]+"</td>").join("")+"</tr>";
 }).join("");}
 render();
 </script>`));
