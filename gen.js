@@ -25,6 +25,28 @@ const LINKS = {
 const GD = JSON.parse(fs.readFileSync(path.join(__dirname, "../go端專案/gamedata.json"), "utf8"));
 const OUT = __dirname;
 
+// ---- 🎁 兌換配方(2026-09-19:玩家找不到「解除詛咒的卷軸」的出處)----
+// 資料來源:`exchange.json`,由 `cd engine && go run ./cmd/exchangedump -json ../玩家資料站/exchange.json` 匯出
+//   (真相源=Go 的 afk.ExchangeRecipes + afk.RingwizRecipes + gamedata 的 towns/items)。
+// 為什麼要這個檔:兌換配方寫在 Go 的靜態表裡,gamedata 只有一句 NPC 說明,
+//   克里斯特那句「以施法卷軸與金幣交換『賦予祝福卷軸』」完全沒提到解除詛咒卷軸
+//   ⇒ 那張卷軸全遊戲只有這一條產線,官網卻查不到,玩家只能亂猜。
+// 🔴 **改了兌換配方就重跑那支工具**,不要手改 exchange.json,也**不要為了這件事去跑 wikidump**
+//    (wikidump 會連強化機率一起重寫,那是刻意維持舊值的)。
+let EXCHANGE = [];
+try { EXCHANGE = JSON.parse(fs.readFileSync(path.join(__dirname, "exchange.json"), "utf8")); } catch (e) { }
+// 配方 → 一行白話(「金幣 1,000,000 + 對武器施法的卷軸 ×100」)
+const recipeCost = r => [
+  r.gold ? "金幣 " + r.gold.toLocaleString() : "",
+  ...(r.req || []).map(q => q.n + (q.cnt > 1 ? " ×" + q.cnt : "")),
+].filter(Boolean).join(" + ");
+// NPC id → 該 NPC 的兌換清單(給 NPC 頁);產物 id → 在哪裡換得到(給道具頁)
+const exByNpc = {}, exByOut = {};
+for (const n of EXCHANGE) {
+  exByNpc[n.id] = (n.recipes || []).map(r => (r.name ? r.name + "：" : "") + recipeCost(r) + " → " + r.out);
+  for (const r of n.recipes || []) (exByOut[r.outId] ||= []).push(`${n.town}「${n.n}」兌換：${recipeCost(r)}`);
+}
+
 // ---- 🎚 內容開關(必須與遊戲裡的 `feature` 指令狀態一致)----
 // 遊戲裡下 `feature xxx on` 開放某內容後,**把這裡也改成 true 再重跑 gen.js**,資料站就會自動補上。
 // 對照:go端專案/.ai/systems/內容開關.md 的狀態表。
@@ -387,6 +409,7 @@ const items = Object.entries(GD.items || {}).filter(([id, v]) => !hiddenItem(id,
   p: v.p || 0, sell: Math.floor((v.p || 0) * 3 / 10), buy: SHOP_SELL.has(id),
   fx: itemFx(v),
   src: [],
+  ex: exByOut[id] || [], // 🎁 兌換取得(見上方 EXCHANGE);怪不掉、商店沒賣的道具只有這條線索
 })).sort((a, b) => a.n.localeCompare(b.n, "zh-Hant"));
 const itemOk = new Set(items.map(i => i.id));
 // 🔎 道具 → 會掉它的怪(反查)。材料類沒有數值也沒說明,玩家真正想知道的是「哪裡拿」。
@@ -484,7 +507,8 @@ const HIDE_NPC = new Set([
 const towns = Object.entries(GD.towns || {}).map(([id, t]) => ({
   id, n: t.n || id,
   npcs: (t.npcs || []).filter(n => !HIDE_NPC.has(n.type)).map(n => ({
-    n: n.n || "", title: n.title || "", t: NPC_TYPE[n.type] || n.type || "", d: n.d || "" })),
+    n: n.n || "", title: n.title || "", t: NPC_TYPE[n.type] || n.type || "", d: n.d || "",
+    ex: exByNpc[n.id] || [] })), // 🎁 兌換 NPC 的完整配方(gamedata 那句說明常常不完整)
 })).filter(t => t.npcs.length > 0);
 
 // 🛡 套裝
@@ -895,18 +919,19 @@ const TS=["全部","武器","防具","飾品","藥水","道具","材料","技能
 $("tchips").innerHTML=TS.map(t=>'<span class="chip'+(t==="全部"?" on":"")+'" data-t="'+t+'">'+t+'</span>').join("");
 document.querySelectorAll("#tchips .chip").forEach(c=>c.onclick=()=>{document.querySelectorAll("#tchips .chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");tf=c.dataset.t;render();});
 function render(){const q=$("q").value.trim().toLowerCase();
-const list=WIKI.items.filter(i=>(tf==="全部"||i.t===tf)&&(!q||i.n.toLowerCase().includes(q)||(i.d||"").toLowerCase().includes(q)||(i.fx||[]).some(x=>x.toLowerCase().includes(q))||(i.src||[]).some(x=>x.toLowerCase().includes(q))));
+const list=WIKI.items.filter(i=>(tf==="全部"||i.t===tf)&&(!q||i.n.toLowerCase().includes(q)||(i.d||"").toLowerCase().includes(q)||(i.fx||[]).some(x=>x.toLowerCase().includes(q))||(i.src||[]).some(x=>x.toLowerCase().includes(q))||(i.ex||[]).some(x=>x.toLowerCase().includes(q))));
 $("tb").innerHTML=list.map(i=>{
 const fx=(i.fx||[]).map(x=>"<span class='tag'>"+esc(x)+"</span>").join("");
 const desc=i.d?"<div style='color:#b6a684;font-size:13px;margin-top:3px'>"+i.d+"</div>":"";
 const src=(i.src&&i.src.length)?"<div style='margin-top:3px;font-size:12px;color:#7bd14a'>📍 掉落:"+i.src.map(x=>esc(x)).join("、")+(i.src.length>=8?" …等":"")+"</div>":"";
 const area=(i.area&&i.area.length)?"<div style='margin-top:3px;font-size:12px;color:#7bd14a'>⛏ 採集地區:"+i.area.map(x=>esc(x)).join("、")+"(在這些地方打任何怪都可能掉)</div>":"";
+const ex=(i.ex&&i.ex.length)?"<div style='margin-top:3px;font-size:12px;color:#f5c451'>🎁 "+i.ex.map(x=>esc(x)).join("<br>🎁 ")+"</div>":"";
 return "<tr><td class='nm'"+(i.legend?" style='color:#ffd700'":"")+">"+(i.legend?"★":"")+esc(i.n)+"</td>"+
 "<td class='num' data-l='類型'>"+i.t+"</td><td class='num' data-l='部位'>"+esc(i.slot||i.wcat||"—")+"</td><td class='num' data-l='職業'>"+esc(i.req||"—")+"</td>"+
 "<td class='num' data-l='傷害'>"+(i.dmg||"—")+"</td><td class='num' data-l='防禦'>"+(i.ac||"—")+"</td>"+
 "<td class='num' data-l='安定'>"+((i.safe!==""&&(i.t==="武器"||i.t==="防具"))?"+"+i.safe:"—")+"</td>"+
 "<td class='num' data-l='價格'>"+(i.p?((i.buy?"<div style='color:#7bd14a'>商店賣 "+i.p.toLocaleString()+"</div>":"")+"<div style='color:#b6a684'>賣店回收 "+i.sell.toLocaleString()+"</div>"):"—")+"</td>"+
-"<td data-l='效果'>"+(fx||desc||src||area?fx+desc+src+area:"<span style='color:#6b5f4c'>—</span>")+"</td></tr>";}).join("")||"<tr><td colspan=9 style='color:#8f8067'>查無符合</td></tr>";}
+"<td data-l='效果'>"+(fx||desc||src||area||ex?fx+desc+src+area+ex:"<span style='color:#6b5f4c'>—</span>")+"</td></tr>";}).join("")||"<tr><td colspan=9 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script>`));
 
@@ -1106,8 +1131,10 @@ const $=id=>document.getElementById(id);
 ${ESC}
 function render(){const q=$("q").value.trim().toLowerCase();
 const rows=[];
-for(const t of WIKI.towns){const ns=t.npcs.filter(n=>!q||n.n.toLowerCase().includes(q)||t.n.toLowerCase().includes(q)||(n.t||"").toLowerCase().includes(q)||(n.title||"").toLowerCase().includes(q));
-ns.forEach((n,i)=>rows.push("<tr><td class='vil' data-l='村莊'><span class='de'>"+(i===0?esc(t.n):"")+"</span><span class='mo'>"+esc(t.n)+"</span></td><td class='nm'>"+esc(n.n)+"</td><td class='num' data-l='身分'>"+esc(n.title||n.t)+"</td><td data-l='說明' style='color:#b6a684;font-size:13px'>"+esc(n.d||"")+"</td></tr>"));}
+for(const t of WIKI.towns){const ns=t.npcs.filter(n=>!q||n.n.toLowerCase().includes(q)||t.n.toLowerCase().includes(q)||(n.t||"").toLowerCase().includes(q)||(n.title||"").toLowerCase().includes(q)||(n.d||"").toLowerCase().includes(q)||(n.ex||[]).some(x=>x.toLowerCase().includes(q)));
+ns.forEach((n,i)=>{
+const ex=(n.ex&&n.ex.length)?"<div style='margin-top:5px;color:#f5c451'>🎁 可以換到:</div><ul style='margin:2px 0 0 16px;padding:0;color:#e8dcc0'>"+n.ex.map(x=>"<li>"+esc(x)+"</li>").join("")+"</ul>":"";
+rows.push("<tr><td class='vil' data-l='村莊'><span class='de'>"+(i===0?esc(t.n):"")+"</span><span class='mo'>"+esc(t.n)+"</span></td><td class='nm'>"+esc(n.n)+"</td><td class='num' data-l='身分'>"+esc(n.title||n.t)+"</td><td data-l='說明' style='color:#b6a684;font-size:13px'>"+esc(n.d||"")+ex+"</td></tr>");});}
 $("tb").innerHTML=rows.join("")||"<tr><td colspan=4 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script>`));

@@ -1,0 +1,107 @@
+[
+ {
+  "id": "npc_krista",
+  "town": "象牙塔",
+  "n": "克里斯特",
+  "title": "交換物品",
+  "recipes": [
+   {
+    "gold": 1000000,
+    "req": [
+     {
+      "id": "scroll_weapon",
+      "n": "對武器施法的卷軸",
+      "cnt": 100
+     }
+    ],
+    "outId": "new_item_bless_wpn",
+    "out": "賦予武器祝福卷軸"
+   },
+   {
+    "gold": 1000000,
+    "req": [
+     {
+      "id": "scroll_armor",
+      "n": "對盔甲施法的卷軸",
+      "cnt": 100
+     }
+    ],
+    "outId": "new_item_bless_arm",
+    "out": "賦予盔甲祝福卷軸"
+   },
+   {
+    "gold": 1000000,
+    "req": [
+     {
+      "id": "scroll_acc",
+      "n": "對飾品施法的卷軸",
+      "cnt": 5
+     }
+    ],
+    "outId": "new_item_bless_acc",
+    "out": "賦予飾品祝福卷軸"
+   },
+   {
+    "gold": 1000000,
+    "req": [
+     {
+      "id": "scroll_weapon_b",
+      "n": "祝福的 對武器施法的卷軸",
+      "cnt": 1
+     },
+     {
+      "id": "scroll_armor_b",
+      "n": "祝福的 對盔甲施法的卷軸",
+      "cnt": 1
+     }
+    ],
+    "outId": "new_item_uncurse",
+    "out": "解除詛咒的卷軸"
+   }
+  ]
+ },
+ {
+  "id": "npc_ringwiz",
+  "town": "威頓村",
+  "n": "猥瑣的流浪者",
+  "title": "煉戒術士",
+  "recipes": [
+   {
+    "name": "女皇很森七七",
+    "gold": 10000000,
+    "req": [
+     {
+      "id": "new_item_226",
+      "n": "被偷的戒指",
+      "cnt": 3
+     }
+    ],
+    "outId": "acc_116",
+    "out": "傳送控制戒指"
+   },
+   {
+    "name": "女皇再線憤怒",
+    "gold": 50000000,
+    "req": [
+     {
+      "id": "new_item_235",
+      "n": "思克巴女皇的神祕魔杖",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_226",
+      "n": "被偷的戒指",
+      "cnt": 3
+     },
+     {
+      "id": "acc_116",
+      "n": "傳送控制戒指",
+      "cnt": 1
+     }
+    ],
+    "outId": "acc_117",
+    "out": "變形控制戒指"
+   }
+  ]
+ }
+]
