@@ -261,6 +261,18 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
    var t=(a[i].textContent||'').trim();
    if(t==='—'||t==='')a[i].classList.add('e');else a[i].classList.remove('e');}}
  new MutationObserver(mark).observe(tb,{childList:true});mark();})();
+/* 🗂 導覽下拉的互斥與收合(2026-09-20 麥哥回報「點了之後不會自動縮回去,要點第二次」)。
+   根因:導覽用原生 <details>,它的行為就是**各開各的** ⇒ 點了「新手上路」再點「練功打怪」,
+   前一個不會關,實際上可以三組同時開著(麥哥的截圖就是三組全開)。
+   修法:任何一次點擊,把「不是剛點到的那一組」全部收起;點選單以外的地方=全部收起。
+   ⚠ 只在 click 時動作,**不碰載入時的預設展開**(目前頁所在那組刻意帶 open,是導覽提示)。 */
+(function(){
+ document.addEventListener('click',function(e){
+  var cur=(e.target&&e.target.closest)?e.target.closest('nav details.ng'):null;
+  var open=document.querySelectorAll('nav details.ng[open]');
+  for(var i=0;i<open.length;i++){if(open[i]!==cur)open[i].open=false;}
+ });
+})();
 </script>
 <footer>資料自動同步自遊戲檔 · 產生於 2026-09-20<br>本站資料僅供參考,阿肥放置天地官方保留最終解釋權。<br>一切贊助皆為玩家自願,款項全數用於伺服器維護與研究開發。</footer>
 </body></html>
