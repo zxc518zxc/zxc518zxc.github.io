@@ -681,6 +681,14 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 .mcard .ttl{color:#f5c451;font-size:17px;font-weight:bold;margin-bottom:2px}
 .mcard .sub{color:#b6a684;font-size:14px;line-height:1.75}
 .mcard table{margin-top:6px}
+/* 🎉 活動卡(2026-09-20 麥哥:活動之間區隔不夠明顯,每項要有自己的框)。
+   ⚠ 刻意另開 .evcard 疊在 .mcard 上,**不要改 .mcard 本身** —— 那是全站共用的,
+   一改所有頁面的卡片都會跟著變。左側金色粗邊是分隔最有效的一招(掃一眼就知道換一項了)。 */
+.evcard{border:1px solid #5a4a26;border-left:4px solid #f5c451;margin-bottom:28px;box-shadow:0 3px 12px rgba(0,0,0,.5)}
+.evcard .evhd{background:#32260f;margin:-14px -16px 12px;padding:12px 16px;border-radius:10px 10px 0 0;border-bottom:1px solid #5a4a26}
+.evcard .evhd .ttl{font-size:19px}
+.evcard.evover{border-left-color:#6b5f4c}
+.evcard.evover .evhd{background:#262017}
 `;
 // 🗂 導覽分組(2026-09-18 麥哥:「資訊有點多有點雜,幫他們歸類、設置引導」)。
 // 分法刻意照「玩家當下想做什麼」,不是照資料類型——玩家不會想「這是道具資料還是怪物資料」,
@@ -1065,10 +1073,15 @@ const EVENTS = [
 ];
 
 // ⚠ 有 result(得獎名單)的活動**不淡化** —— 這張卡會被截圖發到社群,灰掉整張很難看。
-const evCard = e => `<div class="mcard"` + (e.over && !e.result ? ` style="opacity:.55"` : "") + `
-  <div class="ttl">${e.title}${e.over ? "（已結束）" : ""}</div>
-  <div class="sub" style="color:#f5a97f;font-weight:bold">🗓️ ${e.when}</div>
-  <div class="sub" style="margin-top:6px">${e.intro}</div>
+// 🔴 2026-09-20 修:開頭這個 `>` **原本漏了** —— `<div class="mcard"` 後面直接接換行與下一個 <div>,
+//    瀏覽器會把後面那個標籤當成屬性吃掉 ⇒ 卡片的 div 根本沒正確開啟,
+//    背景/邊框/內距**一次都沒生效過**。這正是麥哥說「活動之間區隔不夠明顯」的根因,不是樣式不夠重。
+const evCard = e => `<div class="mcard evcard${e.over ? " evover" : ""}"` + (e.over && !e.result ? ` style="opacity:.55"` : "") + `>
+  <div class="evhd">
+    <div class="ttl">${e.title}${e.over ? "（已結束）" : ""}</div>
+    <div class="sub" style="color:#f5a97f;font-weight:bold;margin-top:4px">🗓️ ${e.when}</div>
+  </div>
+  <div class="sub">${e.intro}</div>
   ${e.result ? `<div class="sub" style="margin-top:14px;color:#f5c451;font-weight:bold;font-size:16px">${e.result.head}</div>
   <div class="wrap"><table><thead><tr>${e.result.cols.map(c => `<th>${c}</th>`).join("")}</tr></thead><tbody>${e.result.rows.map(r => `<tr><td class="nm">${r[0]}</td><td class="nm" style="color:#f5c451">${r[1]}</td><td class="num" data-l="職業">${r[2]}</td><td class="num" data-l="等級">${r[3]}</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">${r[4]}</td></tr>`).join("")}</tbody></table></div>
   <div class="sub" style="margin-top:6px;font-size:13px">${e.result.foot}</div>

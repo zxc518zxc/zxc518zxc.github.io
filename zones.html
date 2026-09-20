@@ -147,6 +147,14 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 .mcard .ttl{color:#f5c451;font-size:17px;font-weight:bold;margin-bottom:2px}
 .mcard .sub{color:#b6a684;font-size:14px;line-height:1.75}
 .mcard table{margin-top:6px}
+/* 🎉 活動卡(2026-09-20 麥哥:活動之間區隔不夠明顯,每項要有自己的框)。
+   ⚠ 刻意另開 .evcard 疊在 .mcard 上,**不要改 .mcard 本身** —— 那是全站共用的,
+   一改所有頁面的卡片都會跟著變。左側金色粗邊是分隔最有效的一招(掃一眼就知道換一項了)。 */
+.evcard{border:1px solid #5a4a26;border-left:4px solid #f5c451;margin-bottom:28px;box-shadow:0 3px 12px rgba(0,0,0,.5)}
+.evcard .evhd{background:#32260f;margin:-14px -16px 12px;padding:12px 16px;border-radius:10px 10px 0 0;border-bottom:1px solid #5a4a26}
+.evcard .evhd .ttl{font-size:19px}
+.evcard.evover{border-left-color:#6b5f4c}
+.evcard.evover .evhd{background:#262017}
 </style></head><body>
 <header>
 <div class="brand"><h1>🏰 阿肥放置天地</h1><span class="sub">玩家資料站</span></div>
