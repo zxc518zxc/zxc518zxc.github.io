@@ -155,6 +155,27 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 </nav></header><main>
 <div class="hint">遊戲的新增、調整與修復紀錄(由新到舊)。</div>
 <div class="mcard">
+    <div class="ttl">2026-09-20 ・ 官網更新</div>
+    
+    <div class="stats" style="margin:6px 0 10px;justify-content:flex-start"><div class="stat-chip" style="padding:5px 12px;font-size:13px"><b style="color:#7bd14a">2</b>新增</div><div class="stat-chip" style="padding:5px 12px;font-size:13px"><b style="color:#5b9bff">4</b>調整</div><div class="stat-chip" style="padding:5px 12px;font-size:13px"><b style="color:#f5c451">2</b>修復</div></div>
+    <div style="padding:9px 0;border-bottom:1px solid #2a2014">
+      <span class="tag" style="color:#7bd14a">新增</span> <b style="color:#e8dcc8">🛡 血盟可以指派「副盟主」了</b>
+      <div class="sub" style="margin-top:4px">先前血盟的所有事務<b>只有盟主能處理</b>，盟主一沒上線，整個血盟就動彈不得。現在盟主可以指派<b>一位副盟主</b>（成員清單裡點該成員即可指派／解除）。<br><b>副盟主可以</b>：設定血盟公告、審核加入申請、驅除一般成員、啟用或停止祝福光環、開啟擴充任務、開啟城堡挑戰。<br><b>副盟主不能</b>：解散血盟、轉移盟主、指派或解除副盟主、驅除盟主。<br>這樣盟主不在時血盟照常運作，但血盟本身不會被拿走；盟主隨時可以解除副盟主。成員清單上 👑 是盟主、🛡 是副盟主。</div></div><div style="padding:9px 0;border-bottom:1px solid #2a2014">
+      <span class="tag" style="color:#5b9bff">調整</span> <b style="color:#e8dcc8">🐉 血盟搜索狀庫存上限 300 → 999</b>
+      <div class="sub" style="margin-top:4px">玩家反映 300 太快就滿、捐不進去。庫存上限提高到 <b>999</b>。</div></div><div style="padding:9px 0;border-bottom:1px solid #2a2014">
+      <span class="tag" style="color:#f5c451">修復</span> <b style="color:#e8dcc8">🐉 血盟捐獻搜索狀時，數量填不進去（永遠只能捐 10 張）</b>
+      <div class="sub" style="margin-top:4px">在「血盟祝福光環」頁面捐獻搜索狀時，數量欄位<b>每秒都會被畫面刷新洗回 10</b>，導致玩家根本來不及按下捐獻，看起來就像「只能捐 10 張、不能自己輸入」。現在填入的數字會保留住，可以一次捐任意張數（超過庫存空間或背包持有量會自動取小，不會扣多）。</div></div><div style="padding:9px 0;border-bottom:1px solid #2a2014">
+      <span class="tag" style="color:#f5c451">修復</span> <b style="color:#e8dcc8">📖 怪物圖鑑的擊殺數字不會即時更新</b>
+      <div class="sub" style="margin-top:4px">圖鑑的擊殺進度（例如 0/55）原本<b>只有在點進圖鑑分頁的那一瞬間才會抓一次</b>，之後就算一直打怪、數字也不會動，要切到別的分頁再切回來才更新。現在打倒怪物後，只要正在看圖鑑，數字就會<b>即時跟著跳</b>。</div></div><div style="padding:9px 0;border-bottom:1px solid #2a2014">
+      <span class="tag" style="color:#7bd14a">新增</span> <b style="color:#e8dcc8">📊 能力頁補上 PvE／PvP 的四個欄位</b>
+      <div class="sub" style="margin-top:4px">有玩家回報「有些加成好像沒有疊加上去」。查證後確認<b>那些加成一直都有生效</b>（圖鑑登錄給的加成，戰鬥計算裡都有吃到），只是能力頁上<b>從來沒有這幾欄</b>，所以看不到。現在補上：<b>對怪傷害（PvE）／對怪減傷（PvE）／對玩家傷害（PvP）／對玩家減傷（PvP）</b>。這四欄是純顯示，不會改變任何數值或平衡。</div></div><div style="padding:9px 0;border-bottom:1px solid #2a2014">
+      <span class="tag" style="color:#5b9bff">調整</span> <b style="color:#e8dcc8">🔔 對怪物施加負面狀態的技能，命中時會在狩獵日誌留一行</b>
+      <div class="sub" style="margin-top:4px">有玩家回報「疾病術好像沒有實裝，放在技能欄也不會放招、魔也沒在扣」。實際查證後確認<b>這些技能都是正常運作的</b>——會施放、會扣魔、狀態也確實上到怪物身上。會有這種感覺是因為兩件事：①<b>狀態還在身上時，技能不會重複施放</b>（疾病術持續 30 秒），打同一隻怪時看起來就像「不放招也不扣魔」；②這類技能<b>沒有傷害數字可以飄</b>，畫面上除了施法動作什麼都看不到。<br>現在命中時，狩獵日誌會多一行「<b>OO 中了「XX術」</b>」，可以確認技能確實生效了。（疾病術、木乃伊的詛咒、毒咒、沉睡之霧、緩速術、弱化術、壞物術、魔法封印、魔法消除、闇盲咒術等都適用。）</div></div><div style="padding:9px 0;border-bottom:1px solid #2a2014">
+      <span class="tag" style="color:#5b9bff">調整</span> <b style="color:#e8dcc8">🤝 隊伍能力的說明講清楚「隊伍不滿時不會繼續扣錢」</b>
+      <div class="sub" style="margin-top:4px">有玩家回報「組隊花 10 萬選了狀態，隊友中途離開後效果失效，但金幣還在扣」。實際上<b>不會繼續扣</b>——一小時到期時如果隊伍不滿 3 人，系統會自動停止並通知你，<b>一塊錢都不會再扣</b>。真正發生的是：<b>已經付掉的那一小時會繼續倒數</b>，隊友離開期間效果暫停（人補回來會自動恢復），這段時間的費用不退。原本的畫面文字只寫「到期滿編自動續扣」，沒有交代不滿編時會怎樣，才造成誤會。現在隊伍能力的畫面與啟用確認視窗都會把這件事寫清楚。</div></div><div style="padding:9px 0;border-bottom:1px solid #2a2014">
+      <span class="tag" style="color:#5b9bff">調整</span> <b style="color:#e8dcc8">📈 伺服器等級 51 → 52</b>
+      <div class="sub" style="margin-top:4px">伺服器等級是「追趕經驗」的基準:角色等級<b>低於</b>它時,打怪經驗有加成,<b>每差 1 級 +100%</b>,差 10 級以上封頂 <b>+1000%</b>。這次由 51 調整為 <b>52</b>,落後的角色追得更快一些。高於伺服器等級沒有加成、也沒有懲罰。</div></div>
+  </div><div class="mcard">
     <div class="ttl">2026-09-19 ・ 官網更新</div>
     
     <div class="stats" style="margin:6px 0 10px;justify-content:flex-start"><div class="stat-chip" style="padding:5px 12px;font-size:13px"><b style="color:#7bd14a">2</b>新增</div><div class="stat-chip" style="padding:5px 12px;font-size:13px"><b style="color:#f5c451">1</b>修復</div></div>
