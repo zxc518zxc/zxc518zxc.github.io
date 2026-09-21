@@ -1899,6 +1899,10 @@ if (WD.enh && WD.enh.length) {
 
 // ================= 💪 變身型態 =================
 // 🔴 由 cmd/wikidump 從 engine/afk/stage3.go 的 polyTiers 匯出(46 種,含 polyAbilityTextGo 的文字)。
+// 🎭 變身表來源(2026-09-21 起):優先讀 poly.json(cmd/polydump 匯出,含 Lv55 段與開啟條件),
+//    沒有才退回 mastery.json 裡的舊 poly。理由:wikidump 不能重跑(會曝光強化機率),變身表要更新只能另開工具。
+//    重生指令:cd go端專案/engine && go run ./cmd/polydump -gd ../gamedata.json -json ../../玩家資料站/poly.json
+try { const pj = JSON.parse(fs.readFileSync(path.join(OUT, "poly.json"), "utf8")); if (Array.isArray(pj) && pj.length) WD.poly = pj; } catch (e) { }
 if (WD.poly && WD.poly.length) {
   // AC 在引擎是「越低越好」,polyAbilityTextGo 直接輸出 AC-1,玩家會誤讀成防禦下降 → 翻成白話。
   // AC 在引擎是「越低越好」,polyAbilityTextGo 直接輸出 AC-1,玩家會誤讀成防禦下降 → 翻成白話。
@@ -1910,7 +1914,9 @@ if (WD.poly && WD.poly.length) {
   }).join("、");
   const secs = WD.poly.map(t => {
     const lv = t.max >= 9999 ? `Lv ${t.min} 以上` : `Lv ${t.min} ～ ${t.max}`;
-    return `<div class="mcard"><div class="ttl">${lv}<span class="sub" style="margin-left:8px">共 ${t.forms.length} 種</span></div>
+    // 🔒 有 unlock 的段(Lv55):卡片標「需先開啟」,並把開啟條件寫在表格上方(麥哥 2026-09-21 拍板條件可公開)
+    const unlockNote = t.unlock ? `<div class="sub" style="margin:6px 0 2px;color:#f5a97f"><b>🔒 這一段的變身要先「開啟」才能使用</b>（持變形控制戒指開選單 → 按該變身旁的「開啟」）。<br>每一種的開啟條件相同：<b>${t.unlock}</b>。開啟後綁定該角色、永久有效；材料差一樣就不會扣。</div>` : "";
+    return `<div class="mcard"><div class="ttl">${lv}<span class="sub" style="margin-left:8px">共 ${t.forms.length} 種</span>${t.unlock ? '<span class="tag" style="margin-left:8px;color:#f5a97f;border-color:#7a4a12">需先開啟</span>' : ""}</div>${unlockNote}
     <div class="wrap"><table><thead><tr><th>型態</th><th>加成</th></tr></thead><tbody>
     ${t.forms.map(f => `<tr><td class="nm">${f.name}</td><td>${polyEff(f.eff)}</td></tr>`).join("")}
     </tbody></table></div></div>`;
@@ -1921,8 +1927,10 @@ if (WD.poly && WD.poly.length) {
 背包裡帶著<b>變形控制戒指</b>(不用裝備,放背包就生效)就可以<b>指定</b>要變哪一種。</div>
 
 <div class="mcard"><div class="ttl">重點</div><div class="sub">
-・<b>只能變成「你目前等級」那一段的型態</b>。等級跨過門檻後,能變的名單就整個換掉。<br>
-・<b>沒有變形控制戒指 = 隨機</b>,有戒指才能點名。<br>
+・<b>沒有戒指吃卷軸 = 隨機變成「你目前等級」那一段的其中一種</b>。<br>
+・<b>有戒指開選單可以點名</b>,而且選單會同時列出<b>目前等級段</b>與<b>上一段</b>,兩段都能選(2026-09-22 起)。<br>
+・<b>Lv55 段要先「開啟」才能用</b>(條件見下方);一種都沒開啟時,吃卷軸會退回 52 級段隨機。<br>
+・「召喚獸命中」只影響法師召喚獸的命中判定,玩家本身的命中不受影響。<br>
 ・變身效果<b>疊在你原本的能力上</b>,不會取代裝備加成。<br>
 ・「攻速」是<b>百分比</b>加成,其餘都是平加。
 </div></div>
