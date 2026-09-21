@@ -155,6 +155,14 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 .evcard .evhd .ttl{font-size:19px}
 .evcard.evover{border-left-color:#6b5f4c}
 .evcard.evover .evhd{background:#262017}
+/* 📝 官方文案範本(可一鍵複製)。⚠ pre 一定要 white-space:pre-wrap + 繼承字體,
+   不然中文會變等寬醜字、長行也會撐出橫捲軸。 */
+.evtpl{background:#1b150b;border:1px solid #3a2f1c;border-radius:8px;padding:12px 14px;margin:0;
+  color:#e8dcc8;font-size:13.5px;line-height:1.85;white-space:pre-wrap;word-break:break-word;
+  font-family:inherit;overflow-wrap:anywhere}
+.evcopy{position:absolute;top:8px;right:8px;background:#3a2f1c;color:#f5c451;border:1px solid #5a4a26;
+  border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;font-family:inherit}
+.evcopy:hover{background:#4a3c24}
 </style></head><body>
 <header>
 <div class="brand"><h1>🏰 阿肥放置天地</h1><span class="sub">玩家資料站</span></div>
@@ -163,7 +171,44 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 </nav></header><main>
 <div class="stats"><div class="stat-chip"><b>1</b>進行中活動</div></div>
 <div class="hint">活動規則以本頁公告為準。獎勵一律寄到遊戲內「交易所 →&nbsp;領取」,離線也收得到。如遇爭議或違規(含外掛、漏洞、多開刷榜等),官方保留取消資格、調整獎勵與最終解釋權。</div>
-<div class="mcard evcard evover" style="opacity:.55">
+<div class="mcard evcard">
+  <div class="evhd">
+    <div class="ttl">🎬 錄影推廣大作戰 II</div>
+    <div class="sub" style="color:#f5a97f;font-weight:bold;margin-top:4px">🗓️ 2026/09/21(一) 至 2026/09/26(六)　每日可領一次</div>
+  </div>
+  <div class="sub">第二波開跑!把你的遊戲畫面錄下來發到社群,天天都能領獎勵。這次的禮包裡多了一張限時的 🎖 錄影推廣勳章,配戴 10 小時內經驗與金幣都會變多。</div>
+  
+  <div class="sub" style="margin-top:12px;color:#f5c451;font-weight:bold">🎁 獎勵</div>
+  <div class="wrap"><table><thead><tr><th>項目</th><th>獎勵</th></tr></thead><tbody><tr><td class="nm">每日回報成功</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">🎁 錄影推廣禮包II ×1</td></tr><tr><td class="nm">禮包內容</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">💎 藍鑽 ×50、🎖 錄影推廣勳章 ×1、💰 金幣 200,000</td></tr><tr><td class="nm">🎖 勳章效果(配戴 10 小時)</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">狩獵經驗 +10%、擊殺金幣 +10%、傷害減免 +2</td></tr></tbody></table></div>
+  <div class="sub" style="margin-top:12px;color:#f5c451;font-weight:bold">📌 參加方式</div>
+  <ol style="color:#b6a684;font-size:14px;line-height:1.9;margin:4px 0 0;padding-left:20px"><li>準備影片:<b>自己錄的遊戲畫面</b>(15 秒以上,建議 15 到 30 秒),<b>或</b>直接使用<b>官方影片範本</b>(向官方 LINE @068ivpaq 索取)。</li><li>貼文文案<b>必須使用下面的官方範本</b>,整段複製,並把第一行的日期改成<b>當天日期</b>。</li><li>發布到 <b>抖音 / Instagram / Threads(脆)</b> 其中一個平台,<b>必須是公開貼文或 Reels</b>;<b>或臉書天堂私服社團,必須是公開貼文</b>。</li><li>把<b>貼文連結</b>私訊官方 LINE @068ivpaq,附上你的<b>遊戲帳號</b>與<b>角色名稱</b>。</li></ol>
+  <div class="sub" style="margin-top:12px;color:#f5c451;font-weight:bold">📝 官方文案範本(必須使用)</div>
+  <div class="sub" style="font-size:13px">整段複製貼上,只要把<b>第一行的日期</b>換成你發文的當天日期。自行改寫或日期不對,該次不計入。</div>
+  <div style="position:relative;margin-top:6px">
+    <button class="evcopy" onclick="var p=this.parentNode.querySelector('pre');navigator.clipboard.writeText(p.innerText);this.textContent='✅ 已複製';var b=this;setTimeout(function(){b.textContent='📋 複製文案'},1800)">📋 複製文案</button>
+    <pre class="evtpl">阿肥放置天地 (當天日期 9/XX)
+「你以為你在上班,其實你的角色正在替你打天下。」
+
+睜開眼,等級又升了。
+打開遊戲,昨天打不過的王已經倒了,裝備還掉了一地。
+
+不用肝、不用一直盯著螢幕,挑個獵場,剩下的交給它。
+
+變身、打王、血盟、交易、決鬥……
+這次不是回到天堂,
+是讓你重新體驗「那個年代」的熱血。
+
+《阿肥放置天地》
+你的角色,永遠比你早一步開始變強。
+
+▼ 遊戲入口
+https://afei.gg/
+
+▼ 客服 ID: @068ivpaq</pre>
+  </div>
+  <div class="sub" style="margin-top:12px;color:#f5c451;font-weight:bold">📋 規則</div>
+  <ul style="color:#b6a684;font-size:14px;line-height:1.9;margin:4px 0 0;padding-left:20px"><li><b>每個 LINE 帳號每天只能回報一次、領取一次</b>(以每日 00:00 到 23:59 計算)。</li><li><b>三個要素缺一不可</b>:①官方文案範本 ②影片(自錄或官方範本影片) ③文案上的<b>當天日期</b>。少一項或文案被改寫,該次不計入。</li><li>貼文需<b>保留至少 1 天</b>,提前刪除或改為私人將取消該次資格。</li><li>獎勵於審核通過後發放,寄到遊戲內<b>交易所 →「領取」</b>頁,離線也收得到。</li><li>🎖 勳章是<b>時效裝備</b>:<b>配戴的那一刻</b>才開始倒數 10 小時(放在背包不會計時),效期內<b>無法卸下</b>、時間到<b>自動消失</b>,而且<b>無法強化、無法交易</b>。配戴前請先看清楚。</li><li>影片內容不得含有不雅、攻擊他人或與本遊戲無關的內容;查證造假者取消資格。</li><li>官方保留活動修改與最終判定之權利。</li></ul>
+</div><div class="mcard evcard evover" style="opacity:.55">
   <div class="evhd">
     <div class="ttl">🎥 徵求推廣範本影片 · 3 個名額（已結束）</div>
     <div class="sub" style="color:#f5a97f;font-weight:bold;margin-top:4px">🗓️ 即日起 至 2026/09/19(六)</div>
@@ -174,11 +219,12 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
   <div class="wrap"><table><thead><tr><th>項目</th><th>獎勵</th></tr></thead><tbody><tr><td class="nm">入選(共 3 名)</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">💎 藍鑽 ×200</td></tr></tbody></table></div>
   <div class="sub" style="margin-top:12px;color:#f5c451;font-weight:bold">📌 參加方式</div>
   <ol style="color:#b6a684;font-size:14px;line-height:1.9;margin:4px 0 0;padding-left:20px"><li>錄製<b>遊戲內打怪畫面</b>,長度 <b>15 到 30 秒</b>。</li><li>影片畫面中要出現 <b>官網 afei.gg</b> 與 <b>官方 LINE @068ivpaq</b>(打字幕或貼在畫面角落都可以)。</li><li>建議用<b>手機直式 9:16</b>,這樣大家轉發到抖音、IG、脆才不會有黑邊。</li><li>私訊官方 LINE @068ivpaq,附上<b>影片原始檔</b>(不要傳壓縮過的連結)與你的<b>遊戲帳號、角色名稱</b>。</li></ol>
+  
   <div class="sub" style="margin-top:12px;color:#f5c451;font-weight:bold">📋 規則</div>
   <ul style="color:#b6a684;font-size:14px;line-height:1.9;margin:4px 0 0;padding-left:20px"><li><b>截止時間:2026/09/19(六)</b>。</li><li>入選 3 名,每位 💎 200 藍鑽,發放至遊戲內<b>交易所 →「領取」</b>頁。</li><li><b>投稿即表示同意</b>官方與其他玩家,可自由使用、修改、散布你的影片作為推廣素材,不另外支付費用。</li><li>影片中<b>不得出現他人的個人資訊</b>或與本遊戲無關的內容。</li><li>由官方擇優選出,評選重點:<b>畫面清晰、節奏明快、看得懂在玩什麼</b>。</li><li>官方保留活動修改與最終判定之權利。</li></ul>
-</div><div class="mcard evcard">
+</div><div class="mcard evcard evover" style="opacity:.55">
   <div class="evhd">
-    <div class="ttl">🎬 錄影推廣大作戰</div>
+    <div class="ttl">🎬 錄影推廣大作戰（已結束）</div>
     <div class="sub" style="color:#f5a97f;font-weight:bold;margin-top:4px">🗓️ 2026/09/16(三) 至 2026/09/19(六)　每日可領一次</div>
   </div>
   <div class="sub">把你的遊戲畫面錄下來發到社群,天天都能領獎勵。掛機、打王、開箱、炫裝備,拍什麼都可以。</div>
@@ -187,6 +233,7 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
   <div class="wrap"><table><thead><tr><th>項目</th><th>獎勵</th></tr></thead><tbody><tr><td class="nm">每日回報成功</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">🎁 錄影推廣禮包 ×1</td></tr><tr><td class="nm">禮包內容</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">💎 藍鑽 ×50、對武器施法的卷軸 ×5、對盔甲施法的卷軸 ×5、💰 金幣 200,000</td></tr></tbody></table></div>
   <div class="sub" style="margin-top:12px;color:#f5c451;font-weight:bold">📌 參加方式</div>
   <ol style="color:#b6a684;font-size:14px;line-height:1.9;margin:4px 0 0;padding-left:20px"><li>錄製<b>遊戲畫面 15 秒以上</b>(建議 15 到 30 秒),內容不限。</li><li>發布到 <b>抖音 / Instagram / Threads(脆)</b> 其中一個平台,<b>必須是公開貼文或 Reels</b>;<b>或臉書天堂私服社團,必須是公開貼文</b>。</li><li>貼文文案必須包含:<b>當天日期</b>(例如 2026/09/16)、<b>遊戲連結 afei.gg 或 官方 LINE @068ivpaq</b>、標籤 <b>#放置天地 #阿肥放置</b>。</li><li>把<b>貼文連結</b>私訊官方 LINE @068ivpaq,附上你的<b>遊戲帳號</b>與<b>角色名稱</b>。</li></ol>
+  
   <div class="sub" style="margin-top:12px;color:#f5c451;font-weight:bold">📋 規則</div>
   <ul style="color:#b6a684;font-size:14px;line-height:1.9;margin:4px 0 0;padding-left:20px"><li><b>每個 LINE 帳號每天只能回報一次、領取一次</b>(以每日 00:00 到 23:59 計算)。</li><li>貼文需<b>保留至少 1 天</b>,提前刪除或改為私人將取消該次資格。</li><li>獎勵於審核通過後發放,寄到遊戲內<b>交易所 →「領取」</b>頁,離線也收得到。</li><li>影片內容不得含有不雅、攻擊他人或與本遊戲無關的內容;查證造假者取消資格。</li><li>官方保留活動修改與最終判定之權利。</li></ul>
 </div><div class="mcard evcard evover">
@@ -201,6 +248,7 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
   <div class="sub" style="margin-top:6px;font-size:13px">名次以結算當下的等級為準（同等級比經驗），與遊戲內「排行榜」同一套排法。獎勵已發放至遊戲內<b>交易所 →&nbsp;領取</b>頁。恭喜以上五位,也謝謝這一週一起衝的每一位冒險者 🎉</div>
   <div class="sub" style="margin-top:12px;color:#f5c451;font-weight:bold">🎁 獎勵</div>
   <div class="wrap"><table><thead><tr><th>名次</th><th>獎勵</th></tr></thead><tbody><tr><td class="nm">🥇 全職業 等級第一名</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">💎 5000 藍鑽</td></tr><tr><td class="nm">🛡️ 騎士 等級第一名</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">💎 2000 藍鑽</td></tr><tr><td class="nm">🏹 妖精 等級第一名</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">💎 2000 藍鑽</td></tr><tr><td class="nm">🔮 法師 等級第一名</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">💎 2000 藍鑽</td></tr><tr><td class="nm">🌑 黑暗妖精 等級第一名</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">💎 2000 藍鑽</td></tr></tbody></table></div>
+  
   
   <div class="sub" style="margin-top:12px;color:#f5c451;font-weight:bold">📋 規則</div>
   <ul style="color:#b6a684;font-size:14px;line-height:1.9;margin:4px 0 0;padding-left:20px"><li>名次以<b>活動結束當下</b>的等級為準;同等級時經驗值高的排前面 —— 與遊戲內「排行榜」完全相同的排法,你隨時都能自己查。</li><li><b>獎項不重複領取</b>:全職業第一名只領 5000 藍鑽那一份,<b>不再領自己職業的 2000</b>;該職業的第一名獎<b>順延給同職業第二名</b>。也就是說,五個獎項會由五位不同的玩家獲得。</li><li>獎勵於活動結束後統一發放,寄到<b>交易所 →「領取」</b>頁,離線也收得到。</li><li>離線掛機獲得的經驗同樣計入,不需要一直守在電腦前。</li><li>獎勵發放對象為該角色所屬的<b>帳號</b>。</li></ul>
@@ -226,5 +274,5 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
  });
 })();
 </script>
-<footer>資料自動同步自遊戲檔 · 產生於 2026-09-20<br>本站資料僅供參考,阿肥放置天地官方保留最終解釋權。<br>一切贊助皆為玩家自願,款項全數用於伺服器維護與研究開發。</footer>
+<footer>資料自動同步自遊戲檔 · 產生於 2026-09-21<br>本站資料僅供參考,阿肥放置天地官方保留最終解釋權。<br>一切贊助皆為玩家自願,款項全數用於伺服器維護與研究開發。</footer>
 </body></html>

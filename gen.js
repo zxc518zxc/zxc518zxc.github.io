@@ -109,6 +109,16 @@ if (!RENAME_CARD_LIVE) HIDDEN_ITEM_ID.add("rename_card");
 // 🧪 經驗藥水(potion_exp,2026-09-14 麥哥要的:一瓶 +50 萬經驗):道具已在 gamedata,發放方式與要不要上官網麥哥未拍板 → 先擋。拍板後改 true。
 const EXP_POTION_LIVE = false;
 if (!EXP_POTION_LIVE) HIDDEN_ITEM_ID.add("potion_exp");
+// 🔒 武官系列 8 件 + 神官系列 7 件(2026-09-21 中午上線):麥哥拍板「官網不發、不開放取得」
+//    —— gachaWeight:0、無掉落、無商店,玩家拿不到。不擋的話資料站會列出來,只會被問「在哪拿」。
+//    ⚠ 之後麥哥決定要放出時,把 OFFICIAL_PRIEST_LIVE 改成 true 即可(不要逐一刪 id)。
+//    用 id 精準擋,不用名稱比對——「神官」兩字之後可能出現在別的道具說明裡。
+const OFFICIAL_PRIEST_LIVE = false;
+if (!OFFICIAL_PRIEST_LIVE) for (const id of [
+  "wpn_officialblade", "wpn_official2h", "amr_official", "clk_official", "shd_official",
+  "glv_official", "bot_official", "hlm_official",
+  "wpn_priestwand", "amr_priest", "hlm_priest", "clk_priest", "glv_priest", "bot_priest", "shd_priest",
+]) HIDDEN_ITEM_ID.add(id);
 const hiddenItem = (id, v) => {
   if (HIDDEN_ITEM_ID.has(id)) return true;
   const s = (v.n || "") + " " + (v.d || "");
@@ -689,6 +699,14 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 .evcard .evhd .ttl{font-size:19px}
 .evcard.evover{border-left-color:#6b5f4c}
 .evcard.evover .evhd{background:#262017}
+/* 📝 官方文案範本(可一鍵複製)。⚠ pre 一定要 white-space:pre-wrap + 繼承字體,
+   不然中文會變等寬醜字、長行也會撐出橫捲軸。 */
+.evtpl{background:#1b150b;border:1px solid #3a2f1c;border-radius:8px;padding:12px 14px;margin:0;
+  color:#e8dcc8;font-size:13.5px;line-height:1.85;white-space:pre-wrap;word-break:break-word;
+  font-family:inherit;overflow-wrap:anywhere}
+.evcopy{position:absolute;top:8px;right:8px;background:#3a2f1c;color:#f5c451;border:1px solid #5a4a26;
+  border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;font-family:inherit}
+.evcopy:hover{background:#4a3c24}
 `;
 // 🗂 導覽分組(2026-09-18 麥哥:「資訊有點多有點雜,幫他們歸類、設置引導」)。
 // 分法刻意照「玩家當下想做什麼」,不是照資料類型——玩家不會想「這是道具資料還是怪物資料」,
@@ -1053,6 +1071,60 @@ $("q").oninput=render;$("cls").onchange=render;render();
 //    活動結束把該筆的 over 改成 true(會自動變灰並標「已結束」)。
 const EVENTS = [
   {
+    // 🎬 第二波錄影推廣(2026-09-21 麥哥開的)。獎勵改成「錄影推廣禮包II」(含 10 小時時效勳章)。
+    // ⚠ 這檔比上一檔多一條硬規定:**貼文文案必須使用官方範本**(下面 tpl 那段),影片可自錄或用官方範本影片。
+    title: "🎬 錄影推廣大作戰 II",
+    rewardHead: "項目",
+    when: "2026/09/21(一) 至 2026/09/26(六)　每日可領一次",
+    over: false,
+    intro: "第二波開跑!把你的遊戲畫面錄下來發到社群,天天都能領獎勵。這次的禮包裡多了一張限時的 🎖 錄影推廣勳章,配戴 10 小時內經驗與金幣都會變多。",
+    rewards: [
+      ["每日回報成功", "🎁 錄影推廣禮包II ×1"],
+      ["禮包內容", "💎 藍鑽 ×50、🎖 錄影推廣勳章 ×1、💰 金幣 200,000"],
+      ["🎖 勳章效果(配戴 10 小時)", "狩獵經驗 +10%、擊殺金幣 +10%、傷害減免 +2"],
+    ],
+    steps: [
+      "準備影片:<b>自己錄的遊戲畫面</b>(15 秒以上,建議 15 到 30 秒),<b>或</b>直接使用<b>官方影片範本</b>(向官方 LINE @068ivpaq 索取)。",
+      "貼文文案<b>必須使用下面的官方範本</b>,整段複製,並把第一行的日期改成<b>當天日期</b>。",
+      "發布到 <b>抖音 / Instagram / Threads(脆)</b> 其中一個平台,<b>必須是公開貼文或 Reels</b>;<b>或臉書天堂私服社團,必須是公開貼文</b>。",
+      "把<b>貼文連結</b>私訊官方 LINE @068ivpaq,附上你的<b>遊戲帳號</b>與<b>角色名稱</b>。",
+    ],
+    tpl: {
+      head: "📝 官方文案範本(必須使用)",
+      note: "整段複製貼上,只要把<b>第一行的日期</b>換成你發文的當天日期。自行改寫或日期不對,該次不計入。",
+      lines: [
+        "阿肥放置天地 (當天日期 9/XX)",
+        "「你以為你在上班,其實你的角色正在替你打天下。」",
+        "",
+        "睜開眼,等級又升了。",
+        "打開遊戲,昨天打不過的王已經倒了,裝備還掉了一地。",
+        "",
+        "不用肝、不用一直盯著螢幕,挑個獵場,剩下的交給它。",
+        "",
+        "變身、打王、血盟、交易、決鬥……",
+        "這次不是回到天堂,",
+        "是讓你重新體驗「那個年代」的熱血。",
+        "",
+        "《阿肥放置天地》",
+        "你的角色,永遠比你早一步開始變強。",
+        "",
+        "▼ 遊戲入口",
+        "https://afei.gg/",
+        "",
+        "▼ 客服 ID: @068ivpaq",
+      ],
+    },
+    rules: [
+      "<b>每個 LINE 帳號每天只能回報一次、領取一次</b>(以每日 00:00 到 23:59 計算)。",
+      "<b>三個要素缺一不可</b>:①官方文案範本 ②影片(自錄或官方範本影片) ③文案上的<b>當天日期</b>。少一項或文案被改寫,該次不計入。",
+      "貼文需<b>保留至少 1 天</b>,提前刪除或改為私人將取消該次資格。",
+      "獎勵於審核通過後發放,寄到遊戲內<b>交易所 →「領取」</b>頁,離線也收得到。",
+      "🎖 勳章是<b>時效裝備</b>:<b>配戴的那一刻</b>才開始倒數 10 小時(放在背包不會計時),效期內<b>無法卸下</b>、時間到<b>自動消失</b>,而且<b>無法強化、無法交易</b>。配戴前請先看清楚。",
+      "影片內容不得含有不雅、攻擊他人或與本遊戲無關的內容;查證造假者取消資格。",
+      "官方保留活動修改與最終判定之權利。",
+    ],
+  },
+  {
     title: "🎥 徵求推廣範本影片 · 3 個名額",
     rewardHead: "項目",
     when: "即日起 至 2026/09/19(六)",
@@ -1080,7 +1152,7 @@ const EVENTS = [
     title: "🎬 錄影推廣大作戰",
     rewardHead: "項目",
     when: "2026/09/16(三) 至 2026/09/19(六)　每日可領一次",
-    over: false,
+    over: true, // 2026-09-21 第一波已結束(由「錄影推廣大作戰 II」接手),卡片自動變灰並標「已結束」
     intro: "把你的遊戲畫面錄下來發到社群,天天都能領獎勵。掛機、打王、開箱、炫裝備,拍什麼都可以。",
     rewards: [
       ["每日回報成功", "🎁 錄影推廣禮包 ×1"],
@@ -1155,6 +1227,12 @@ const evCard = e => `<div class="mcard evcard${e.over ? " evover" : ""}"` + (e.o
   <div class="wrap"><table><thead><tr><th>${e.rewardHead || "名次"}</th><th>獎勵</th></tr></thead><tbody>${e.rewards.map(([k, v]) => `<tr><td class="nm">${k}</td><td class="num" data-l="獎勵" style="color:#7bd1ff;font-weight:bold">${v}</td></tr>`).join("")}</tbody></table></div>
   ${e.steps ? `<div class="sub" style="margin-top:12px;color:#f5c451;font-weight:bold">📌 參加方式</div>
   <ol style="color:#b6a684;font-size:14px;line-height:1.9;margin:4px 0 0;padding-left:20px">${e.steps.map(s => `<li>${s}</li>`).join("")}</ol>` : ""}
+  ${e.tpl ? `<div class="sub" style="margin-top:12px;color:#f5c451;font-weight:bold">${e.tpl.head}</div>
+  <div class="sub" style="font-size:13px">${e.tpl.note}</div>
+  <div style="position:relative;margin-top:6px">
+    <button class="evcopy" onclick="var p=this.parentNode.querySelector('pre');navigator.clipboard.writeText(p.innerText);this.textContent='✅ 已複製';var b=this;setTimeout(function(){b.textContent='📋 複製文案'},1800)">📋 複製文案</button>
+    <pre class="evtpl">${e.tpl.lines.map(l => String(l).replace(/&/g, "&amp;").replace(/</g, "&lt;")).join("\n")}</pre>
+  </div>` : ""}
   <div class="sub" style="margin-top:12px;color:#f5c451;font-weight:bold">📋 規則</div>
   <ul style="color:#b6a684;font-size:14px;line-height:1.9;margin:4px 0 0;padding-left:20px">${e.rules.map(r => `<li>${r}</li>`).join("")}</ul>
 </div>`;
@@ -1541,7 +1619,7 @@ try { STATS = JSON.parse(fs.readFileSync(path.join(OUT, "stats.json"), "utf8"));
   CHANGES = CHANGES.filter(d => d.date <= today);
 }
 {
-  const TCOL = { "新增": "#7bd14a", "調整": "#5b9bff", "修復": "#f5c451" };
+  const TCOL = { "新增": "#7bd14a", "調整": "#5b9bff", "修復": "#f5c451", "活動": "#f5a97f" };
   // **粗體** → <b>(內容用 Markdown 寫,HTML 不會自己渲染)
   const md = t => String(t || "").replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
   const cnt = its => ["新增", "調整", "修復"].map(t => [its.filter(i => i.t === t).length, t]).filter(([n]) => n > 0);
