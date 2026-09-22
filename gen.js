@@ -411,9 +411,20 @@ try { WD = JSON.parse(fs.readFileSync(path.join(OUT, "mastery.json"), "utf8")); 
 const TYPE_NAME = { wpn: "武器", arm: "防具", acc: "飾品", pot: "藥水", misc: "道具", material: "材料", skillbk: "技能書", etc: "其他" };
 const ELE_NAME = { fire: "火", water: "水", wind: "風", earth: "地", none: "無", "": "無" };
 
+// ⏳ 官網限定的臨時附註(只加在官網的道具說明尾端,**不進 gamedata**)。
+//    為什麼要這個機制:gamedata 的道具說明是遊戲內與官網共用的同一份,
+//    若把「X 月 X 日實裝」寫進 gamedata,上線之後遊戲內與官網都會留著一句過時的話,
+//    要清掉還得再改 gamedata + 再重啟一次伺服器。放在這裡只影響官網,
+//    上線後把那一行刪掉、重跑 gen 就乾淨了(官網 push 不需要重啟遊戲)。
+// 🔴 上線後**一定要回來刪**——留著就是對玩家說謊。
+const TEMP_NOTE = {
+  // 2026-09-22 麥哥交代:掉率原本設錯 100 倍(0.15% 而非 15%),修正排 9/23 中午重啟實裝。
+  mat_boss_crystal: "⏳ 掉落率修正將於 2026/09/23(二)中午伺服器重啟後實裝;在那之前實際掉落率低於本頁標示。",
+};
+
 const items = Object.entries(GD.items || {}).filter(([id, v]) => !hiddenItem(id, v)).map(([id, v]) => ({
   id, n: v.n || id, t: TYPE_NAME[v.type] || v.type || "其他",
-  d: v.d || "", legend: v.gachaWeight === 1,
+  d: (v.d || "") + (TEMP_NOTE[id] ? "\n" + TEMP_NOTE[id] : ""), legend: v.gachaWeight === 1,   // ⏳ TEMP_NOTE:官網限定附註(見上)
   dmg: v.dmgS ? `${v.dmgS}/${v.dmgL || v.dmgS}` : "", ac: v.ac || 0, safe: v.safe ?? "",
   slot: SLOT_N[v.slot] || "", req: reqStr(v.req), wcat: v.wcat || "",
   p: v.p || 0, sell: Math.floor((v.p || 0) * 3 / 10), buy: SHOP_SELL.has(id),
