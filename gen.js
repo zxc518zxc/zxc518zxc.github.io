@@ -401,6 +401,18 @@ try {
 // 🔍 偷窺卡 2026-09-11 起重新在各村雜貨商販售(30 萬)。mastery.json 是舊匯出、還沒有它,
 //    而 wikidump **不能重跑**(會讓強化機率暗改曝光)⇒ 在這裡手動補一筆。日後能重跑 wikidump 時這行可刪。
 SHOP_SELL.add("peek_card");
+SHOP_SELL.add("mat_blackstone2");   // 🌑 二級黑魔石 2026-09-23 起沉默洞穴販售(2,500;回收 300 靠 sellP)。同上:mastery.json 是舊匯出,手動補。
+// 🌑 沉默洞穴史克瓦提整家店都不在舊匯出裡(2026-09-23 抓到:一級黑魔石 + 四種鋼爪 + 四種雙刀在道具頁全標「商店沒賣」)。
+//    同上理由手動補;go端專案/engine/afk/blackstone2_shop_test.go 有守門:貨架上每一樣都必須在這裡或 mastery.json。
+SHOP_SELL.add("mat_blackstone1");
+SHOP_SELL.add("wpn_claw_bronze");
+SHOP_SELL.add("wpn_claw_steel");
+SHOP_SELL.add("wpn_claw_shadow");
+SHOP_SELL.add("wpn_claw_damascus");
+SHOP_SELL.add("wpn_dual_bronze");
+SHOP_SELL.add("wpn_dual_steel");
+SHOP_SELL.add("wpn_dual_shadow");
+SHOP_SELL.add("wpn_dual_damascus");
 
 // ⚒💪🔮 強化機率 / 變身型態 / 碧恩詞條 —— 全部由 cmd/wikidump 從 Go 程式**實跑**匯出,
 //    不是人工抄的。改了 enhance.go / stage3.go / derived.go 就要重跑 wikidump 再重生。
@@ -427,7 +439,7 @@ const items = Object.entries(GD.items || {}).filter(([id, v]) => !hiddenItem(id,
   d: (v.d || "") + (TEMP_NOTE[id] ? "\n" + TEMP_NOTE[id] : ""), legend: v.gachaWeight === 1,   // ⏳ TEMP_NOTE:官網限定附註(見上)
   dmg: v.dmgS ? `${v.dmgS}/${v.dmgL || v.dmgS}` : "", ac: v.ac || 0, safe: v.safe ?? "",
   slot: SLOT_N[v.slot] || "", req: reqStr(v.req), wcat: v.wcat || "",
-  p: v.p || 0, sell: Math.floor((v.p || 0) * 3 / 10), buy: SHOP_SELL.has(id),
+  p: v.p || 0, sell: v.sellP ? v.sellP : Math.floor((v.p || 0) * 3 / 10), buy: SHOP_SELL.has(id),   // 💰 sellP=回收價覆寫(2026-09-23 二級黑魔石;與 Go sellPriceOf / adapter itemSell 三份同步,Go 守門會掃這行)
   fx: itemFx(v),
   src: [],
   ex: exByOut[id] || [], // 🎁 兌換取得(見上方 EXCHANGE);怪不掉、商店沒賣的道具只有這條線索
