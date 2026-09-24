@@ -738,7 +738,7 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 const NAV_GROUPS = [
   ["新手上路", "🌱", [
     ["guide.html", "guide", "🌱", "新手指南", "第一次玩看這裡"],
-    ["systems.html", "sys", "📜", "系統說明", "交易所・倉庫・月卡・血盟・組隊・擁擠・離線掛機・經驗・潘朵拉"],
+    ["systems.html", "sys", "📜", "系統說明", "交易所・倉庫・月卡・血魔恢復・血盟・組隊・擁擠・離線掛機・經驗・潘朵拉"],
     ["event.html", "event", "🎉", "活動介紹", "目前進行中的活動"],
     ["rules.html", "rules", "⚖️", "遊戲規章", "什麼行為會被停權・封鎖名單"],
   ]],
@@ -776,6 +776,7 @@ const ASK = [
   ["強化會不會破?", "enhance.html"],
   ["第一次玩怎麼開始?", "guide.html"],
   ["月卡・倉庫・交易所怎麼用?", "systems.html"],
+  ["血魔多久回一次?", "systems.html"],
   ["加一點力量會加多少傷害?", "stats.html"],
   ["最近改了什麼?", "changelog.html"],
 ];
@@ -1483,6 +1484,20 @@ fs.writeFileSync(path.join(OUT, "systems.html"), page("系統說明", "sys", `
 <div class="mcard"><div class="ttl">🏆 分身挑戰賽</div>
 <div class="sub">玩法與對局規則見<a href="guide.html" style="color:#f5c451">新手指南</a>的「分身挑戰賽」一列。</div></div>
 
+<div class="mcard"><div class="ttl">💗 血魔自然恢復</div>
+<div class="sub">血和魔會自己回,<b>在村莊回得快、在獵場回得慢</b>。兩種是不同的規則。</div>
+<div class="wrap"><table><thead><tr><th>在哪裡</th><th>多久回一次</th><th>回多少</th></tr></thead><tbody>
+<tr><td><b>村莊/大廳</b>(回家)</td><td><b>每 3 秒</b></td><td>最大 HP 與最大 MP 的 <b>10%</b>(兩者同時回)⇒ <b>30 秒回滿</b></td></tr>
+<tr><td><b>獵場</b></td><td><b>每 16 秒</b></td><td><b>固定數值</b>:HP = 體質的自然回復量 + 裝備的 HP 恢復;MP = 精神的自然回復量 + 裝備的 MP 恢復</td></tr>
+</tbody></table></div>
+<div class="sub" style="margin-top:8px">
+・<b>在獵場打怪中也會回</b>,不需要停手。<br>
+・獵場回的是<b>固定數值、不是百分比</b> ⇒ <b>血量池越大,感覺回得越慢</b>(這是正常的,不是壞掉)。<br>
+・剛回到村莊要<b>先等 3 秒</b>才開始回;離開村莊進獵場後,下次回村會重新從 3 秒起算。<br>
+・體質 <b>11 以下沒有 HP 自然回復</b>,體質 60 以上封頂;各能力實際的回復量看<a href="stats.html" style="color:#f5c451">能力值</a>頁的「HP 自然回復量」與「MP 自然回復量」。<br>
+・想在獵場撐久一點,主要靠<b>自動喝水</b>與<b>治癒術</b>,自然恢復只是輔助。
+</div></div>
+
 <div class="mcard"><div class="ttl">🛡 獵場 AC 門檻</div>
 <div class="sub">部分獵場對防禦有要求(<a href="zones.html" style="color:#f5c451">獵場列表</a>有標)。AC 是<b>越低越好</b>;你的 AC <b>沒達標</b>時,怪物<b>物理攻擊</b>對你的傷害會放大:<b>每差 1 點多受 20%</b>(差 5 點就是 2 倍)。每一下都看你當下的 AC,進場穿裝再脫掉沒用。魔法傷害、中毒、世界王房、PK 不受影響。遊戲內不會另外提示,打起來血掉太快就先看 AC。</div></div>
 
@@ -1686,7 +1701,7 @@ if (STATS.length) {
       ["騎士 每級 HP", "conHpKnight", "(體質−8)×1.5"],
       ["妖精/法師 每級 HP", "conHpOther", "(體質−8)×0.8"],
       ["黑暗妖精 每級 HP", "conHpDark", "(體質−8)×0.5"],
-      ["HP 自然回復上限", "conRegen", "體質 11 以下沒有加成"],
+      ["HP 自然回復量", "conRegen", "體質 11 以下沒有回復;獵場每 16 秒回這個量(見系統說明)"],
     ]],
     ["int", "智力", "🧠", "魔法攻擊。法師主要靠它。", [
       ["魔法傷害", "intDmg", "攻擊魔法的傷害加值"],
@@ -1697,7 +1712,7 @@ if (STATS.length) {
     ]],
     ["wis", "精神", "🔮", "魔法防禦與魔力。被魔法打到痛不痛看它。", [
       ["魔法防禦 MR", "wisMr", "=(精神−10)×4,精神 10 以下沒有"],
-      ["MP 自然回復", "wisMpRegen", ""],
+      ["MP 自然回復量", "wisMpRegen", "獵場每 16 秒回這個量 + 裝備的 MP 恢復(見系統說明)"],
       ["藍水回復加成", "wisBluePotion", "喝藍水多回這麼多 MP"],
       ["每級 MP 成長", "wisMpGrowth", "=(精神−9)×0.5"],
     ]],
