@@ -769,6 +769,8 @@ const NAV_GROUPS = [
 ];
 // 📖 圖鑑登錄:內容開關開了才進導覽(放在「練功打怪」的世界王之後)
 if (FEAT.codex) NAV_GROUPS[1][2].splice(3, 0, ["codex.html", "codex", "📖", "怪物圖鑑登錄", "殺幾隻點亮・登錄要多少・給什麼加成"]);
+// 🪆 娃娃卡片:內容開關開了才進導覽(放在「角色變強」最後)。麥哥 2026-09-25:官網只介紹白/綠/藍
+if (FEAT.doll) NAV_GROUPS[3][2].push(["doll.html", "doll", "🪆", "娃娃卡片", "白・綠・藍娃娃能力・合成・召喚維持費"]);
 
 // ❓ 首頁引導:用玩家會問的話當入口(不用先猜分類)。[問題, 連結]
 const ASK = [
@@ -1123,7 +1125,7 @@ const EVENTS = [
       `到 <b>Lv40 以上</b>的狩獵區打怪，有機率獲得「月光碎片」（碎片不能賣店、不能存倉庫、不能上交易所）。`,
       `集滿 <b>${MOON_EX.need} 個</b>月光碎片 → 到<b>說話之島</b>找「<b>月宮玉兔</b>」兌換「中秋禮盒」（<b>每個帳號每天最多 ${MOON_EX.dailyCap} 次</b>，清晨 05:00 重置）。`,
       `到任一村莊的<b>雜貨商</b>購買「中秋鑰匙」（${(MOON_KEY_P / 10000).toLocaleString()} 萬金幣 / 把）。`,
-      `在背包點「中秋禮盒」→「使用」，一把鑰匙開一盒；數量多的時候可以用「<b>使用 ×10</b>」「<b>使用 ×100</b>」一次開一批，結果會彙總顯示。`,
+      `在背包點「中秋禮盒」→「使用」，一把鑰匙開一盒；數量多的時候可以用「<b>使用 ×5</b>」「<b>使用 ×10</b>」一次開一批，結果會彙總顯示。`,
       `開到「<b>娃娃契約書</b>」（白／綠／藍）就到<b>背包 → 🪆 娃娃</b>分頁點「使用」，隨機解鎖該階的一隻娃娃；抽到已擁有的會轉成該階碎片 ×1（和抽卡相同）。`,
       `碎片多出來的話，月宮玉兔還有第二樣：<b>月光碎片 ×${MOON_BADGE.need} + ${MOON_BADGE.gold.toLocaleString()} 金幣 → 🎖 中秋勳章</b>（<b>每個帳號每天最多 ${MOON_BADGE.dailyCap} 枚</b>，和禮盒的次數分開算）。勳章戴在「徽章②」，配戴後 <b>10 小時</b>內：<b>HP +50、MP +50、狩獵經驗 +10%、近戰／遠距／魔法命中各 +2、召喚獸命中 +1</b>；放在背包不計時、卸下會暫停、時間到自動消失。<b>可以和徽章①的其他勳章同時配戴</b>，效果相加。`,
     ],
@@ -1433,6 +1435,47 @@ $("tb").innerHTML=list.map(s=>"<tr><td class='nm'>"+esc(s.n)+"</td><td class='nu
 $("q").oninput=render;render();
 </script>`));
 
+
+// ---- 🪆 娃娃卡片(2026-09-26 隨中秋活動開放;FEAT.doll 開放後才生成)----
+// 資料來源:gamedata.dolls(n/g/fx)+ dollCfg(維持費/合成率/門檻)。🔴 麥哥 2026-09-25 拍板:**只介紹白・綠・藍(g≤3)**,
+// 紅/紫與抽卡機率一律不上(遊戲內未解鎖也是零洩漏);取得方式只寫「活動期間=契約書,其他另行公告」(免費/金幣十連別寫死)。
+// 效果中文對照抄自 public/index.html DOLL_FX_N(改那邊要同步)。
+if (FEAT.doll && Array.isArray(GD.dolls) && GD.dollCfg) {
+  const FXN = { exp: ["經驗獲得", "%"], gold: ["金幣獲得", "%"], md: ["近距離傷害", ""], mh: ["近距離命中", ""], rd: ["遠距離傷害", ""], rh: ["遠距離命中", ""],
+    mgd: ["魔法傷害", ""], mpr: ["MP恢復", ""], hp: ["最大HP", ""], mp: ["最大MP", ""], ac: ["防禦力 AC", ""], er: ["迴避 ER", ""], dr: ["傷害減免", ""],
+    critM: ["近距離爆擊", "%"], critR: ["遠距離爆擊", "%"], hpRegen: ["HP回復", ""], int: ["智力", ""], potion: ["藥水恢復", "%"],
+    petHit: ["寵物/召喚獸命中", ""], petDmg: ["寵物/召喚獸傷害", ""], str: ["力量", ""], dex: ["敏捷", ""], cha: ["魅力", ""],
+    mcrit: ["魔法爆擊", "%"], physPct: ["對怪物理增傷", "%"], fireChance: ["屬火發動率", "%"], flameSoul: ["烈焰之魂倍率", ""], triPct: ["三重矢傷害", "%"], meteorPct: ["流星雨傷害", "%"] };
+  const GN = { 1: "白", 2: "綠", 3: "藍" };
+  const GC = { 1: "#e8e8e8", 2: "#7bd14a", 3: "#5b9bff" };
+  const cfg = GD.dollCfg;
+  const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  const fxTxt = fx => Object.entries(fx || {}).map(([k, v]) => { const d = FXN[k] || [k, ""]; return `${d[0]} ${v > 0 ? "+" : ""}${v}${d[1]}`; }).join("、");
+  const dolls = GD.dolls.filter(d => d.g >= 1 && d.g <= 3).sort((a, b) => (a.g - b.g) || String(a.n).localeCompare(String(b.n)));
+  const upkeep = g => Math.round((cfg.upkeepGold || {})[g] / 10000) || 0;
+  const upMin = Math.round((cfg.upkeepMs || 1800000) / 60000);
+  const rate = g => Math.round(((cfg.synthRate || {})[g] || 0) * 100);
+  const cnt = g => dolls.filter(d => d.g === g).length;
+  fs.writeFileSync(path.join(OUT, "doll.html"), page("娃娃卡片", "doll", `
+${chips([[cnt(1), "白娃娃"], [cnt(2), "綠娃娃"], [cnt(3), "藍娃娃"]])}
+<div class="hint">「背包 → 🪆 娃娃」。娃娃是<b>解鎖制</b>的收藏：解鎖後永久記在角色上（不佔背包、不能交易），<b>召喚</b>其中一隻就能吃到它的能力加成；同一時間只能召喚一隻。</div>
+
+<div class="mcard"><div class="ttl">🪆 怎麼玩</div>
+<div class="wrap"><table><thead><tr><th>項目</th><th>說明</th></tr></thead><tbody>
+<tr><td>取得娃娃</td><td>活動期間：使用中秋禮盒開出的「<b>娃娃契約書</b>」（白／綠／藍），會<b>隨機解鎖該階的一隻</b>；抽到已擁有的會轉成該階<b>碎片 ×1</b>。其他取得方式將另行公告。</td></tr>
+<tr><td>召喚</td><td>在卡冊點已解鎖的娃娃 → 召喚。召喚中每 <b>${upMin} 分鐘</b>扣一次維持費：白 <b>${upkeep(1)} 萬</b>／綠 <b>${upkeep(2)} 萬</b>／藍 <b>${upkeep(3)} 萬</b>金幣；<b>金幣不夠會自動收回</b>。可隨時收回（已扣的不退）。</td></tr>
+<tr><td>合成</td><td>同階碎片 <b>${cfg.synthNeed || 4} 片</b>賭一次升上一階：白 → 綠 <b>${rate(1)}%</b>、綠 → 藍 <b>${rate(2)}%</b>；成功得到上一階隨機一隻（已擁有則轉碎片），失敗退回 1 片。白／綠可用「快速合成」一次連賭多次。</td></tr>
+<tr><td>門檻</td><td>合成需角色 <b>Lv${cfg.minLv || 45}</b>；召喚不限等級。</td></tr>
+<tr><td>效果</td><td>只有<b>召喚中</b>的那一隻生效；經驗％與血盟、勳章等加成<b>相加</b>；離線掛機照樣生效（維持費也照扣）。</td></tr>
+</tbody></table></div></div>
+
+${[1, 2, 3].map(g => `<div class="mcard"><div class="ttl" style="color:${GC[g]}">${GN[g]}娃娃（${cnt(g)} 隻）</div>
+<div class="wrap"><table><thead><tr><th>娃娃</th><th>召喚效果</th></tr></thead><tbody>
+${dolls.filter(d => d.g === g).map(d => `<tr><td class="nm">${esc(d.n)}</td><td>${esc(fxTxt(d.fx))}</td></tr>`).join("\n")}
+</tbody></table></div></div>`).join("\n")}
+<div class="sub" style="margin-top:8px">更高階的娃娃將於日後開放時再公布。</div>
+`));
+}
 
 // ---- 📖 怪物圖鑑登錄(2026-09-14 改版;FEAT.codex 開放後才生成)----
 // 資料來源:gamedata.codexBonus(伺服器不下發給玩家,這裡直接讀本機檔)+ mobs 等級;規則常數手抄自 engine/afk/codex.go
