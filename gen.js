@@ -87,7 +87,7 @@ fs.writeFileSync(path.join(OUT, ".nojekyll"), "");
 
 // ---- 未開放內容的判定 ----
 // 🐉 封閉頻道:遊戲裡由 engine/afk/zonegate.go 的 BlockedZones 擋死(連封包硬送都會被回
-//    「此頻道已關閉」)。三龍窟的怪是 Lv93~95、血 12~15 萬,而角色等級上限只有 55 ⇒
+//    「此頻道已關閉」)。三龍窟的怪是 Lv93~95、血 12~15 萬,而角色等級上限只有 58(2026-09-26 起;原 55)⇒
 //    玩家永遠碰不到。列在資料站上只會讓人問「三龍窟怎麼進」(2026-09-09 麥哥拍板關掉)。
 //    ⚠ 日後遊戲裡開放(刪 zonegate.go 的 BlockedZones)時,這裡也要同步拿掉。
 const BLOCKED_ZONES = new Set(["antaras_lair", "fafurion_lair", "valakas_lair"]);
@@ -981,7 +981,7 @@ fs.writeFileSync(path.join(OUT, "pets.html"), page("寵物與召喚", "pets", `
 <div class="wrap" style="margin-top:8px"><table><thead><tr><th>角色等級</th><th>召喚</th></tr></thead><tbody>
 <tr><td>未滿 32</td><td>哈柏哥布林</td></tr><tr><td>32</td><td>甘地妖魔</td></tr><tr><td>40</td><td>食人妖精</td></tr><tr><td>52</td><td>魔狼</td></tr><tr><td>60</td><td>地獄奴隸</td></tr><tr><td>64</td><td>地獄束縛犬</td></tr><tr><td>72</td><td>黑豹</td></tr>
 </tbody></table></div>
-<div class="sub" style="margin-top:8px">目前等級上限 55,60 級以上的召喚物要等上限開放。</div></div>
+<div class="sub" style="margin-top:8px">目前等級上限 58,60 級以上的召喚物要等上限開放。</div></div>
 
 <div class="mcard"><div class="ttl">🧚 妖精「召喚屬性精靈」</div>
 <div class="sub">召喚屬性精靈(敏 40)與召喚強力屬性精靈(敏 50)也是<b>一次一隻</b>,精靈的屬性跟著妖精自己選的屬性走。兩支互斥:勾強力會自動取消普通並換成上級精靈。</div></div>
@@ -1582,7 +1582,7 @@ fs.writeFileSync(path.join(OUT, "systems.html"), page("系統說明", "sys", `
 
 <div class="mcard"><div class="ttl">📈 經驗與伺服器等級</div>
 <div class="wrap"><table><thead><tr><th>項目</th><th>規則</th></tr></thead><tbody>
-<tr><td>等級上限</td><td><b>55 級</b>;滿級後經驗不再累積,頂欄顯示 MAX</td></tr>
+<tr><td>等級上限</td><td><b>58 級</b>(2026-09-26 起;原 55);滿級後經驗不再累積,頂欄顯示 MAX。50 級起每級經驗衰減:50~55 級為 1/2、1/3…1/7,56 級起每升一級再減半</td></tr>
 <tr><td>伺服器等級</td><td>目前 <b>52</b>(9/20 起;營運視全服進度調整)。角色<b>低於</b>伺服器等級時打怪經驗有追趕加成:<b>每差 1 級 +100%</b>,差 10 級以上封頂 <b>+1000%</b>。例:伺服器 52,角色 42 → +1000%(差 10 級封頂)。高於伺服器等級沒有加成也沒有懲罰</td></tr>
 <tr><td>升級門檻</td><td>Lv45 起每級需求跳升:729,360 → 1,508,416 → 3,495,263 → 9,912,189,Lv49 起每級固定 36,065,092</td></tr>
 <tr><td>升級獎勵</td><td>升級當下 HP／MP 補滿;<b>Lv50 起每升一級多 1 點自由屬性點</b></td></tr>
