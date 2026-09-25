@@ -1106,6 +1106,7 @@ const MOON_ROWS = (() => {
     .map(r => [`${r.mq ? "✨ " : ""}${r.n} ×${r.q}`, `${r.pct.toFixed(2)}%`]);
 })();
 const MOON_EX = ((GD.items || {}).pack_moon_box || {}).moonEx || { need: 50, dailyCap: 5 };
+const MOON_BADGE = ((GD.items || {}).badge_moon || {}).moonEx || { need: 30, gold: 888888, dailyCap: 2 }; // 🎖 中秋勳章列(9/25 晚加)
 const MOON_KEY_P = ((GD.items || {}).item_moon_key || {}).p || 2000000;
 
 const EVENTS = [
@@ -1124,6 +1125,7 @@ const EVENTS = [
       `到任一村莊的<b>雜貨商</b>購買「中秋鑰匙」（${(MOON_KEY_P / 10000).toLocaleString()} 萬金幣 / 把）。`,
       `在背包點「中秋禮盒」→「使用」，一把鑰匙開一盒；數量多的時候可以用「<b>使用 ×10</b>」「<b>使用 ×100</b>」一次開一批，結果會彙總顯示。`,
       `開到「<b>娃娃契約書</b>」（白／綠／藍）就到<b>背包 → 🪆 娃娃</b>分頁點「使用」，隨機解鎖該階的一隻娃娃；抽到已擁有的會轉成該階碎片 ×1（和抽卡相同）。`,
+      `碎片多出來的話，月宮玉兔還有第二樣：<b>月光碎片 ×${MOON_BADGE.need} + ${MOON_BADGE.gold.toLocaleString()} 金幣 → 🎖 中秋勳章</b>（<b>每個帳號每天最多 ${MOON_BADGE.dailyCap} 枚</b>，和禮盒的次數分開算）。勳章戴在「徽章②」，配戴後 <b>10 小時</b>內：<b>HP +50、MP +50、狩獵經驗 +10%、近戰／遠距／魔法命中各 +2、召喚獸命中 +1</b>；放在背包不計時、卸下會暫停、時間到自動消失。<b>可以和徽章①的其他勳章同時配戴</b>，效果相加。`,
     ],
     rules: [
       `<b>機率表</b>就是上面那張：每一盒開出其中<b>一項</b>，數字是「該項被抽中的機率」，全部加起來 100%。標 ✨ 的是稀有品，開出來會<b>全服跑馬燈</b>恭喜。`,
