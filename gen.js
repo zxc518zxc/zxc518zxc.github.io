@@ -1123,7 +1123,9 @@ const MOON_ROWS = (() => {
 const MOON_EX = ((GD.items || {}).pack_moon_box || {}).moonEx || { need: 50, dailyCap: 5 };
 const MOON_BADGE = ((GD.items || {}).badge_moon || {}).moonEx || { need: 30, gold: 888888, dailyCap: 2 }; // 🎖 中秋勳章列(9/25 晚加)
 // 掉落的怪等級門檻:開發機 gamedata 已是 35 但正式服 9/27 12:30 才上 ⇒ 到當天前官網一律寫 40(同 changelog 的未來日期閘;掉率本身不公開)
-const MOON_MINLV = (new Date().toLocaleDateString("sv-SE") >= "2026-09-27") ? ((((GD.items || {}).mat_moon_shard || {}).eventDrop || {}).minLv || 35) : 40;
+// 🔴 9/27 那批(門檻 35、勳章回收)要等第二台 12:30 部署驗收後才發 ⇒ 用手動旗標,不用日期(9/27 凌晨麥哥就要先發「錄影活動已結束」)。部署後改 true 再 gen。
+const DEPLOYED_0927 = false;
+const MOON_MINLV = DEPLOYED_0927 ? ((((GD.items || {}).mat_moon_shard || {}).eventDrop || {}).minLv || 35) : 40;
 const MOON_KEY_P = ((GD.items || {}).item_moon_key || {}).p || 2000000;
 
 const EVENTS = [
@@ -1160,7 +1162,7 @@ const EVENTS = [
     title: "🎬 錄影推廣大作戰 II",
     rewardHead: "項目",
     when: "2026/09/21(一) 至 2026/09/26(六)　每日可領一次",
-    over: new Date().toLocaleDateString("sv-SE") >= "2026-09-27", // 9/27 中午勳章回收後自動標「已結束」(當天 gen 就會變)
+    over: true, // 2026-09-27 02:30 麥哥:改成已結束並變暗(回收在中午,活動本身 9/26 截止)
     intro: "第二波開跑!把你的遊戲畫面錄下來發到社群,天天都能領獎勵。這次的禮包裡多了一張限時的 🎖 錄影推廣勳章,配戴 10 小時內經驗與金幣都會變多。",
     rewards: [
       ["每日回報成功", "🎁 錄影推廣禮包II ×1"],
@@ -1766,7 +1768,7 @@ try { STATS = JSON.parse(fs.readFileSync(path.join(OUT, "stats.json"), "utf8"));
   const today = new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD(本地時區)
   const future = CHANGES.filter(d => d.date > today);
   if (future.length) console.log(`⏳ 跳過未來日期的更新日誌 ${future.length} 區塊:${future.map(d => d.date).join(", ")}(到當天才會發布)`);
-  CHANGES = CHANGES.filter(d => d.date <= today);
+  CHANGES = CHANGES.filter(d => d.date <= today && !(d.date === "2026-09-27" && !DEPLOYED_0927)); // 9/27 區塊另受 DEPLOYED_0927 旗標(部署後才印)
 }
 {
   const TCOL = { "新增": "#7bd14a", "調整": "#5b9bff", "修復": "#f5c451", "活動": "#f5a97f" };
