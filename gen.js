@@ -1122,7 +1122,8 @@ const MOON_ROWS = (() => {
 })();
 const MOON_EX = ((GD.items || {}).pack_moon_box || {}).moonEx || { need: 50, dailyCap: 5 };
 const MOON_BADGE = ((GD.items || {}).badge_moon || {}).moonEx || { need: 30, gold: 888888, dailyCap: 2 }; // 🎖 中秋勳章列(9/25 晚加)
-const MOON_MINLV = (((GD.items || {}).mat_moon_shard || {}).eventDrop || {}).minLv || 40; // 掉落的怪等級門檻(9/27 起 35;掉率本身不公開)
+// 掉落的怪等級門檻:開發機 gamedata 已是 35 但正式服 9/27 12:30 才上 ⇒ 到當天前官網一律寫 40(同 changelog 的未來日期閘;掉率本身不公開)
+const MOON_MINLV = (new Date().toLocaleDateString("sv-SE") >= "2026-09-27") ? ((((GD.items || {}).mat_moon_shard || {}).eventDrop || {}).minLv || 35) : 40;
 const MOON_KEY_P = ((GD.items || {}).item_moon_key || {}).p || 2000000;
 
 const EVENTS = [
@@ -1136,7 +1137,7 @@ const EVENTS = [
     intro: `中秋節到了！活動期間打怪有機會撿到「<b>月光碎片</b>」，集滿 <b>${MOON_EX.need} 個</b>就能到<b>說話之島</b>找「<b>月宮玉兔</b>」換一個「<b>中秋禮盒</b>」。禮盒要用「<b>中秋鑰匙</b>」（各村雜貨商販售，${(MOON_KEY_P / 10000).toLocaleString()} 萬金幣）才打得開，開出來的東西包含<b>卷軸、藍鑽、祝福卷軸、BOSS結晶、高階技能書</b>，以及這次新登場的「<b>娃娃契約書</b>」——用了就能直接解鎖一隻娃娃！<br>碎片多的話，月宮玉兔還能換「<b>🎖 中秋勳章</b>」（${MOON_BADGE.need} 碎片 + ${MOON_BADGE.gold.toLocaleString()} 金幣，每帳號每天 ${MOON_BADGE.dailyCap} 枚）：戴上 10 小時內 <b>HP +50、MP +50、狩獵經驗 +10%、近戰／遠距／魔法命中各 +2、召喚獸命中 +1</b>。`,
     rewards: MOON_ROWS,
     steps: [
-      `打 <b>Lv${MOON_MINLV} 以上的怪</b>（看怪物等級，不是角色等級），有機率獲得「月光碎片」（碎片不能賣店、不能存倉庫、不能上交易所）。`,
+      `打<b>怪物等級 Lv${MOON_MINLV} 以上的怪</b>，有機率獲得「月光碎片」。<b>看的是「怪物」的等級</b>，不是你的角色等級、也不是獵場名稱——同一個獵場裡只有 Lv${MOON_MINLV} 以上的怪會掉，低於 Lv${MOON_MINLV} 的怪不會掉（怪物等級可在「怪物掉落圖鑑」查）。碎片不能賣店、不能存倉庫、不能上交易所。`,
       `集滿 <b>${MOON_EX.need} 個</b>月光碎片 → 到<b>說話之島</b>找「<b>月宮玉兔</b>」兌換「中秋禮盒」（<b>每個帳號每天最多 ${MOON_EX.dailyCap} 次</b>，清晨 05:00 重置）。`,
       `到任一村莊的<b>雜貨商</b>購買「中秋鑰匙」（${(MOON_KEY_P / 10000).toLocaleString()} 萬金幣 / 把）。`,
       `在背包點「中秋禮盒」→「使用」，一把鑰匙開一盒；數量多的時候可以用「<b>使用 ×5</b>」「<b>使用 ×10</b>」一次開一批，結果會彙總顯示。`,
