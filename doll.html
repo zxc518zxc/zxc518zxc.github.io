@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>道具圖鑑 - 阿肥放置天地 資料站</title><style>
+<title>娃娃卡片 - 阿肥放置天地 資料站</title><style>
 *{box-sizing:border-box}body{background:#1a140c;color:#e8dcc8;font-family:"Microsoft JhengHei",sans-serif;margin:0;padding:0}
 /* ── 頁首與導覽列 ──
    14 個功能鍵,所以做成膠囊按鈕 + 圖示;捲動時固定在頂端(查資料時不用捲回去換頁)。
@@ -167,12 +167,62 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 <header>
 <div class="brand"><h1>🏰 阿肥放置天地</h1><span class="sub">玩家資料站</span></div>
 <nav><a href="index.html" class=""><span class="i">🏠</span>首頁</a>
-<details class="ng"><summary><span class="i">🌱</span>新手上路</summary><div class="ngm"><a href="guide.html" class=""><span class="i">🌱</span>新手指南</a><a href="systems.html" class=""><span class="i">📜</span>系統說明</a><a href="event.html" class=""><span class="i">🎉</span>活動介紹</a><a href="rules.html" class=""><span class="i">⚖️</span>遊戲規章</a></div></details><details class="ng"><summary><span class="i">⚔️</span>練功打怪</summary><div class="ngm"><a href="zones.html" class=""><span class="i">🗺️</span>獵場列表</a><a href="monsters.html" class=""><span class="i">👹</span>怪物掉落圖鑑</a><a href="worldboss.html" class=""><span class="i">🐉</span>世界王</a><a href="codex.html" class=""><span class="i">📖</span>怪物圖鑑登錄</a><a href="trials.html" class=""><span class="i">📜</span>職業試煉</a></div></details><details class="ng here" open><summary><span class="i">🎒</span>裝備養成</summary><div class="ngm"><a href="items.html" class="on"><span class="i">⚔️</span>道具圖鑑</a><a href="enhance.html" class=""><span class="i">⚒️</span>強化機率</a><a href="affix.html" class=""><span class="i">🌑</span>詞條大全</a><a href="sets.html" class=""><span class="i">🛡️</span>套裝效果</a></div></details><details class="ng"><summary><span class="i">✨</span>角色變強</summary><div class="ngm"><a href="stats.html" class=""><span class="i">📊</span>能力值加成表</a><a href="skills.html" class=""><span class="i">✨</span>技能介紹</a><a href="mastery.html" class=""><span class="i">🎓</span>精通升級數據</a><a href="poly.html" class=""><span class="i">💪</span>變身型態</a><a href="pets.html" class=""><span class="i">🐕</span>寵物與召喚</a><a href="doll.html" class=""><span class="i">🪆</span>娃娃卡片</a></div></details><details class="ng"><summary><span class="i">🏘️</span>查資料</summary><div class="ngm"><a href="npc.html" class=""><span class="i">🏘️</span>NPC 一覽</a><a href="changelog.html" class=""><span class="i">📢</span>版本更新</a></div></details>
+<details class="ng"><summary><span class="i">🌱</span>新手上路</summary><div class="ngm"><a href="guide.html" class=""><span class="i">🌱</span>新手指南</a><a href="systems.html" class=""><span class="i">📜</span>系統說明</a><a href="event.html" class=""><span class="i">🎉</span>活動介紹</a><a href="rules.html" class=""><span class="i">⚖️</span>遊戲規章</a></div></details><details class="ng"><summary><span class="i">⚔️</span>練功打怪</summary><div class="ngm"><a href="zones.html" class=""><span class="i">🗺️</span>獵場列表</a><a href="monsters.html" class=""><span class="i">👹</span>怪物掉落圖鑑</a><a href="worldboss.html" class=""><span class="i">🐉</span>世界王</a><a href="codex.html" class=""><span class="i">📖</span>怪物圖鑑登錄</a><a href="trials.html" class=""><span class="i">📜</span>職業試煉</a></div></details><details class="ng"><summary><span class="i">🎒</span>裝備養成</summary><div class="ngm"><a href="items.html" class=""><span class="i">⚔️</span>道具圖鑑</a><a href="enhance.html" class=""><span class="i">⚒️</span>強化機率</a><a href="affix.html" class=""><span class="i">🌑</span>詞條大全</a><a href="sets.html" class=""><span class="i">🛡️</span>套裝效果</a></div></details><details class="ng here" open><summary><span class="i">✨</span>角色變強</summary><div class="ngm"><a href="stats.html" class=""><span class="i">📊</span>能力值加成表</a><a href="skills.html" class=""><span class="i">✨</span>技能介紹</a><a href="mastery.html" class=""><span class="i">🎓</span>精通升級數據</a><a href="poly.html" class=""><span class="i">💪</span>變身型態</a><a href="pets.html" class=""><span class="i">🐕</span>寵物與召喚</a><a href="doll.html" class="on"><span class="i">🪆</span>娃娃卡片</a></div></details><details class="ng"><summary><span class="i">🏘️</span>查資料</summary><div class="ngm"><a href="npc.html" class=""><span class="i">🏘️</span>NPC 一覽</a><a href="changelog.html" class=""><span class="i">📢</span>版本更新</a></div></details>
 </nav></header><main>
-<div class="stats"><div class="stat-chip"><b>121</b>武器</div><div class="stat-chip"><b>143</b>防具</div><div class="stat-chip"><b>42</b>飾品</div><div class="stat-chip"><b>11</b>藥水</div><div class="stat-chip"><b>28</b>道具</div><div class="stat-chip"><b>0</b>材料</div><div class="stat-chip"><b>116</b>技能書</div></div>
-<div class="bar"><input id="q" placeholder="🔍 搜道具名稱"></div>
-<div class="chips" id="tchips"></div>
-<div class="wrap" id="tb-wrap"><table><thead><tr><th>道具</th><th>類型</th><th>部位/類別</th><th>職業</th><th>傷害</th><th>防禦</th><th>安定</th><th>價格</th><th>效果與說明</th></tr></thead><tbody id="tb"></tbody></table></div></main>
+<div class="stats"><div class="stat-chip"><b>8</b>白娃娃</div><div class="stat-chip"><b>8</b>綠娃娃</div><div class="stat-chip"><b>15</b>藍娃娃</div></div>
+<div class="hint">「背包 → 🪆 娃娃」。娃娃是<b>解鎖制</b>的收藏：解鎖後永久記在角色上（不佔背包、不能交易），<b>召喚</b>其中一隻就能吃到它的能力加成；同一時間只能召喚一隻。</div>
+
+<div class="mcard"><div class="ttl">🪆 怎麼玩</div>
+<div class="wrap"><table><thead><tr><th>項目</th><th>說明</th></tr></thead><tbody>
+<tr><td>取得娃娃</td><td>活動期間：使用中秋禮盒開出的「<b>娃娃契約書</b>」（白／綠／藍），會<b>隨機解鎖該階的一隻</b>；抽到已擁有的會轉成該階<b>碎片 ×1</b>。其他取得方式將另行公告。</td></tr>
+<tr><td>召喚</td><td>在卡冊點已解鎖的娃娃 → 召喚。召喚中每 <b>30 分鐘</b>扣一次維持費：白 <b>1 萬</b>／綠 <b>2 萬</b>／藍 <b>3 萬</b>金幣；<b>金幣不夠會自動收回</b>。可隨時收回（已扣的不退）。</td></tr>
+<tr><td>合成</td><td>同階碎片 <b>4 片</b>賭一次升上一階：白 → 綠 <b>50%</b>、綠 → 藍 <b>30%</b>；成功得到上一階隨機一隻（已擁有則轉碎片），失敗退回 1 片。白／綠可用「快速合成」一次連賭多次。</td></tr>
+<tr><td>門檻</td><td>合成需角色 <b>Lv45</b>；召喚不限等級。</td></tr>
+<tr><td>效果</td><td>只有<b>召喚中</b>的那一隻生效；經驗％與血盟、勳章等加成<b>相加</b>；離線掛機照樣生效（維持費也照扣）。</td></tr>
+</tbody></table></div></div>
+
+<div class="mcard"><div class="ttl" style="color:#e8e8e8">白娃娃（8 隻）</div>
+<div class="wrap"><table><thead><tr><th>娃娃</th><th>召喚效果</th></tr></thead><tbody>
+<tr><td class="nm">木刻人偶</td><td>最大HP +50、經驗獲得 +3%</td></tr>
+<tr><td class="nm">石頭高崙</td><td>經驗獲得 +3%、傷害減免 +1</td></tr>
+<tr><td class="nm">希爾黛斯</td><td>經驗獲得 +3%、遠距離傷害 +1</td></tr>
+<tr><td class="nm">奎斯坦修</td><td>經驗獲得 +3%、近距離命中 +1</td></tr>
+<tr><td class="nm">食人妖精</td><td>經驗獲得 +3%、近距離傷害 +1</td></tr>
+<tr><td class="nm">狼人</td><td>經驗獲得 +3%、近距離傷害 +1</td></tr>
+<tr><td class="nm">蛇女</td><td>經驗獲得 +3%、MP恢復 +3</td></tr>
+<tr><td class="nm">雪怪</td><td>經驗獲得 +3%、防禦力 AC -3</td></tr>
+</tbody></table></div></div>
+<div class="mcard"><div class="ttl" style="color:#7bd14a">綠娃娃（8 隻）</div>
+<div class="wrap"><table><thead><tr><th>娃娃</th><th>召喚效果</th></tr></thead><tbody>
+<tr><td class="nm">史巴托</td><td>經驗獲得 +5%、近距離傷害 +2</td></tr>
+<tr><td class="nm">亞力安</td><td>經驗獲得 +5%、遠距離傷害 +1、遠距離命中 +1</td></tr>
+<tr><td class="nm">長者</td><td>最大MP +50、經驗獲得 +5%、MP恢復 +5</td></tr>
+<tr><td class="nm">思克巴</td><td>經驗獲得 +5%、MP恢復 +6</td></tr>
+<tr><td class="nm">美人魚</td><td>經驗獲得 +5%、MP恢復 +2、寵物/召喚獸命中 +1、寵物/召喚獸傷害 +1</td></tr>
+<tr><td class="nm">雪人</td><td>經驗獲得 +5%、近距離傷害 +1、近距離命中 +1</td></tr>
+<tr><td class="nm">熔岩高崙</td><td>經驗獲得 +5%、近距離傷害 +1、遠距離傷害 +1、傷害減免 +1</td></tr>
+<tr><td class="nm">稻草人</td><td>經驗獲得 +5%、遠距離傷害 +2</td></tr>
+</tbody></table></div></div>
+<div class="mcard"><div class="ttl" style="color:#5b9bff">藍娃娃（15 隻）</div>
+<div class="wrap"><table><thead><tr><th>娃娃</th><th>召喚效果</th></tr></thead><tbody>
+<tr><td class="nm">力卡溫</td><td>經驗獲得 +8%、近距離傷害 +1、迴避 ER +2</td></tr>
+<tr><td class="nm">巨人</td><td>經驗獲得 +8%、最大HP +50、近距離傷害 +1</td></tr>
+<tr><td class="nm">巨大守護螞蟻</td><td>經驗獲得 +8%、防禦力 AC -1、藥水恢復 +3%</td></tr>
+<tr><td class="nm">老虎</td><td>最大HP +50、經驗獲得 +8%、迴避 ER +1</td></tr>
+<tr><td class="nm">阿魯巴</td><td>經驗獲得 +8%、藥水恢復 +3%</td></tr>
+<tr><td class="nm">哈維 (藍色)</td><td>最大HP +50、最大MP +50、經驗獲得 +8%</td></tr>
+<tr><td class="nm">思克巴女皇</td><td>最大MP +50、經驗獲得 +8%、MP恢復 +8、魔法傷害 +1</td></tr>
+<tr><td class="nm">飛龍</td><td>經驗獲得 +8%、MP恢復 +6、遠距離傷害 +2</td></tr>
+<tr><td class="nm">食人妖精王</td><td>經驗獲得 +8%、近距離傷害 +2、MP恢復 +6</td></tr>
+<tr><td class="nm">海洋哈維</td><td>經驗獲得 +8%、遠距離傷害 +2</td></tr>
+<tr><td class="nm">曼波兔</td><td>經驗獲得 +8%、防禦力 AC -1、遠距離命中 +2</td></tr>
+<tr><td class="nm">混沌的活鎧甲</td><td>經驗獲得 +8%、防禦力 AC -1、傷害減免 +1</td></tr>
+<tr><td class="nm">黑長者</td><td>經驗獲得 +8%、MP恢復 +10、魔法傷害 +1</td></tr>
+<tr><td class="nm">葛林</td><td>最大HP +50、經驗獲得 +8%、遠距離傷害 +2</td></tr>
+<tr><td class="nm">鑽石高崙</td><td>經驗獲得 +8%、傷害減免 +2</td></tr>
+</tbody></table></div></div>
+<div class="sub" style="margin-top:8px">更高階的娃娃將於日後開放時再公布。</div>
+</main>
 <script>
 /* 📱 手機卡片式:值是「—」的欄位加 .e 由 CSS 隱藏,免得每張卡都一堆空白列。
    各頁 render 是各自的 innerHTML 賦值,所以用 MutationObserver 統一處理一次就好。 */
@@ -195,25 +245,4 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 })();
 </script>
 <footer>資料自動同步自遊戲檔 · 產生於 2026-09-26<br>本站資料僅供參考,阿肥放置天地官方保留最終解釋權。<br>一切贊助皆為玩家自願,款項全數用於伺服器維護與研究開發。</footer>
-<script src="data.js?v=fd36b889"></script><script>
-const $=id=>document.getElementById(id);
-const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
-const TS=["全部","武器","防具","飾品","藥水","道具","材料","技能書","其他"];let tf="全部";
-$("tchips").innerHTML=TS.map(t=>'<span class="chip'+(t==="全部"?" on":"")+'" data-t="'+t+'">'+t+'</span>').join("");
-document.querySelectorAll("#tchips .chip").forEach(c=>c.onclick=()=>{document.querySelectorAll("#tchips .chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");tf=c.dataset.t;render();});
-function render(){const q=$("q").value.trim().toLowerCase();
-const list=WIKI.items.filter(i=>(tf==="全部"||i.t===tf)&&(!q||i.n.toLowerCase().includes(q)||(i.d||"").toLowerCase().includes(q)||(i.fx||[]).some(x=>x.toLowerCase().includes(q))||(i.src||[]).some(x=>x.toLowerCase().includes(q))||(i.ex||[]).some(x=>x.toLowerCase().includes(q))));
-$("tb").innerHTML=list.map(i=>{
-const fx=(i.fx||[]).map(x=>"<span class='tag'>"+esc(x)+"</span>").join("");
-const desc=i.d?"<div style='color:#b6a684;font-size:13px;margin-top:3px'>"+i.d+"</div>":"";
-const src=(i.src&&i.src.length)?"<div style='margin-top:3px;font-size:12px;color:#7bd14a'>📍 掉落:"+i.src.map(x=>esc(x)).join("、")+(i.src.length>=8?" …等":"")+"</div>":"";
-const area=(i.area&&i.area.length)?"<div style='margin-top:3px;font-size:12px;color:#7bd14a'>⛏ 採集地區:"+i.area.map(x=>esc(x)).join("、")+"(在這些地方打任何怪都可能掉)</div>":"";
-const ex=(i.ex&&i.ex.length)?"<div style='margin-top:3px;font-size:12px;color:#f5c451'>🎁 "+i.ex.map(x=>esc(x)).join("<br>🎁 ")+"</div>":"";
-return "<tr><td class='nm'"+(i.legend?" style='color:#ffd700'":"")+">"+(i.legend?"★":"")+esc(i.n)+"</td>"+
-"<td class='num' data-l='類型'>"+i.t+"</td><td class='num' data-l='部位'>"+esc(i.slot||i.wcat||"—")+"</td><td class='num' data-l='職業'>"+esc(i.req||"—")+"</td>"+
-"<td class='num' data-l='傷害'>"+(i.dmg||"—")+"</td><td class='num' data-l='防禦'>"+(i.ac||"—")+"</td>"+
-"<td class='num' data-l='安定'>"+((i.safe!==""&&(i.t==="武器"||i.t==="防具"))?"+"+i.safe:"—")+"</td>"+
-"<td class='num' data-l='價格'>"+(i.p?((i.buy?"<div style='color:#7bd14a'>商店賣 "+i.p.toLocaleString()+"</div>":"")+"<div style='color:#b6a684'>賣店回收 "+i.sell.toLocaleString()+"</div>"):"—")+"</td>"+
-"<td data-l='效果'>"+(fx||desc||src||area||ex?fx+desc+src+area+ex:"<span style='color:#6b5f4c'>—</span>")+"</td></tr>";}).join("")||"<tr><td colspan=9 style='color:#8f8067'>查無符合</td></tr>";}
-$("q").oninput=render;render();
-</script></body></html>
+</body></html>
