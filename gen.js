@@ -276,7 +276,17 @@ const healText = ih => "回復量 = " + ih[0] + " + " + ih[1] + " × 額外魔�
 // 魔法攻擊:afk/skills2b.go magicSkillDmgGo —— 骰 × (1 + 3×魔法傷害/16) × (1 + 階級/3) + 額外魔法點數 → 怪物 MR 減傷 → 法師 ×1.5。
 //   這裡算「平均、裸裝、不含爆擊、未扣 MR」給玩家當量級參考;階級 0 的治盔技能引擎當 1。
 const magicAvg = (dice, tier, i, mage) => { const avg = dice[0] * (dice[1] + 1) / 2, coef = (1 + 3 * magicDmg(i) / 16) * (1 + (tier || 1) / 3); return Math.floor((avg * coef + extraMp(i)) * (mage ? 1.5 : 1)); };
-const magicText = v => "平均傷害(裸裝、未扣怪物 MR、不含爆擊):" + SAMPLE_INT.map(i => "INT " + i + " → 法師約 " + magicAvg(v.dmgDice, v.tier, i, true) + " / 妖精約 " + magicAvg(v.dmgDice, v.tier, i, false)).join("、");
+// 🔴 2026-09-27 麥哥回報:法師的技能頁把「妖精約」也印出來,但很多高階魔法(如究極光裂術,reqM=40)
+//    妖精根本學不到(reqE 沒有這一格)——原本 magicText 沒管 reqK/reqM/reqE/reqD,四職業魔法傷害技能一律印
+//    死「法師約 / 妖精約」兩欄。改成**只列這支技能真的學得到的職業**(afk/skills2b.go magicSkillDmgGo:
+//    只有 mage 吃 ×1.5,騎士/妖精/黑暗妖精都是 ×1);沒人學得到就不印(理論不會發生)。
+const CLASS_LABEL_REQ = { reqK: "騎士", reqM: "法師", reqE: "妖精", reqD: "黑暗妖精" };
+const magicText = v => {
+  const learners = Object.keys(CLASS_LABEL_REQ).filter(k => v[k] > 0);
+  if (!learners.length) return "";
+  return "平均傷害(裸裝、未扣怪物 MR、不含爆擊):" + SAMPLE_INT.map(i => "INT " + i + " → " +
+    learners.map(k => CLASS_LABEL_REQ[k] + "約 " + magicAvg(v.dmgDice, v.tier, i, k === "reqM")).join(" / ")).join("、");
+};
 // 狀態技對怪物的實際效果(afk/skills2b.go applyMobStatusGo + combat.go MobAttack;⚠ gamedata 的 pbase 引擎不讀,命中一律走「異常魔法命中」)
 const SK_STATUS_FX = {
   poison: s => "中毒:每 " + (s.tick || 3) + " 秒扣 " + dice(s.dmg) + " 固定傷害(命中時擲一次、之後每跳同值),持續 " + s.dur + " 秒",
