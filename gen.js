@@ -61,7 +61,8 @@ const FEAT = {
   glory:   false, // 榮光進化(精通)
   potion:  false, // 嗑藥大師(精通)
   codex:   true, // 📖 圖鑑登錄(2026-09-14 改版;麥哥:官網只寫 Lv1~39 規則與效果,Lv40+/世界王/加成表不上;feature codex 開放後改 true 生成 codex.html)
-  mcard:   false, // 商城:精通洗鍊卡 / 精通轉換卡
+  mcardreset: false, // 商城:精通洗鍊卡(💎300;2026-09-28 拆出來獨立賣,見下方 mcard)——**部署+驗收後改 true**
+  mcard:   false, // 商城:精通轉換卡(💎500;2026-09-28 起洗鍊卡拆出去了,這個只剩轉換卡)
   trial50: false, // 📜 50 級試煉(燃柳村 迪嘉勒廷)——麥哥 2026-09-16 拍板收起,遊戲內 NPC 也一起收
                   //    ⚠ 必須與遊戲的 `feature trial50` 同步:那邊開放了,這裡才改 true 重發布
 };
@@ -102,7 +103,8 @@ if (!FEAT.doll)   HIDDEN_ITEM_RE.push(/娃娃/);
 if (!FEAT.castle) HIDDEN_ITEM_RE.push(/攻城|城堡/);
 // 用 id 精準擋(比對名稱會誤傷:「精通」兩字還有別的道具在用)
 const HIDDEN_ITEM_ID = new Set();
-if (!FEAT.mcard) { HIDDEN_ITEM_ID.add("mastery_reset_card"); HIDDEN_ITEM_ID.add("mastery_swap_card"); }
+if (!FEAT.mcardreset) HIDDEN_ITEM_ID.add("mastery_reset_card");
+if (!FEAT.mcard) HIDDEN_ITEM_ID.add("mastery_swap_card");
 // 🪪 更名卡:2026-09-14 中午維修才上線;道具已在 gamedata 裡,上線前不擋會提早出現在資料站。上線當天改成 true。
 const RENAME_CARD_LIVE = true; // 2026-09-11 開服隨 exe 一起上線 → 資料站放出
 if (!RENAME_CARD_LIVE) HIDDEN_ITEM_ID.add("rename_card");
@@ -1696,9 +1698,9 @@ if (MASTERY.length) {
   const ABIL_N = { hit: "命中", dmg: "傷害", balance: "平衡(命中+傷害)" };
   // **粗體 → <b>**(Go 那邊的說明用 Markdown 寫,HTML 不會自己渲染)
   const md = s => String(s || "").replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
-  // 🔒 精通洗鍊卡收起中(FEAT.mcard=false)→ 說明裡不要提它,否則玩家會跑來問哪裡買。
-  //    Go 的 AbilNote 是寫死字串,在呈現層把那一段拿掉即可。
-  const abilNote = t => FEAT.mcard ? t : String(t || "").replace("(或用「精通洗鍊卡」重選)", "");
+  // 🔒 精通洗鍊卡收起中(FEAT.mcardreset=false)→ 說明裡不要提它,否則玩家會跑來問哪裡買。
+  //    Go 的 AbilNote 是寫死字串,在呈現層把那一段拿掉即可。2026-09-28 跟著開關拆分改看 mcardreset。
+  const abilNote = t => FEAT.mcardreset ? t : String(t || "").replace("(或用「精通洗鍊卡」重選)", "");
   const matStr = m => {
     const nm = m.item === "(綁定武器)" ? "綁定武器" : itemName(m.item);
     return (m.en >= 0 ? "+" + m.en + " " : "") + nm + " ×" + m.n;
@@ -1786,7 +1788,7 @@ try { STATS = JSON.parse(fs.readFileSync(path.join(OUT, "stats.json"), "utf8"));
   const today = new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD(本地時區)
   const future = CHANGES.filter(d => d.date > today);
   if (future.length) console.log(`⏳ 跳過未來日期的更新日誌 ${future.length} 區塊:${future.map(d => d.date).join(", ")}(到當天才會發布)`);
-  CHANGES = CHANGES.filter(d => d.date <= today && !(d.date === "2026-09-27" && !DEPLOYED_0927) && !(d.date === "2026-10-03" && !MOON_OVER) && !(d.gate === "DEPLOYED_MKT" && !DEPLOYED_MKT)); // 9/27 區塊另受 DEPLOYED_0927 旗標(部署後才印);10/3 區塊受 MOON_OVER(回收跑完才印)
+  CHANGES = CHANGES.filter(d => d.date <= today && !(d.date === "2026-09-27" && !DEPLOYED_0927) && !(d.date === "2026-10-03" && !MOON_OVER) && !(d.gate === "DEPLOYED_MKT" && !DEPLOYED_MKT) && !(d.gate === "MCARD_RESET" && !FEAT.mcardreset)); // 9/27 區塊另受 DEPLOYED_0927 旗標(部署後才印);10/3 區塊受 MOON_OVER(回收跑完才印);精通洗鍊卡那條受 FEAT.mcardreset(跟商城實際可買同步,避免公告先出、卡還買不到)
 }
 {
   const TCOL = { "新增": "#7bd14a", "調整": "#5b9bff", "修復": "#f5c451", "活動": "#f5a97f" };
