@@ -1124,7 +1124,7 @@ const MOON_EX = ((GD.items || {}).pack_moon_box || {}).moonEx || { need: 50, dai
 const MOON_BADGE = ((GD.items || {}).badge_moon || {}).moonEx || { need: 30, gold: 888888, dailyCap: 2 }; // 🎖 中秋勳章列(9/25 晚加)
 // 掉落的怪等級門檻:開發機 gamedata 已是 35 但正式服 9/27 12:30 才上 ⇒ 到當天前官網一律寫 40(同 changelog 的未來日期閘;掉率本身不公開)
 // 🔴 9/27 那批(門檻 35、勳章回收)要等第二台 12:30 部署驗收後才發 ⇒ 用手動旗標,不用日期(9/27 凌晨麥哥就要先發「錄影活動已結束」)。部署後改 true 再 gen。
-const DEPLOYED_0927 = false;
+const DEPLOYED_0927 = true; // 2026-09-27 12:33 第二台部署驗收通過(pid 12372 / cv 1943a129)後翻開
 const MOON_MINLV = DEPLOYED_0927 ? ((((GD.items || {}).mat_moon_shard || {}).eventDrop || {}).minLv || 35) : 40;
 const MOON_KEY_P = ((GD.items || {}).item_moon_key || {}).p || 2000000;
 
