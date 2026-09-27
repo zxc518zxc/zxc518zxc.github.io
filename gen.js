@@ -1128,6 +1128,10 @@ const DEPLOYED_0927 = true; // 2026-09-27 12:33 第二台部署驗收通過(pid 
 // 🎑 10/3 活動收尾:第二台跑完 moonwipe 回收、goline 重新起來之後才翻 true ⇒ 活動頁變暗標「已結束」+ changelog 10/3 那條才印。
 //    (指令包 go端專案/.ai/2026-10-03-活動收尾-第二台指令.md;翻開前 gen 一律當作活動還在)
 const MOON_OVER = false;
+// 🏷 交易所賤賣防呆(近期成交行情 + 低價確認框):程式 go端專案 b41efbda,**還沒上正式服**(排下次白天維護,指令包
+//    go端專案/.ai/2026-09-28-交易所賤賣防呆-第二台指令.md)。第二台部署驗收後翻 true 再 gen+push:changelog 條目(gate 欄位)+ 系統說明那一列才印。
+//    麥哥 9/27 拍板「可以上官網」。門檻百分比與樣本筆數刻意不寫死在官網(以後調常數不用改官網)。翻旗標時順便把 changelog.json 那塊的 date 改成實際部署日。
+const DEPLOYED_MKT = false;
 const MOON_MINLV = DEPLOYED_0927 ? ((((GD.items || {}).mat_moon_shard || {}).eventDrop || {}).minLv || 35) : 40;
 const MOON_KEY_P = ((GD.items || {}).item_moon_key || {}).p || 2000000;
 
@@ -1548,7 +1552,8 @@ fs.writeFileSync(path.join(OUT, "systems.html"), page("系統說明", "sys", `
 <tr><td>上架手續費</td><td>售價的 <b>1%</b>,上架時就扣,<b>賣不掉、下架都不退</b>(藍鑽計價最少 1 顆)</td></tr>
 <tr><td>成交</td><td>賣家拿到售價的 <b>90%</b>(10% 為交易稅);款項與商品都寄到「領取」頁</td></tr>
 <tr><td>浮現時間</td><td>上架後隨機 <b>30 ~ 120 秒</b>才會出現在清單(含賣家自己),防止蹲守秒殺</td></tr>
-<tr><td>賣不掉</td><td>上架滿 <b>12 小時</b>自動下架,商品退回賣家的領取頁</td></tr>
+<tr><td>賣不掉</td><td>上架滿 <b>12 小時</b>自動下架,商品退回賣家的領取頁</td></tr>${DEPLOYED_MKT ? `
+<tr><td>行情提醒</td><td>上架視窗會顯示該道具<b>近期成交行情</b>(以單價計);開價<b>明顯低於行情</b>時會先跳一次確認。<b>只提醒、不阻擋</b>,確認後照樣可以用任何價格上架。行情要累積足夠的成交筆數才會顯示;指定交易、藍鑽計價、有強化或詞綴的裝備不提醒</td></tr>` : ''}
 <tr><td>其他</td><td>不能買自己的商品;鎖定中的道具不能上架;清單順序隨機、每個人看到的一樣</td></tr>
 </tbody></table></div></div>
 
@@ -1771,7 +1776,7 @@ try { STATS = JSON.parse(fs.readFileSync(path.join(OUT, "stats.json"), "utf8"));
   const today = new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD(本地時區)
   const future = CHANGES.filter(d => d.date > today);
   if (future.length) console.log(`⏳ 跳過未來日期的更新日誌 ${future.length} 區塊:${future.map(d => d.date).join(", ")}(到當天才會發布)`);
-  CHANGES = CHANGES.filter(d => d.date <= today && !(d.date === "2026-09-27" && !DEPLOYED_0927) && !(d.date === "2026-10-03" && !MOON_OVER)); // 9/27 區塊另受 DEPLOYED_0927 旗標(部署後才印);10/3 區塊受 MOON_OVER(回收跑完才印)
+  CHANGES = CHANGES.filter(d => d.date <= today && !(d.date === "2026-09-27" && !DEPLOYED_0927) && !(d.date === "2026-10-03" && !MOON_OVER) && !(d.gate === "DEPLOYED_MKT" && !DEPLOYED_MKT)); // 9/27 區塊另受 DEPLOYED_0927 旗標(部署後才印);10/3 區塊受 MOON_OVER(回收跑完才印)
 }
 {
   const TCOL = { "新增": "#7bd14a", "調整": "#5b9bff", "修復": "#f5c451", "活動": "#f5a97f" };
