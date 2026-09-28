@@ -1144,6 +1144,9 @@ const MOON_OVER = false;
 //    go端專案/.ai/2026-09-28-交易所賤賣防呆-第二台指令.md)。第二台部署驗收後翻 true 再 gen+push:changelog 條目(gate 欄位)+ 系統說明那一列才印。
 //    麥哥 9/27 拍板「可以上官網」。門檻百分比與樣本筆數刻意不寫死在官網(以後調常數不用改官網)。翻旗標時順便把 changelog.json 那塊的 date 改成實際部署日。
 const DEPLOYED_MKT = true;
+// 💰 9/29 白天維護:狩獵收益面板「消耗金幣/淨收益」(程式 go端專案 7609f3d6;指令包 .ai/2026-09-29-白天維護-第二台指令.md)。
+//    麥哥 9/28 拍板「明天官網上」。第二台部署驗收後翻 true 再 gen+push(changelog gate=DEPLOYED_0929 那塊才印)。
+const DEPLOYED_0929 = false;
 const MOON_MINLV = DEPLOYED_0927 ? ((((GD.items || {}).mat_moon_shard || {}).eventDrop || {}).minLv || 35) : 40;
 const MOON_KEY_P = ((GD.items || {}).item_moon_key || {}).p || 2000000;
 
@@ -1788,7 +1791,7 @@ try { STATS = JSON.parse(fs.readFileSync(path.join(OUT, "stats.json"), "utf8"));
   const today = new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD(本地時區)
   const future = CHANGES.filter(d => d.date > today);
   if (future.length) console.log(`⏳ 跳過未來日期的更新日誌 ${future.length} 區塊:${future.map(d => d.date).join(", ")}(到當天才會發布)`);
-  CHANGES = CHANGES.filter(d => d.date <= today && !(d.date === "2026-09-27" && !DEPLOYED_0927) && !(d.date === "2026-10-03" && !MOON_OVER) && !(d.gate === "DEPLOYED_MKT" && !DEPLOYED_MKT) && !(d.gate === "MCARD_RESET" && !FEAT.mcardreset)); // 9/27 區塊另受 DEPLOYED_0927 旗標(部署後才印);10/3 區塊受 MOON_OVER(回收跑完才印);精通洗鍊卡那條受 FEAT.mcardreset(跟商城實際可買同步,避免公告先出、卡還買不到)
+  CHANGES = CHANGES.filter(d => d.date <= today && !(d.date === "2026-09-27" && !DEPLOYED_0927) && !(d.date === "2026-10-03" && !MOON_OVER) && !(d.gate === "DEPLOYED_MKT" && !DEPLOYED_MKT) && !(d.gate === "DEPLOYED_0929" && !DEPLOYED_0929) && !(d.gate === "MCARD_RESET" && !FEAT.mcardreset)); // 9/27 區塊另受 DEPLOYED_0927 旗標(部署後才印);10/3 區塊受 MOON_OVER(回收跑完才印);精通洗鍊卡那條受 FEAT.mcardreset(跟商城實際可買同步,避免公告先出、卡還買不到)
 }
 {
   const TCOL = { "新增": "#7bd14a", "調整": "#5b9bff", "修復": "#f5c451", "活動": "#f5a97f" };
