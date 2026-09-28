@@ -65,6 +65,8 @@ const FEAT = {
   mcard:   false, // 商城:精通轉換卡(💎500;2026-09-28 起洗鍊卡拆出去了,這個只剩轉換卡)
   trial50: false, // 📜 50 級試煉(燃柳村 迪嘉勒廷)——麥哥 2026-09-16 拍板收起,遊戲內 NPC 也一起收
                   //    ⚠ 必須與遊戲的 `feature trial50` 同步:那邊開放了,這裡才改 true 重發布
+  rastabad: false, // 🗺 新地區 拉斯塔巴德(2026-09-29 起分批開放;遊戲 `feature rastabad on` 之後才改 true)
+                   //    true 時也只列 gamedata 裡真的有的頻道(分批還沒放的那幾張本來就不在),那些圖專屬的怪/新裝備一併不列
 };
 // 🐉 世界王等級上限(對應遊戲的 CMD `wbmax`;0=不限)。超過此等級的王不列出。
 const WB_MAX_LV = 52;
@@ -92,10 +94,18 @@ fs.writeFileSync(path.join(OUT, ".nojekyll"), "");
 //    玩家永遠碰不到。列在資料站上只會讓人問「三龍窟怎麼進」(2026-09-09 麥哥拍板關掉)。
 //    ⚠ 日後遊戲裡開放(刪 zonegate.go 的 BlockedZones)時,這裡也要同步拿掉。
 const BLOCKED_ZONES = new Set(["antaras_lair", "fafurion_lair", "valakas_lair"]);
+// 🗺 拉斯塔巴德 8 張(= go端專案 engine/cmd/goline/rastagate.go rastaZones)
+const RASTA_ZONES = new Set(["rastabad_cave1", "rastabad_cave2", "rastabad_cave3", "rastabad_gate",
+  "rastabad_beast", "dark_magic_lab", "necro_training", "elder_room"]);
+// 拉斯塔巴德 16 件新裝備:只有「看得到的怪」會掉時才列(分批開放時,後面幾張圖專屬的裝備不能先曝光)
+const RASTA_NEW_ITEMS = new Set(["wpn_spear_rasta", "amr_rasta_robe", "wpn_wand_rasta", "arm_rasta_leather", "bot_rasta",
+  "wpn_bow_rasta", "shd_rasta", "wpn_xbow_heavy_rasta", "acc_darkmage_amulet", "amr_darkmage_robe", "wpn_darkmage_wand",
+  "wpn_blood_2hsword", "wpn_red_crystalwand", "clk_blacktiger", "acc_summoner_amulet", "amr_summoner_robe"]);
 const hiddenZone = z =>
   BLOCKED_ZONES.has(z) ||
   (!FEAT.tianfa && (z === "twilight_mt" || z.startsWith("pride_"))) ||
   (!FEAT.castle && z.startsWith("siege_")) ||
+  (!FEAT.rastabad && RASTA_ZONES.has(z)) ||
   z.startsWith("pk_") || z === "lobby";
 const HIDDEN_ITEM_RE = [];
 if (!FEAT.tianfa) HIDDEN_ITEM_RE.push(/傲慢之塔|天罰|奇美拉之皮/);
@@ -123,6 +133,7 @@ if (!OFFICIAL_PRIEST_LIVE) for (const id of [
 ]) HIDDEN_ITEM_ID.add(id);
 const hiddenItem = (id, v) => {
   if (HIDDEN_ITEM_ID.has(id)) return true;
+  if (RASTA_NEW_ITEMS.has(id) && !rastaItemVisible(id)) return true;
   const s = (v.n || "") + " " + (v.d || "");
   return HIDDEN_ITEM_RE.some(re => re.test(s));
 };
@@ -169,6 +180,13 @@ for (const [z, keys] of Object.entries(GD.maps || {})) {
     (mobZones[mn] ||= new Set()).add(nm);
   }
 }
+// 🗺 拉斯塔巴德專屬怪目前看不到(開關收起 / 分批還沒開)→ 道具頁的「哪裡拿」不列牠,
+//    牠專屬的新裝備也不列(RASTA_NEW_ITEMS;hiddenItem 用)。只管拉斯塔巴德的怪,其他內容行為不變。
+const RASTA_MOB_NAMES = new Set();
+for (const z of RASTA_ZONES) for (const k of GD.maps?.[z] || []) { const n = GD.mobs?.[k]?.n; if (n) RASTA_MOB_NAMES.add(n); }
+const hiddenMob = n => RASTA_MOB_NAMES.has(n) && !mobZones[n] && !WB_MOB_NAMES.has(n);
+const rastaItemVisible = id => Object.entries(GD.mobDrops || {}).some(([mobN, rows]) =>
+  !hiddenMob(mobN) && (mobZones[mobN] || WB_MOB_NAMES.has(mobN)) && (rows || []).some(r => r && r[0] === id));
 
 
 
@@ -465,6 +483,7 @@ const srcByItem = {};
 // 掉落:只列「誰掉什麼」,**不輸出機率**(鐵律①)
 const dropsByMobName = {};
 for (const [mobN, rows] of Object.entries(GD.mobDrops || {})) {
+  if (hiddenMob(mobN)) continue; // 🗺 看不到的拉斯塔巴德怪不當來源
   const set = new Set();
   for (const r of rows || []) if (r && r[0] && itemOk.has(r[0])) set.add(r[0]);
   dropsByMobName[mobN] = [...set];
