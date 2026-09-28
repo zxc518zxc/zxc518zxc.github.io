@@ -1143,7 +1143,7 @@ const MOON_OVER = false;
 // 🏷 交易所賤賣防呆(近期成交行情 + 低價確認框):程式 go端專案 b41efbda,**還沒上正式服**(排下次白天維護,指令包
 //    go端專案/.ai/2026-09-28-交易所賤賣防呆-第二台指令.md)。第二台部署驗收後翻 true 再 gen+push:changelog 條目(gate 欄位)+ 系統說明那一列才印。
 //    麥哥 9/27 拍板「可以上官網」。門檻百分比與樣本筆數刻意不寫死在官網(以後調常數不用改官網)。翻旗標時順便把 changelog.json 那塊的 date 改成實際部署日。
-const DEPLOYED_MKT = false;
+const DEPLOYED_MKT = true;
 const MOON_MINLV = DEPLOYED_0927 ? ((((GD.items || {}).mat_moon_shard || {}).eventDrop || {}).minLv || 35) : 40;
 const MOON_KEY_P = ((GD.items || {}).item_moon_key || {}).p || 2000000;
 
