@@ -61,11 +61,11 @@ const FEAT = {
   glory:   false, // 榮光進化(精通)
   potion:  false, // 嗑藥大師(精通)
   codex:   true, // 📖 圖鑑登錄(2026-09-14 改版;麥哥:官網只寫 Lv1~39 規則與效果,Lv40+/世界王/加成表不上;feature codex 開放後改 true 生成 codex.html)
-  mcardreset: false, // 商城:精通洗鍊卡(💎300;2026-09-28 拆出來獨立賣,見下方 mcard)——**部署+驗收後改 true**
+  mcardreset: true, // 商城:精通洗鍊卡(💎300;2026-09-28 拆出來獨立賣,見下方 mcard)——**部署+驗收後改 true**
   mcard:   false, // 商城:精通轉換卡(💎500;2026-09-28 起洗鍊卡拆出去了,這個只剩轉換卡)
   trial50: false, // 📜 50 級試煉(燃柳村 迪嘉勒廷)——麥哥 2026-09-16 拍板收起,遊戲內 NPC 也一起收
                   //    ⚠ 必須與遊戲的 `feature trial50` 同步:那邊開放了,這裡才改 true 重發布
-  rastabad: false, // 🗺 新地區 拉斯塔巴德(2026-09-29 起分批開放;遊戲 `feature rastabad on` 之後才改 true)
+  rastabad: true, // 🗺 新地區 拉斯塔巴德(2026-09-29 起分批開放;遊戲 `feature rastabad on` 之後才改 true)
                    //    true 時也只列 gamedata 裡真的有的頻道(分批還沒放的那幾張本來就不在),那些圖專屬的怪/新裝備一併不列
 };
 // 🐉 世界王等級上限(對應遊戲的 CMD `wbmax`;0=不限)。超過此等級的王不列出。
@@ -1165,7 +1165,7 @@ const MOON_OVER = false;
 const DEPLOYED_MKT = true;
 // 💰 9/29 白天維護:狩獵收益面板「消耗金幣/淨收益」(程式 go端專案 7609f3d6;指令包 .ai/2026-09-29-白天維護-第二台指令.md)。
 //    麥哥 9/28 拍板「明天官網上」。第二台部署驗收後翻 true 再 gen+push(changelog gate=DEPLOYED_0929 那塊才印)。
-const DEPLOYED_0929 = false;
+const DEPLOYED_0929 = true;
 const MOON_MINLV = DEPLOYED_0927 ? ((((GD.items || {}).mat_moon_shard || {}).eventDrop || {}).minLv || 35) : 40;
 const MOON_KEY_P = ((GD.items || {}).item_moon_key || {}).p || 2000000;
 
