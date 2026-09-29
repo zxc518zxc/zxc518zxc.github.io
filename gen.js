@@ -1166,7 +1166,7 @@ const DEPLOYED_MKT = true;
 // 💰 9/29 白天維護:狩獵收益面板「消耗金幣/淨收益」(程式 go端專案 7609f3d6;指令包 .ai/2026-09-29-白天維護-第二台指令.md)。
 //    麥哥 9/28 拍板「明天官網上」。第二台部署驗收後翻 true 再 gen+push(changelog gate=DEPLOYED_0929 那塊才印)。
 const DEPLOYED_0929 = true;
-// 🛡 精通突破「先吃白板+吃到有詞條先確認」(程式 go端專案 1b87c938;指令包 .ai/下次白天維護-精通突破確認-第二台指令.md)。
+// 🛡 精通突破「先吃白板+吃到有詞條先確認」(程式 go端專案 1b87c938;指令包 .ai/2026-09-30-白天維護-第二台指令.md)。
 //    麥哥 9/29 拍板要上官網。第二台部署驗收後:翻 true,並把 changelog.json 裡 gate=DEPLOYED_BK 那塊的 date 改成實際上線日,再 gen+push。
 const DEPLOYED_BK = false;
 const MOON_MINLV = DEPLOYED_0927 ? ((((GD.items || {}).mat_moon_shard || {}).eventDrop || {}).minLv || 35) : 40;
