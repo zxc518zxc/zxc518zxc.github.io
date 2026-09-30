@@ -69,7 +69,7 @@ const FEAT = {
                    //    true 時也只列 gamedata 裡真的有的頻道(分批還沒放的那幾張本來就不在),那些圖專屬的怪/新裝備一併不列
 };
 // 🐉 世界王等級上限(對應遊戲的 CMD `wbmax`;0=不限)。超過此等級的王不列出。
-const WB_MAX_LV = 52;   // ⚠ 2026-09-30 遊戲 wbmax 57(開冰之女王/巨蟻女皇)上線後,發布時改 57
+const WB_MAX_LV = 57;   // 2026-09-30 12:2x 遊戲 wbmax 57 已上線(開冰之女王/巨蟻女皇)
 
 // ---- 🖼 圖示 ----
 // 🔴 2026-09-07 麥哥拍板改**純文字表格,不放圖片**。理由:
@@ -1170,7 +1170,7 @@ const DEPLOYED_MKT = true;
 const DEPLOYED_0929 = true;
 // 🛡 精通突破「先吃白板+吃到有詞條先確認」(程式 go端專案 1b87c938;指令包 .ai/2026-09-30-白天維護-第二台指令.md)。
 //    麥哥 9/29 拍板要上官網。第二台部署驗收後:翻 true,並把 changelog.json 裡 gate=DEPLOYED_BK 那塊的 date 改成實際上線日,再 gen+push。
-const DEPLOYED_BK = false;
+const DEPLOYED_BK = true; // 2026-09-30 12:30 白天維護已上線(第二台驗收通過)
 const MOON_MINLV = DEPLOYED_0927 ? ((((GD.items || {}).mat_moon_shard || {}).eventDrop || {}).minLv || 35) : 40;
 const MOON_KEY_P = ((GD.items || {}).item_moon_key || {}).p || 2000000;
 
