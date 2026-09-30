@@ -174,9 +174,9 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 <div class="mcard"><div class="ttl">💗 魅力決定「能帶幾隻」</div>
 <div class="sub">寵物(狗)和召喚物<b>共用一個名額池</b>:名額 = <b>魅力 ÷ 6</b>(小數捨去)。每張項圈佔 1 格、活著的召喚物佔 1 格。名額滿了就不能再誘捕、也不能再召喚。</div>
 <div class="wrap" style="margin-top:8px"><table><thead><tr><th>魅力</th><th>名額</th></tr></thead><tbody>
-<tr><td>6 ~ 11</td><td>1</td></tr><tr><td>12 ~ 17</td><td>2</td></tr><tr><td>18 ~ 23</td><td>3</td></tr><tr><td>24 ~ 29</td><td>4</td></tr><tr><td>30 ~ 35</td><td>5</td></tr><tr><td>36 ~ 41</td><td>6</td></tr>
+<tr><td>6 ~ 11</td><td>1</td></tr><tr><td>12 ~ 17</td><td>2</td></tr><tr><td>18 ~ 23</td><td>3</td></tr><tr><td>24 ~ 29</td><td>4</td></tr><tr><td>30 ~ 35</td><td>5</td></tr><tr><td>36 ~ 41</td><td>6</td></tr><tr><td>42 ~ 47</td><td>7</td></tr><tr><td>48 ~ 53</td><td>8</td></tr><tr><td>54 ~ 59</td><td>9</td></tr><tr><td>60 ~ 65</td><td>10</td></tr><tr><td>66 ~ 71</td><td>11</td></tr>
 </tbody></table></div>
-<div class="sub" style="margin-top:8px">・魅力<b>不影響</b>寵物的命中與傷害,那些看狗自己的等級(1~50)。<br>・喝「萬能藥」可永久 +1 魅力,最多 20 瓶。<br>・<b>寵物優先</b>:有召喚物時吹哨子叫狗,召喚物會被收掉。</div></div>
+<div class="sub" style="margin-top:8px">・表格列到魅力 71;更高的魅力照「魅力 ÷ 6」算,沒有上限。<br>・魅力<b>不影響</b>寵物的命中與傷害,那些看狗自己的等級(1~50)。<br>・喝「萬能藥」可永久 +1 魅力,最多 20 瓶。<br>・<b>寵物優先</b>:有召喚物時吹哨子叫狗,召喚物會被收掉。</div></div>
 
 <div class="mcard"><div class="ttl">🐕 四種狗怎麼得到</div>
 <div class="sub">用「肉」啟動<b>誘捕 300 秒</b>(名額滿不能啟動),期間殺到對應的怪 <b>100% 掉項圈</b>,拿到項圈就能吹哨子叫牠出來。項圈不可交易、不可存倉庫。</div>
@@ -195,10 +195,10 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 <div class="sub" style="margin-top:8px">・<b>一隻練滿 50 級</b>:1,000 萬金幣 + 15 瓶萬能藥(CHA)。四隻全滿:4,000 萬金幣 + 60 瓶。<br>・萬能藥(CHA) 由 3 瓶白色萬能藥合成,而且自己喝(+1 魅力)、法師召喚精通也都用它,要自己取捨。<br>・升級只吃背包裡<b>沒上鎖</b>、沒強化沒祝福的萬能藥(CHA);金幣和藥先全部檢查夠不夠才扣,不會扣一半。<br>・累計經驗:30 級約 3.1 萬次命中、50 級約 29.6 萬次,四隻一起帶大約 43 小時。<br>・「重練」免費,等級、經驗、天賦全部歸零,已花的金幣和藥<b>不退</b>。</div></div>
 
 <div class="mcard"><div class="ttl">🔮 法師「召喚術」召出誰</div>
-<div class="sub"><b>召出幾隻看魅力</b>:法師召喚術一次召出 <b>魅力 ÷ 6 隻</b>(小數捨去,最少 1 隻);<b>52 級以上改 ÷ 8、60 級以上改 ÷ 10</b>(高階召喚物比較強,所以隻數變少)。整群召喚物只佔魅力名額 <b>1 格</b>,而且要有 1 格空名額才召得出來(名額 = 魅力 ÷ 6,狗先佔位)。</div>
+<div class="sub"><b>召喚隻數看魅力,沒有上限</b>:法師召喚術召出的隻數 = <b>魅力 ÷ 6</b>(小數捨去,最少 1 隻);<b>52 級以上改 ÷ 8、60 級以上改 ÷ 10</b>(高階召喚物比較強,所以隻數變少)。魅力越高隻數越多,<b>沒有「最多幾隻」的限制</b>。<br>・<b>遊戲裡怎麼看</b>:召喚後狀態列會顯示「召喚物名稱(每次 N 段)」,<b>N 段就是 N 隻</b>(整群召喚物一起出手,每次攻擊打 N 下)。<br>・<b>算法範例</b>:55 級、魅力 48 → 48 ÷ 8 = <b>6 隻</b>;45 級、魅力 40 → 40 ÷ 6 = 6.67,小數捨去 = <b>6 隻</b>。<br>・<b>召喚名額</b>:寵物項圈和召喚共用「魅力名額」(名額 = 魅力 ÷ 6,小數捨去)。整群召喚物不管幾隻都只佔 <b>1 格</b>,只要還有 1 格空名額就召得出來;項圈帶滿、名額用完就召不出來。</div>
 <div class="wrap" style="margin-top:8px"><table><thead><tr><th>魅力</th><th>51 級以下召出</th><th>52 ~ 59 級召出</th><th>60 級以上召出</th></tr></thead><tbody>
-<tr><td>6 ~ 11</td><td>1 隻</td><td>1 隻</td><td>1 隻</td></tr><tr><td>12 ~ 17</td><td>2 隻</td><td>1 隻(16 起 2 隻)</td><td>1 隻</td></tr><tr><td>18 ~ 23</td><td>3 隻</td><td>2 隻</td><td>1 隻(20 起 2 隻)</td></tr><tr><td>24 ~ 29</td><td>4 隻</td><td>3 隻</td><td>2 隻</td></tr><tr><td>30 ~ 35</td><td>5 隻</td><td>3 隻(32 起 4 隻)</td><td>3 隻</td></tr><tr><td>36 ~ 41</td><td>6 隻</td><td>4 隻(40 起 5 隻)</td><td>3 隻(40 起 4 隻)</td></tr>
-</tbody></table></div>
+<tr><td>6 ~ 11</td><td>1 隻</td><td>1 隻</td><td>1 隻</td></tr><tr><td>12 ~ 17</td><td>2 隻</td><td>1 隻(16 起 2 隻)</td><td>1 隻</td></tr><tr><td>18 ~ 23</td><td>3 隻</td><td>2 隻</td><td>1 隻(20 起 2 隻)</td></tr><tr><td>24 ~ 29</td><td>4 隻</td><td>3 隻</td><td>2 隻</td></tr><tr><td>30 ~ 35</td><td>5 隻</td><td>3 隻(32 起 4 隻)</td><td>3 隻</td></tr><tr><td>36 ~ 41</td><td>6 隻</td><td>4 隻(40 起 5 隻)</td><td>3 隻(40 起 4 隻)</td></tr><tr><td>42 ~ 47</td><td>7 隻</td><td>5 隻</td><td>4 隻</td></tr><tr><td>48 ~ 53</td><td>8 隻</td><td>6 隻</td><td>4 隻(50 起 5 隻)</td></tr><tr><td>54 ~ 59</td><td>9 隻</td><td>6 隻(56 起 7 隻)</td><td>5 隻</td></tr><tr><td>60 ~ 65</td><td>10 隻</td><td>7 隻(64 起 8 隻)</td><td>6 隻</td></tr><tr><td>66 ~ 71</td><td>11 隻</td><td>8 隻</td><td>6 隻(70 起 7 隻)</td></tr></tbody></table></div>
+<div class="sub" style="margin-top:6px">表格列到魅力 71;更高的魅力照上面公式算,一樣沒有上限。「16 起 2 隻」= 魅力 16 以上變成 2 隻。</div>
 <div class="sub" style="margin-top:8px"><b>召出誰</b>看<b>角色等級</b>,不看魅力:</div>
 <div class="wrap" style="margin-top:8px"><table><thead><tr><th>角色等級</th><th>召喚</th></tr></thead><tbody>
 <tr><td>未滿 32</td><td>哈柏哥布林</td></tr><tr><td>32</td><td>甘地妖魔</td></tr><tr><td>40</td><td>食人妖精</td></tr><tr><td>52</td><td>魔狼</td></tr><tr><td>60</td><td>地獄奴隸</td></tr><tr><td>64</td><td>地獄束縛犬</td></tr><tr><td>72</td><td>黑豹</td></tr>
