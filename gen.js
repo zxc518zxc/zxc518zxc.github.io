@@ -225,7 +225,7 @@ function itemFx(v) {
   t.push(...num(v.hit, "命中 N"), ...num(v.dmgBonus, "傷害 N"), ...num(v.mdmg, "魔法傷害 N"), ...num(v.mr, "魔防 N"));
   t.push(...num(v.resFire, "火抗 N"), ...num(v.resWater, "水抗 N"),
     ...num(v.resWind, "風抗 N"), ...num(v.resEarth, "地抗 N"));
-  if (v.block) t.push("格擋 " + v.block + "%");
+  // 🔴 盾牌 block(格擋)未實作,刻意不顯示(2026-09-30 麥哥:沒有的特效不要顯示;Go 引擎零引用,同上面 EFF_N 的原則)
   if (v.magicDrNonEle) t.push("無屬性魔法傷害 -" + v.magicDrNonEle + "%");
   if (v.immStone) t.push("免疫石化");
   if (v.immPoison) t.push("免疫中毒");
