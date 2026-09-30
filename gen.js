@@ -126,13 +126,15 @@ if (!EXP_POTION_LIVE) HIDDEN_ITEM_ID.add("potion_exp");
 //    ⚠ 之後麥哥決定要放出時,把 OFFICIAL_PRIEST_LIVE 改成 true 即可(不要逐一刪 id)。
 //    用 id 精準擋,不用名稱比對——「神官」兩字之後可能出現在別的道具說明裡。
 const OFFICIAL_PRIEST_LIVE = false;
+// 🗺 2026-09-30:拉斯塔巴德已開放區域打得到的那幾件(例:魔獸訓練場的武官雙手劍/手套/長靴)照常顯示,其餘繼續擋(見 hiddenItem)。
+const OFFICIAL_PRIEST_IDS = new Set();
 if (!OFFICIAL_PRIEST_LIVE) for (const id of [
   "wpn_officialblade", "wpn_official2h", "amr_official", "clk_official", "shd_official",
   "glv_official", "bot_official", "hlm_official",
   "wpn_priestwand", "amr_priest", "hlm_priest", "clk_priest", "glv_priest", "bot_priest", "shd_priest",
-]) HIDDEN_ITEM_ID.add(id);
+]) { HIDDEN_ITEM_ID.add(id); OFFICIAL_PRIEST_IDS.add(id); }
 const hiddenItem = (id, v) => {
-  if (HIDDEN_ITEM_ID.has(id)) return true;
+  if (HIDDEN_ITEM_ID.has(id) && !(OFFICIAL_PRIEST_IDS.has(id) && rastaItemVisible(id))) return true;
   if (RASTA_NEW_ITEMS.has(id) && !rastaItemVisible(id)) return true;
   const s = (v.n || "") + " " + (v.d || "");
   return HIDDEN_ITEM_RE.some(re => re.test(s));
