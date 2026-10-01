@@ -1189,12 +1189,14 @@ const PROMO3_BOX_ROWS = (() => {
   return b.pick.filter(r => (+r.w || 0) > 0)
     .map(r => [`　└ 娃娃盲盒開出:${(GD.items[r.id] || {}).n || r.id} ×${r.n || 1}`, `${+((+r.w) / tot * 100).toFixed(2)}%`]);
 })();
+// 🎬 10/7 錄影推廣III 結束:第二台跑完 badgewipe 回收、goline 起來之後才翻 true(同 MOON_OVER 的作法)。
+const PROMO3_OVER = false;
 const PROMO3_BADGE = (GD.items || {}).badge_promo_video || {};
 const PROMO3_EVENT = {
   title: "🎬 錄影推廣大作戰 III",
   rewardHead: "項目",
   when: "2026/10/01(四) 至 2026/10/07(三)　每日可領一次",
-  over: false,
+  over: PROMO3_OVER, // 10/7 badgewipe 回收跑完後翻 true(活動卡變暗+已結束)
   intro: "第三波開跑!把你的遊戲畫面錄下來發到社群,天天都能領獎勵。🎖 錄影推廣勳章回來了,並且多增加了 <b>🪆 娃娃盲盒</b>,打開就有機會拿到藍娃娃契約書。",
   rewards: [
     ["每日回報成功", "🎁 錄影推廣禮包III ×1"],
