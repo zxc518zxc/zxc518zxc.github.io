@@ -1174,7 +1174,7 @@ const DEPLOYED_0929 = true;
 //    麥哥 9/29 拍板要上官網。第二台部署驗收後:翻 true,並把 changelog.json 裡 gate=DEPLOYED_BK 那塊的 date 改成實際上線日,再 gen+push。
 const DEPLOYED_BK = true; // 2026-09-30 12:30 白天維護已上線(第二台驗收通過)
 // 🪍 2026-10-01 白天維護(召喚控制戒指移除回魔):第二台驗收通過後翻 true 再 gen+push。⚠ 翻之前不要 gen+push(道具頁會提早顯示新數值)。
-const DEPLOYED_1001 = false;
+const DEPLOYED_1001 = true; // 2026-10-01 12:2x 白天維護驗收通過(goline pid 12740 / cv 52b408f2)
 const MOON_MINLV = DEPLOYED_0927 ? ((((GD.items || {}).mat_moon_shard || {}).eventDrop || {}).minLv || 35) : 40;
 const MOON_KEY_P = ((GD.items || {}).item_moon_key || {}).p || 2000000;
 
