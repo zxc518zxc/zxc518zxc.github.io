@@ -69,7 +69,7 @@ const FEAT = {
                    //    true 時也只列 gamedata 裡真的有的頻道(分批還沒放的那幾張本來就不在),那些圖專屬的怪/新裝備一併不列
 };
 // 🐉 世界王等級上限(對應遊戲的 CMD `wbmax`;0=不限)。超過此等級的王不列出。
-const WB_MAX_LV = 57;   // 2026-09-30 12:2x 遊戲 wbmax 57 已上線(開冰之女王/巨蟻女皇)
+const WB_MAX_LV = 59;   // 2026-10-03 12:2x 遊戲 wbmax 59 已上線(開不死鳥);前一版 57(9/30 冰之女王/巨蟻女皇)
 
 // ---- 🖼 圖示 ----
 // 🔴 2026-09-07 麥哥拍板改**純文字表格,不放圖片**。理由:
@@ -1178,7 +1178,7 @@ const DEPLOYED_1001 = true; // 2026-10-01 12:2x 白天維護驗收通過(goline 
 // 🖼 2026-10-02 白天維護(祝福施法卷軸新圖 + 消耗金幣不算寵物的肉):第二台驗收通過後翻 true 再 gen+push。⚠ 翻之前不要 gen+push(道具圖鑑會先顯示新圖)。
 const DEPLOYED_1002 = true;
 // 🐌 10/3(六)12:30 白天維護(蝸牛超車等):第二台回報驗收後才翻 true。(10/3 中秋收尾改期 10/5 後,不再受 MOON_OVER 影響)
-const DEPLOYED_1003 = false;
+const DEPLOYED_1003 = true;
 const MOON_MINLV = DEPLOYED_0927 ? ((((GD.items || {}).mat_moon_shard || {}).eventDrop || {}).minLv || 35) : 40;
 const MOON_KEY_P = ((GD.items || {}).item_moon_key || {}).p || 2000000;
 
