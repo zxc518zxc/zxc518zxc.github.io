@@ -1620,10 +1620,11 @@ ${dolls.filter(d => d.g === g).map(d => `<tr><td class="nm">${esc(d.n)}</td><td>
 
 // ---- 📖 怪物圖鑑登錄(2026-09-14 改版;FEAT.codex 開放後才生成)----
 // 資料來源:gamedata.codexBonus(伺服器不下發給玩家,這裡直接讀本機檔)+ mobs 等級;規則常數手抄自 engine/afk/codex.go
-//   (50/200 次、等級×2 萬;麥哥拍板官網只寫 Lv1~39:Lv40+ 與世界王的擊殺數/藍鑽費/效果一律不列)。改引擎要同步。
+//   (50/200 次、等級×2 萬;麥哥 9/14 拍板官網只寫 Lv1~39 → 9/14 晚 Lv40~49 也上 → 10/3 世界王 Lv42~59 也上)。改引擎要同步。
 if (FEAT.codex && GD.codexBonus) {
   const STAT = { hp: "最大 HP", mp: "最大 MP", hpr: "回血", mpr: "回魔", mh: "近戰命中", rh: "遠程命中", magicHit: "魔法命中", mgd: "魔法傷害",
-    pveDmg: "PvE 傷害", pveDr: "PvE 減傷", pvpDmg: "PvP 傷害", pvpDr: "PvP 減傷", exp: "經驗獲得" };
+    pveDmg: "PvE 傷害", pveDr: "PvE 減傷", pvpDmg: "PvP 傷害", pvpDr: "PvP 減傷", exp: "經驗獲得",
+    str: "力量", dex: "敏捷", con: "體力", wis: "精神", cha: "魅力", int: "智慧" }; // 六維(世界王 Lv59+ 給的;對齊 engine codexStatName)
   const rows = Object.entries(GD.codexBonus)
     .map(([k, d]) => ({ k, d, m: GD.mobs[k] }))
     .filter(r => r.m && (r.m.lv <= 49 || r.d.open) && mobZones[r.m.n] && STAT[r.d.stat]) // mobZones=玩家進得去的獵場才有的怪(同怪物頁過濾);麥哥 9/14 晚:Lv40~49 也上;9/25:`open:true` 的特別開放格也上(遺忘之島獨眼巨人/飛龍)
@@ -1631,6 +1632,13 @@ if (FEAT.codex && GD.codexBonus) {
   const need = lv => lv < 20 ? 50 : lv < 40 ? 200 : 500;
   const cost = (lv, d) => `${(lv * 20000).toLocaleString()} 金幣${lv >= 40 ? ` + ${(d && d.bd) || 10} 藍鑽` : ""}`; // d.bd=該格藍鑽覆寫(同 engine CodexCostOf)
   const special = rows.filter(r => r.d.open && r.m.lv >= 50);
+  // 📖 世界王頁(2026-10-03 麥哥:今天開 Lv42~59,官網也要列;推翻 9/14「世界王不列」)。上限對應遊戲 `codex wblv 59`,改上限時這裡一起改。
+  const CODEX_WB_MAX_LV = 59;
+  const wbRows = Object.entries(GD.codexBonus)
+    .map(([k, d]) => ({ k, d, m: GD.mobs[k] }))
+    .filter(r => r.m && WB_MOB_KEYS.has(r.k) && r.m.lv <= CODEX_WB_MAX_LV && (!WB_MAX_LV || r.m.lv <= WB_MAX_LV) && STAT[r.d.stat])
+    .sort((a, b) => (a.m.lv - b.m.lv) || a.m.n.localeCompare(b.m.n));
+  const wbMinLv = wbRows.length ? wbRows[0].m.lv : 0;
   const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
   const bonusTxt = d => `${STAT[d.stat]} +${d.v}${d.stat === "exp" ? "%" : ""}`;
   fs.writeFileSync(path.join(OUT, "codex.html"), page("怪物圖鑑登錄", "codex", `
@@ -1642,15 +1650,21 @@ if (FEAT.codex && GD.codexBonus) {
 <tr><td>Lv20 ~ 39</td><td>200 次</td><td>怪物等級 × 2 萬金幣</td></tr>
 <tr><td>Lv40 ~ 49</td><td>500 次</td><td>怪物等級 × 2 萬金幣 <b>+ 10 藍鑽</b></td></tr>
 ${special.length ? `<tr><td>特別開放：${special.map(r => esc(r.m.n)).join("、")}</td><td>500 次</td><td>怪物等級 × 2 萬金幣 <b>+ ${special[0].d.bd || 10} 藍鑽</b></td></tr>` : ""}
-<tr><td>其他 Lv50 以上・世界王</td><td colspan="2">尚未開放</td></tr>
+${wbRows.length ? `<tr><td>世界王(Lv${wbMinLv} ~ ${CODEX_WB_MAX_LV})</td><td>拿到王房結算獎勵 <b>3 次</b></td><td><b>${(wbRows[0].d.bd) || 100} 藍鑽</b>(不收金幣)</td></tr>` : ""}
+<tr><td>其他 Lv50 以上一般怪・Lv${CODEX_WB_MAX_LV + 1} 以上世界王</td><td colspan="2">尚未開放</td></tr>
 </tbody></table></div>
-<div class="sub" style="margin-top:8px">・只有 <b>41 級以上</b>的角色打怪才會計入擊殺數(40 級以下不計)。<br>・沒點亮的格子會顯示目前殺了幾次(例:12 / 50)。<br>・登錄是一次性的,登錄後那格永久亮起、效果立即生效。<br>・圖鑑開放之前的擊殺不算,從開放那一刻開始計;尚未開放的等級帶也不會累積。<br>・世界王只有「拿到王房結算獎勵」的那一次才算殺過。</div></div>
+<div class="sub" style="margin-top:8px">・只有 <b>41 級以上</b>的角色打怪才會計入擊殺數(40 級以下不計)。<br>・沒點亮的格子會顯示目前殺了幾次(例:12 / 50)。<br>・登錄是一次性的,登錄後那格永久亮起、效果立即生效。<br>・圖鑑開放之前的擊殺不算,從開放那一刻開始計;尚未開放的等級帶也不會累積。<br>・世界王:王被擊殺時<b>人在王房內並拿到結算獎勵</b>才算一次;40 級以上需<b>月卡有效</b>(月卡過期拿不到結算獎勵,也不計次);王被擊殺前離開王房不計。</div></div>
 
 <div class="mcard"><div class="ttl">🗂 已開放各怪登錄效果(Lv1 ~ 49 + 特別開放,共 ${rows.length} 格)</div>
 <div class="wrap"><table><thead><tr><th>等級</th><th>怪物</th><th>點亮</th><th>登錄費</th><th>登錄效果</th></tr></thead><tbody>
 ${rows.map(r => `<tr><td>${r.m.lv}</td><td>${esc(r.m.n)}${r.d.open && r.m.lv >= 50 ? " <span style='color:#f5a97f;font-size:12px'>特別開放</span>" : ""}</td><td>${need(r.m.lv)} 次</td><td>${cost(r.m.lv, r.d)}</td><td>${bonusTxt(r.d)}</td></tr>`).join("\n")}
 </tbody></table></div>
 <div class="sub" style="margin-top:8px">Lv1 ~ 49 全部登錄合計:最大 HP +200、最大 MP +100、回血 +15、回魔 +10、近戰／遠程／魔法命中各 +5、PvE 傷害 +5、PvE 減傷 +3(依實際登錄的怪為準)。</div></div>
+${wbRows.length ? `
+<div class="mcard"><div class="ttl">🐉 世界王登錄效果(Lv${wbMinLv} ~ ${CODEX_WB_MAX_LV},共 ${wbRows.length} 格)</div>
+<div class="wrap"><table><thead><tr><th>等級</th><th>世界王</th><th>點亮</th><th>登錄費</th><th>登錄效果</th></tr></thead><tbody>
+${wbRows.map(r => `<tr><td>${r.m.lv}</td><td>${esc(r.m.n)}</td><td>結算 3 次</td><td>${r.d.bd || 100} 藍鑽</td><td>${bonusTxt(r.d)}</td></tr>`).join("\n")}
+</tbody></table></div></div>` : ""}
 `));
 }
 
