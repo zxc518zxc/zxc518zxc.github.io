@@ -1160,8 +1160,8 @@ const MOON_BADGE = ((GD.items || {}).badge_moon || {}).moonEx || { need: 30, gol
 // 掉落的怪等級門檻:開發機 gamedata 已是 35 但正式服 9/27 12:30 才上 ⇒ 到當天前官網一律寫 40(同 changelog 的未來日期閘;掉率本身不公開)
 // 🔴 9/27 那批(門檻 35、勳章回收)要等第二台 12:30 部署驗收後才發 ⇒ 用手動旗標,不用日期(9/27 凌晨麥哥就要先發「錄影活動已結束」)。部署後改 true 再 gen。
 const DEPLOYED_0927 = true; // 2026-09-27 12:33 第二台部署驗收通過(pid 12372 / cv 1943a129)後翻開
-// 🎑 10/3 活動收尾:第二台跑完 moonwipe 回收、goline 重新起來之後才翻 true ⇒ 活動頁變暗標「已結束」+ changelog 10/3 那條才印。
-//    (指令包 go端專案/.ai/2026-10-03-活動收尾-第二台指令.md;翻開前 gen 一律當作活動還在)
+// 🎑 10/5 活動收尾(麥哥 10/3 改期:原 10/3):第二台跑完 moonwipe 回收、goline 重新起來之後才翻 true ⇒ 活動頁變暗標「已結束」+ changelog 10/5 那條(gate MOON_OVER)才印。
+//    (指令包 go端專案/.ai/2026-10-05-活動收尾-第二台指令.md;翻開前 gen 一律當作活動還在)
 const MOON_OVER = false;
 // 🏷 交易所賤賣防呆(近期成交行情 + 低價確認框):程式 go端專案 b41efbda,**還沒上正式服**(排下次白天維護,指令包
 //    go端專案/.ai/2026-09-28-交易所賤賣防呆-第二台指令.md)。第二台部署驗收後翻 true 再 gen+push:changelog 條目(gate 欄位)+ 系統說明那一列才印。
@@ -1177,7 +1177,7 @@ const DEPLOYED_BK = true; // 2026-09-30 12:30 白天維護已上線(第二台驗
 const DEPLOYED_1001 = true; // 2026-10-01 12:2x 白天維護驗收通過(goline pid 12740 / cv 52b408f2)
 // 🖼 2026-10-02 白天維護(祝福施法卷軸新圖 + 消耗金幣不算寵物的肉):第二台驗收通過後翻 true 再 gen+push。⚠ 翻之前不要 gen+push(道具圖鑑會先顯示新圖)。
 const DEPLOYED_1002 = true;
-// 🐌 10/3(六)12:30 白天維護(蝸牛超車等):第二台回報驗收後才翻 true。⚠ 10/3 的區塊另受 MOON_OVER(中秋收尾)過濾,兩個都要 true 才會印。
+// 🐌 10/3(六)12:30 白天維護(蝸牛超車等):第二台回報驗收後才翻 true。(10/3 中秋收尾改期 10/5 後,不再受 MOON_OVER 影響)
 const DEPLOYED_1003 = false;
 const MOON_MINLV = DEPLOYED_0927 ? ((((GD.items || {}).mat_moon_shard || {}).eventDrop || {}).minLv || 35) : 40;
 const MOON_KEY_P = ((GD.items || {}).item_moon_key || {}).p || 2000000;
@@ -1252,13 +1252,13 @@ const PROMO3_EVENT = {
 const EVENTS = [
   ...(DEPLOYED_1001 || PREVIEW_1001 ? [PROMO3_EVENT] : []),
   {
-    // 🎑 中秋活動(2026-09-25 麥哥拍板;9/26 12:30 ~ 10/3 12:00)。規則與數字對應 go端專案 gamedata:
+    // 🎑 中秋活動(2026-09-25 麥哥拍板;9/26 12:30 ~ 10/5 12:00;10/3 麥哥改:碎片掉落 10/3 12:30 先結束、其餘延到 10/5)。規則與數字對應 go端專案 gamedata:
     //    items.mat_moon_shard(eventDrop)/pack_moon_box(moonEx + pack)/item_moon_key(p)/doll_contract_1~3;內容開關 moon/doll/dollgold/dollfree。
     title: "🎑 中秋月光祭",
     rewardHead: "🎁 中秋禮盒內容物（每盒開出其中一項）",
-    when: "2026/09/26(六) 12:30 至 2026/10/03(六) 12:00",
-    over: MOON_OVER, // 10/3 回收跑完才翻(見上方旗標)
-    intro: `中秋節到了！活動期間打怪有機會撿到「<b>月光碎片</b>」，集滿 <b>${MOON_EX.need} 個</b>就能到<b>說話之島</b>找「<b>月宮玉兔</b>」換一個「<b>中秋禮盒</b>」。禮盒要用「<b>中秋鑰匙</b>」（各村雜貨商販售，${(MOON_KEY_P / 10000).toLocaleString()} 萬金幣）才打得開，開出來的東西包含<b>卷軸、藍鑽、祝福卷軸、BOSS結晶、高階技能書</b>，以及這次新登場的「<b>娃娃契約書</b>」——用了就能直接解鎖一隻娃娃！<br>碎片多的話，月宮玉兔還能換「<b>🎖 中秋勳章</b>」（${MOON_BADGE.need} 碎片 + ${MOON_BADGE.gold.toLocaleString()} 金幣，每帳號每天 ${MOON_BADGE.dailyCap} 枚）：戴上 10 小時內 <b>HP +50、MP +50、狩獵經驗 +10%、近戰／遠距／魔法命中各 +2、召喚獸命中 +1</b>。`,
+    when: "2026/09/26(六) 12:30 至 2026/10/05(一) 12:00（月光碎片掉落至 10/03(六) 12:30 結束）",
+    over: MOON_OVER, // 10/5 回收跑完才翻(見上方旗標)
+    intro: `<b>📢 活動延長：</b>月光碎片<b>掉落</b>至 <b>10/3(六) 12:30</b> 結束；月宮玉兔兌換（中秋禮盒、中秋勳章）、雜貨商的中秋鑰匙、開禮盒<b>延長到 10/5(一) 12:00</b>。<br>中秋節到了！活動期間打怪有機會撿到「<b>月光碎片</b>」，集滿 <b>${MOON_EX.need} 個</b>就能到<b>說話之島</b>找「<b>月宮玉兔</b>」換一個「<b>中秋禮盒</b>」。禮盒要用「<b>中秋鑰匙</b>」（各村雜貨商販售，${(MOON_KEY_P / 10000).toLocaleString()} 萬金幣）才打得開，開出來的東西包含<b>卷軸、藍鑽、祝福卷軸、BOSS結晶、高階技能書</b>，以及這次新登場的「<b>娃娃契約書</b>」——用了就能直接解鎖一隻娃娃！<br>碎片多的話，月宮玉兔還能換「<b>🎖 中秋勳章</b>」（${MOON_BADGE.need} 碎片 + ${MOON_BADGE.gold.toLocaleString()} 金幣，每帳號每天 ${MOON_BADGE.dailyCap} 枚）：戴上 10 小時內 <b>HP +50、MP +50、狩獵經驗 +10%、近戰／遠距／魔法命中各 +2、召喚獸命中 +1</b>。`,
     rewards: MOON_ROWS,
     steps: [
       `打<b>怪物等級 Lv${MOON_MINLV} 以上的怪</b>，有機率獲得「月光碎片」。<b>看的是「怪物」的等級</b>，不是你的角色等級、也不是獵場名稱——同一個獵場裡只有 Lv${MOON_MINLV} 以上的怪會掉，低於 Lv${MOON_MINLV} 的怪不會掉（怪物等級可在「怪物掉落圖鑑」查）。碎片不能賣店、不能存倉庫、不能上交易所。`,
@@ -1270,7 +1270,7 @@ const EVENTS = [
     ],
     rules: [
       `<b>機率表</b>就是上面那張：每一盒開出其中<b>一項</b>，數字是「該項被抽中的機率」，全部加起來 100%。標 ✨ 的是稀有品，開出來會<b>全服跑馬燈</b>恭喜。`,
-      `月光碎片、中秋鑰匙、中秋禮盒都是<b>活動道具</b>：不能賣店、不能存倉庫、不能上交易所。<b>活動結束（10/3 12:00）後，月光碎片、中秋鑰匙、未開封的中秋禮盒會由系統全數回收</b>，請在活動期間用完。已經開出來的獎品與已解鎖的娃娃<b>不會被回收</b>；<b>🪆 娃娃契約書不回收</b>，活動結束後仍可使用。`,
+      `月光碎片、中秋鑰匙、中秋禮盒都是<b>活動道具</b>：不能賣店、不能存倉庫、不能上交易所。<b>活動結束（10/5 12:00）後，月光碎片、中秋鑰匙、未開封的中秋禮盒會由系統全數回收</b>，請在活動期間用完。已經開出來的獎品與已解鎖的娃娃<b>不會被回收</b>；<b>🪆 娃娃契約書不回收</b>，活動結束後仍可使用。`,
       `兌換次數以<b>帳號</b>計（同帳號不同角色共用每天 ${MOON_EX.dailyCap} 次）。`,
       `活動期間 <b>🪆 娃娃卡片</b>正式開放；活動期間娃娃的取得方式為<b>禮盒開出的娃娃契約書</b>，其他取得方式將於活動結束後另行公告。`,
       `<b>🎖 中秋勳章</b>也是活動道具（不能賣店、不能存倉庫、不能上交易所、不能強化、不能賦予）；<b>配戴的那一刻才開始倒數 10 小時</b>，放在背包不計時，卸下會暫停、再戴上從剩餘時間繼續，時間到自動消失。同一時間只能配戴一枚中秋勳章（徽章②），但可以和徽章①的其他勳章同時配戴、效果相加。活動結束時<b>尚未配戴的中秋勳章一併回收</b>，戴在身上的會倒數到結束為止。`,
@@ -1900,7 +1900,7 @@ try { STATS = JSON.parse(fs.readFileSync(path.join(OUT, "stats.json"), "utf8"));
   const today = new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD(本地時區)
   const future = CHANGES.filter(d => d.date > today);
   if (future.length) console.log(`⏳ 跳過未來日期的更新日誌 ${future.length} 區塊:${future.map(d => d.date).join(", ")}(到當天才會發布)`);
-  CHANGES = CHANGES.filter(d => d.date <= today && !(d.date === "2026-09-27" && !DEPLOYED_0927) && !(d.date === "2026-10-03" && !MOON_OVER) && !(d.gate === "DEPLOYED_MKT" && !DEPLOYED_MKT) && !(d.gate === "DEPLOYED_0929" && !DEPLOYED_0929) && !(d.gate === "MCARD_RESET" && !FEAT.mcardreset) && !(d.gate === "RASTABAD" && !FEAT.rastabad) && !(d.gate === "DEPLOYED_BK" && !DEPLOYED_BK) && !(d.gate === "DEPLOYED_1001" && !DEPLOYED_1001) && !(d.gate === "DEPLOYED_1002" && !DEPLOYED_1002) && !(d.gate === "DEPLOYED_1003" && !DEPLOYED_1003)); // 9/27 區塊另受 DEPLOYED_0927 旗標(部署後才印);10/3 區塊受 MOON_OVER(回收跑完才印);精通洗鍊卡那條受 FEAT.mcardreset(跟商城實際可買同步,避免公告先出、卡還買不到)
+  CHANGES = CHANGES.filter(d => d.date <= today && !(d.date === "2026-09-27" && !DEPLOYED_0927) && !(d.gate === "MOON_OVER" && !MOON_OVER) && !(d.gate === "DEPLOYED_MKT" && !DEPLOYED_MKT) && !(d.gate === "DEPLOYED_0929" && !DEPLOYED_0929) && !(d.gate === "MCARD_RESET" && !FEAT.mcardreset) && !(d.gate === "RASTABAD" && !FEAT.rastabad) && !(d.gate === "DEPLOYED_BK" && !DEPLOYED_BK) && !(d.gate === "DEPLOYED_1001" && !DEPLOYED_1001) && !(d.gate === "DEPLOYED_1002" && !DEPLOYED_1002) && !(d.gate === "DEPLOYED_1003" && !DEPLOYED_1003)); // 9/27 區塊另受 DEPLOYED_0927 旗標(部署後才印);10/3 區塊受 MOON_OVER(回收跑完才印);精通洗鍊卡那條受 FEAT.mcardreset(跟商城實際可買同步,避免公告先出、卡還買不到)
 }
 {
   const TCOL = { "新增": "#7bd14a", "調整": "#5b9bff", "修復": "#f5c451", "活動": "#f5a97f" };
