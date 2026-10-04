@@ -203,7 +203,7 @@ const reqStr = r => !r || r === "all" ? "全職業" : r.split(",").map(x => REQ_
 // 武器特殊效果(對照 engine 內的 eff 分支;只列玩家打得到、意義明確的)
 // ✅ 已確認**程式碼裡真的有實作**的武器效果(逐一 grep engine/ 驗過)
 const EFF_N = {
-  doublehit: "雙擊:機率追加一次攻擊", // afk/darkelf.go:53
+  doublehit: "雙擊:機率傷害加倍", // afk/darkelf.go:53
   clawmark: "爪痕:機率造成武器最大傷害", // afk/darkelf.go:33
   mp_drain: "吸取魔力",                  // engine/combat.go:247
   moonburst: "月光爆裂",                 // afk/bosstick.go:210 / sim.go:1270
@@ -242,6 +242,8 @@ function itemFx(v) {
   if (v.allowEnh0) t.push("安定值 0 仍可強化");
   if (v.isArrow) t.push("箭矢");
   if (v.eff && EFF_N[v.eff]) t.push(EFF_N[v.eff] + (v.effPct ? "(" + v.effPct + "%)" : ""));
+  // 🧟 2026-10-04 玩家看官網反應「銀光雙刀沒有不死系加成」:加成一直有(combat.go PhysFixedDmg:unBonus/unDice/sp=elf ⇒ 對不死或狼人 rollN(1,20)),只是這裡沒顯示。20 樣武器共用同一顆 1d20。
+  if (v.unBonus || v.unDice || v.sp === "elf") t.push("對不死系／狼人:每次攻擊額外傷害 +1~20");
   if (v.sk || (v.grantSkills && v.grantSkills.length)) t.push("裝備時授予額外技能");
   if (v.spd && v.spd !== 1) t.push(v.spd < 1 ? "攻擊速度快" : "攻擊速度慢");
   if (v.w2h || v.twohanded || v.greatsword) t.push("雙手武器");
