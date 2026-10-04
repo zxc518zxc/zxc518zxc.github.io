@@ -360,6 +360,8 @@ const SK_NOTE = {
   sk_elf_singleres: "自己所選妖精屬性的抗性 +50:該屬性的怪物魔法傷害減半(抗性 100 = 免疫)。未選屬性則無效果。",
   sk_elf_attrfire: "近戰且屬性為火時,每次普攻或物理技命中有 33% 機率整段傷害 ×1.5。遠程武器不觸發。",
   sk_elf_flamesoul: "近戰時武器骰不再隨機,一律取最大值再 ×1.2;武器上「賦予:屬性」的傷害(含打到被剋屬性怪物的加成)也一起 ×1.2。力量、裝備、強化的加成不放大。遠程不吃。",
+  // 2026-10-04 麥哥:玩家在客服問衝暈效果 ⇒ 三種場合寫清楚。數字來源:afk/skills2b.go skillStunTicks=60 拍(0.1 秒/拍)、afk/skills.go abnormalMagicHitGo、cmd/goline/boss.go bossStunChance 0.30 / bossStunDurTicks 20 / bossStunImmuneTicks 20、afk/pk.go pvpStunHitPenalty 2 / pvpStunSkillCd 4。改了程式要回來改這段。
+  sk_shock_stun: "用武器打一下普通攻擊(傷害同普攻、沒有額外倍率),打中後再判定是否擊暈。約每 2 秒施放一次(有加速更短)。 【一般狩獵場】擊暈成功,怪物暈眩 6 秒、期間不會攻擊;王類的怪不會被暈。成功率看「命中值」= 自己等級 + 魔法命中 −(怪物等級 − 10)− 怪物魔防 ÷ 10,每 1 點約 5%,最低 5%、最高 95%(例:55 級、魔法命中 0,打 50 級、魔防 40 的怪 = 11 點 ≈ 55%)。 【世界王、城堡戰】固定 30% 機率讓王暈眩 2 秒(普攻與施法全停);暈完後有 2 秒免疫;王已經在暈時再放不會疊加、也不會延長。 【PK】擊暈判定的命中值再 −2,而且這招在 PK 中有 4 秒專屬冷卻(冷卻時改用普攻);暈眩不疊加。",
   sk_berserk: "AC 變差 10 點 = 怪物更容易命中你,換近戰傷害 +5。",
   sk_dark_stealth: "怪物對你的下一次物理攻擊 100% 迴避,迴避後效果消失、5 秒內不能再放。對魔法無效。",
   sk_dark_poisonres: "自己中毒時每跳傷害減半。目前只有傲慢之塔的變種楊果里恩、梅杜莎、奇美拉、扭曲的潔尼斯女王會對玩家上毒。",
@@ -405,7 +407,7 @@ function skillFx(v) {
   if (v.hpCost && v.mpGain) t.push("每次 −" + v.hpCost + " HP → +" + v.mpGain + " MP,冷卻 " + v.autoCd + " 秒(每秒約 −" + Math.round(v.hpCost / v.autoCd) + " HP / +" + Math.round(v.mpGain / v.autoCd) + " MP)");
   else if (v.hpCost) t.push("消耗 HP " + v.hpCost + (v.autoCd ? ",冷卻 " + v.autoCd + " 秒" : ""));
   if (v.instakill) t.push("即死:對「" + (v.instakill.tag === "undead" ? "不死系" : v.instakill.tag === "element" ? "元素系" : v.instakill.tag) + "」怪物判定,成功即秒殺(世界王免疫)");
-  if (v.stun) t.push("先打 1 次普攻,怪物存活時再判「異常魔法命中」,成功使目標暈眩 6 秒(世界王免疫)");
+  if (v.stun) t.push("先打 1 次普攻,怪物存活時再判「異常魔法命中」,成功使目標暈眩 6 秒(世界王、PK 另有規則,見說明)");
   if (v.haste) t.push("攻擊速度提升:攻擊間隔 ×0.67、技能冷卻同步縮短;與加速藥水不疊加、與勇敢藥水可疊加");
   // 🌑 行走加速(sk_dark_walkhaste):名字只寫「行走」,但引擎裡它是**攻擊速度**乘數(derived.go sbWalkHaste ×0.85),
   //    而且與 haste(綠水/加速術)是兩個獨立旗標 ⇒ **可以疊乘**。玩家一直誤以為兩者衝突,所以效果欄要寫清楚。
