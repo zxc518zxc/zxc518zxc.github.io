@@ -375,7 +375,8 @@ const SK_NOTE = {
   sk_dark_refine: "被動。可在背包提煉黑魔石:每次扣 1 顆 + 5 MP,成功變高一級、失敗化為粉末。1→2 級成功率 = 3.5% + 等級×1% + (WIS−8)×1.25%(WIS 最多算到 35、上限 80%);2→3 級為其一半、3→4 級為 1/4、4→5 級為 1/8。對照(1→2 / 2→3 / 3→4 / 4→5):Lv30・WIS 20 → 48.5% / 24% / 12% / 6%;Lv45・WIS 30 → 76% / 38% / 19% / 9.5%;Lv55・WIS 35 → 80% / 40% / 20% / 10%。要提煉出一顆五級黑魔石,平均要消耗的一級黑魔石:Lv30・WIS 20 約 1,160 顆、Lv45・WIS 30 約 190 顆、Lv55・WIS 35 約 156 顆(一級石 1,000 金一顆,滿等約 16 萬金幣、約 340 次提煉)。背包點石頭有「自動提煉」鈕,每 2 秒自動提煉一次同級石(換分頁或斷線會停);MP 不夠會卡住,建議在大廳做。",
   sk_undead_bane: "成功率 = 32% + (自己等級 − 怪物等級) + 魔法命中 × 2.5 − 怪物 MR ÷ 2,限 1%~95%;成功即秒殺(正常給經驗與掉落),失敗也扣 MP。例:Lv30、INT 25 打骷髏鬥士(Lv29、MR 25)約 25%,打骷髏(Lv10、MR 10)約 52%。世界王免疫。",
   // 2026-10-05 麥哥要我檢查:原文把「四大精靈王」列成可秒殺對象是錯的——牠們與冰之女王是王類(gamedata boss:true),tryInstakillGo 第一行就擋掉。可秒殺名單=gamedata mobs 的 elem:true 且非 boss。
-  sk_elf_release: "對「元素系」的一般怪物判定,成功直接秒殺(照常給經驗與掉落),失敗也會扣 MP。單體、每次 30 MP。可秒殺的怪:火蜥蜴、火炎蛋、雪人、冰人、希爾黛斯、冰之女王侍女、污染的地精靈、四種元素守護者,以及夢幻之島的閃電球、鎧甲守衛、火蜥蜴、火炎蛋、冰人。王類免疫(四大精靈王、冰之女王、世界王都秒殺不了)。成功率看「命中值」= 自己等級 + 魔法命中 −(怪物等級 − 10)− 怪物魔防 ÷ 10,每 1 點約 5%,最低 5%、最高 95%。",
+  // 2026-10-05 麥哥:這招正確功能=解放別人的召喚獸;遊戲內已停用(afk.UnimplSkills)。上線後顯示「未實裝」版。
+  sk_elf_release: DEPLOYED_1005 ? "【未實裝】釋放元素是用來解放別人的召喚獸,不是放在怪物身上的技能。這個功能目前尚未實裝,所以遊戲內暫時無法施放,設定裡的技能選單也不會列出它。" : "對「元素系」的一般怪物判定,成功直接秒殺(照常給經驗與掉落),失敗也會扣 MP。單體、每次 30 MP。可秒殺的怪:火蜥蜴、火炎蛋、雪人、冰人、希爾黛斯、冰之女王侍女、污染的地精靈、四種元素守護者,以及夢幻之島的閃電球、鎧甲守衛、火蜥蜴、火炎蛋、冰人。王類免疫(四大精靈王、冰之女王、世界王都秒殺不了)。成功率看「命中值」= 自己等級 + 魔法命中 −(怪物等級 − 10)− 怪物魔防 ÷ 10,每 1 點約 5%,最低 5%、最高 95%。",
   sk_ice_lance: "只有傷害,沒有冰凍效果。",
   sk_cold_shiver: "純魔法攻擊,不會吸血。",
   sk_vampire: "純魔法攻擊,不會吸血。",
@@ -394,6 +395,8 @@ const SK_STATUS = { poison: "中毒", blind: "黑暗", broken: "防禦破壞", s
   magicseal: "魔法封印", armorbreak: "破甲" };
 // 骰子 [n, 面數] → nDf(最小 n、最大 n×f)
 const dice = d => Array.isArray(d) && d.length === 2 ? `${d[0]}D${d[1]}(${d[0]}~${d[0] * d[1]})` : "";
+// 🚧 未實裝的技能(對齊遊戲 afk.UnimplSkills;2026-10-05 釋放元素):技能頁標「未實裝」、不顯示原本的效果標籤
+const UNIMPL_SK = new Set(["sk_elf_release"].map(id => (GD.skills || {})[id]).filter(Boolean));
 function skillFx(v) {
   const t = [];
   // 2026-09-15 對碼後改寫:lifesteal / freeze / healDice / pbase / autoBuff 都是引擎不讀的死欄位,不再照字面翻;
@@ -408,7 +411,8 @@ function skillFx(v) {
   if (v.dur) t.push("持續 " + v.dur + " 秒");
   if (v.hpCost && v.mpGain) t.push("每次 −" + v.hpCost + " HP → +" + v.mpGain + " MP,冷卻 " + v.autoCd + " 秒(每秒約 −" + Math.round(v.hpCost / v.autoCd) + " HP / +" + Math.round(v.mpGain / v.autoCd) + " MP)");
   else if (v.hpCost) t.push("消耗 HP " + v.hpCost + (v.autoCd ? ",冷卻 " + v.autoCd + " 秒" : ""));
-  if (v.instakill) t.push("即死:對「" + (v.instakill.tag === "undead" ? "不死系" : v.instakill.tag === "element" ? "元素系" : v.instakill.tag) + "」怪物判定,成功即秒殺(世界王免疫)");
+  if (DEPLOYED_1005 && UNIMPL_SK.has(v)) t.push("🚧 未實裝(暫時無法施放)");
+  else if (v.instakill) t.push("即死:對「" + (v.instakill.tag === "undead" ? "不死系" : v.instakill.tag === "element" ? "元素系" : v.instakill.tag) + "」怪物判定,成功即秒殺(世界王免疫)");
   if (v.stun) t.push("先打 1 次普攻,怪物存活時再判「異常魔法命中」,成功使目標暈眩 6 秒(世界王、PK 另有規則,見說明)");
   if (v.haste) t.push("攻擊速度提升:攻擊間隔 ×0.67、技能冷卻同步縮短;與加速藥水不疊加、與勇敢藥水可疊加");
   // 🌑 行走加速(sk_dark_walkhaste):名字只寫「行走」,但引擎裡它是**攻擊速度**乘數(derived.go sbWalkHaste ×0.85),
