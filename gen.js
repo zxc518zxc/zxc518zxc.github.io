@@ -1943,13 +1943,16 @@ ${body}`));
 // 改了平衡只要重跑那支再跑 gen.js 就同步。**不要手改 stats.json**。
 if (STATS.length) {
   // 每個能力一張表:[鍵, 名稱, 圖示, 一句話, [[欄名, 欄位, 說明], ...]]
+  // ⭐ 2026-10-04 玩家問「40 力命中 28、45 力突然 35 是不是寫錯」⇒ 45 是獎勵門檻,標出來(差值由 stats.json 算,不手抄)
+  const _r44 = STATS.find(r => r.v === 44) || {}, _r45 = STATS.find(r => r.v === 45) || {};
+  const _gate = (nm, k) => (_r45[k + "Dmg"] - _r44[k + "Dmg"] > 1) ? `<br>⭐ <b>${nm} 45 是獎勵門檻</b>:從 44 到 45 這一點會一次多給 傷害 +${_r45[k + "Dmg"] - _r44[k + "Dmg"]}、命中 +${_r45[k + "Hit"] - _r44[k + "Hit"]}、爆擊率 +${_r45[k + "Crit"] - _r44[k + "Crit"]}%,所以表上的數字會突然跳一段(不是寫錯);其他區間是每點慢慢加。` : "";
   const SD = [
-    ["str", "力量", "💪", "近距離戰鬥。騎士與黑暗妖精主要靠它。", [
+    ["str", "力量", "💪", "近距離戰鬥。騎士與黑暗妖精主要靠它。" + _gate("力量", "str"), [
       ["近距離傷害", "strDmg", "平砍與近戰技能的傷害加值"],
       ["近距離命中", "strHit", "打得到近戰目標的能力"],
       ["近距離爆擊率", "strCrit", "%"],
     ]],
-    ["dex", "敏捷", "🏹", "遠距離戰鬥與閃避。妖精與黑暗妖精主要靠它。", [
+    ["dex", "敏捷", "🏹", "遠距離戰鬥與閃避。妖精與黑暗妖精主要靠它。" + _gate("敏捷", "dex"), [
       ["遠距離傷害", "dexDmg", "弓箭與遠程技能的傷害加值"],
       ["遠距離命中", "dexHit", "射得中目標的能力"],
       ["防禦 AC", "dexAc", "數字<b>越低越強</b>。這張表<b>不分職業、不分等級</b>:敏捷<b>每到 3 的倍數</b>(9、12、15、18、21…)才再 −1,中間的點數<b>不會變</b>。例:12 → −4,15 → −5,<b>16、17 還是 −5</b>,要到 18 才 −6。直接看下表的數字最準。<br>另外<b>每升幾級 AC 也會 −1</b>,看職業不看敏捷:騎士<b>每 6 級</b>、妖精<b>每 7 級</b>、法師與黑暗妖精<b>每 8 級</b>(無條件捨去)。不需要先把敏捷堆到 18。"],
@@ -2004,7 +2007,7 @@ $("sdesc").innerHTML="<b style='color:#f5c451'>"+d[2]+" "+d[1]+"</b>　"+d[3];
 $("th").innerHTML="<tr><th>"+d[1]+"</th>"+cols.map(c=>"<th style='text-align:right'>"+c[0]+(c[2]?"<div style='font-weight:normal;color:#8f8067;font-size:11px'>"+c[2]+"</div>":"")+"</th>").join("")+"</tr>";
 const rows=ST.filter(r=>r.v>=MINV);
 $("tb").innerHTML=rows.map(r=>{
-  return "<tr><td class='nm'>"+r.v+"</td>"+cols.map(c=>"<td class='num' data-l='"+c[0]+"'>"+r[c[1]]+"</td>").join("")+"</tr>";
+  return "<tr><td class='nm'>"+r.v+((r.v===45&&(cur==="str"||cur==="dex"))?" ⭐":"")+"</td>"+cols.map(c=>"<td class='num' data-l='"+c[0]+"'>"+r[c[1]]+"</td>").join("")+"</tr>";
 }).join("");}
 render();
 </script>`));
@@ -2057,7 +2060,8 @@ if (WD.bianOdds && WD.bianOdds.length) {
 
 <div class="mcard"><div class="ttl">③ 祝福的 / 詛咒的 效果</div>
 <div class="sub">同一個位置只會有其中一個。<b>防禦 AC 在遊戲內是數字越低越強</b>,這裡已經換算成白話。</div>
-${effTbl(WD.bless || [])}</div>
+${effTbl(WD.bless || [])}
+<div class="hint" style="margin-top:10px">💡 <b>「額外傷害」和強化的傷害有什麼不同?</b><br>武器每強化 +1,加的是「近距離/遠距離傷害」與命中各 +1;祝福的、永恆、遠古等詞條加的是「<b>額外傷害</b>」。兩種平常打起來一樣都是 +1,差別只在<b>爆擊時</b>:強化加的傷害會跟著爆擊一起放大,「額外傷害」不會放大、固定加上去。<br>例:<b>+7 祝福的</b>武器 和 <b>+9 詛咒的</b>同款武器,平常的傷害、命中相同(都是 +8);爆擊那一下 +9 詛咒的略高,但詛咒的裝備<b>脫不下來</b>、魔力少 4 點。</div></div>
 
 <div class="mcard"><div class="ttl">④ 遠古系四變體</div>
 <div class="sub">四種變體強化的方向完全不同,<b>沒有絕對最好的</b>,看你要傷害、命中還是防禦。</div>
