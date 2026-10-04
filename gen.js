@@ -23,6 +23,7 @@ const LINKS = {
 };
 
 const GD = JSON.parse(fs.readFileSync(path.join(__dirname, "../go端專案/gamedata.json"), "utf8"));
+const DEPLOYED_1005 = false;   // 10/5 白天維護(娃娃帳號共用;第二台驗收後翻 true)   // ⚠ 放這麼前面是因為上面的技能說明表(SK_DESC 那張)在載入時就要讀它
 const OUT = __dirname;
 
 // ---- 🎁 兌換配方(2026-09-19:玩家找不到「解除詛咒的卷軸」的出處)----
@@ -360,8 +361,8 @@ const SK_NOTE = {
   sk_elf_singleres: "自己所選妖精屬性的抗性 +50:該屬性的怪物魔法傷害減半(抗性 100 = 免疫)。未選屬性則無效果。",
   sk_elf_attrfire: "近戰且屬性為火時,每次普攻或物理技命中有 33% 機率整段傷害 ×1.5。遠程武器不觸發。",
   sk_elf_flamesoul: "近戰時武器骰不再隨機,一律取最大值再 ×1.2;武器上「賦予:屬性」的傷害(含打到被剋屬性怪物的加成)也一起 ×1.2。力量、裝備、強化的加成不放大。遠程不吃。",
-  // 2026-10-04 麥哥:玩家在客服問衝暈效果 ⇒ 三種場合寫清楚。數字來源:afk/skills2b.go skillStunTicks=60 拍(0.1 秒/拍)、afk/skills.go abnormalMagicHitGo、cmd/goline/boss.go bossStunChance 0.30 / bossStunDurTicks 20 / bossStunImmuneTicks 20、afk/pk.go pvpStunHitPenalty 2 / pvpStunSkillCd 4。改了程式要回來改這段。
-  sk_shock_stun: "用武器打一下普通攻擊(傷害同普攻、沒有額外倍率),打中後再判定是否擊暈。約每 2 秒施放一次(有加速更短)。 【一般狩獵場】擊暈成功,怪物暈眩 6 秒、期間不會攻擊;王類的怪不會被暈。成功率看「命中值」= 自己等級 + 魔法命中 −(怪物等級 − 10)− 怪物魔防 ÷ 10,每 1 點約 5%,最低 5%、最高 95%(例:55 級、魔法命中 0,打 50 級、魔防 40 的怪 = 11 點 ≈ 55%)。 【世界王、城堡戰】固定 30% 機率讓王暈眩 2 秒(普攻與施法全停);暈完後有 2 秒免疫;王已經在暈時再放不會疊加、也不會延長。 【PK】擊暈判定的命中值再 −2,而且這招在 PK 中有 4 秒專屬冷卻(冷卻時改用普攻);暈眩不疊加。",
+  // 2026-10-04 麥哥:玩家在客服問衝暈效果 ⇒ 三種場合寫清楚。數字來源:afk/skills2b.go skillStunTicks=60 拍(0.1 秒/拍)、afk/skills.go abnormalMagicHitGo、cmd/goline/boss.go bossStunChance 0.30 / bossStunDurTicks 20 / bossStunImmuneTicks 20、afk/pk.go pvpStunHitPenalty 2 / pvpStunSkillCd 4。改了程式要回來改這段。施放冷卻=afk/skills2b.go StunSkillCdSec(10/5 起 6 秒;之前獵場 2 秒×攻速、王房/城堡 5 秒)。
+  sk_shock_stun: "用武器打一下普通攻擊(傷害同普攻、沒有額外倍率),打中後再判定是否擊暈。" + (DEPLOYED_1005 ? "每 6 秒可施放一次(固定 6 秒,不受加速影響;一般狩獵場、世界王、城堡戰都一樣)。" : "施放間隔:一般狩獵場約每 2 秒一次(有加速更短);世界王、城堡戰每 5 秒一次。") + " 【一般狩獵場】擊暈成功,怪物暈眩 6 秒、期間不會攻擊;王類的怪不會被暈。成功率看「命中值」= 自己等級 + 魔法命中 −(怪物等級 − 10)− 怪物魔防 ÷ 10,每 1 點約 5%,最低 5%、最高 95%(例:55 級、魔法命中 0,打 50 級、魔防 40 的怪 = 11 點 ≈ 55%)。 【世界王、城堡戰】固定 30% 機率讓王暈眩 2 秒(普攻與施法全停);暈完後有 2 秒免疫;王已經在暈時再放不會疊加、也不會延長。 【PK】擊暈判定的命中值再 −2,而且這招在 PK 中有 4 秒專屬冷卻(冷卻時改用普攻);暈眩不疊加。",
   sk_berserk: "AC 變差 10 點 = 怪物更容易命中你,換近戰傷害 +5。",
   sk_dark_stealth: "怪物對你的下一次物理攻擊 100% 迴避,迴避後效果消失、5 秒內不能再放。對魔法無效。",
   sk_dark_poisonres: "自己中毒時每跳傷害減半。目前只有傲慢之塔的變種楊果里恩、梅杜莎、奇美拉、扭曲的潔尼斯女王會對玩家上毒。",
@@ -1185,7 +1186,6 @@ const DEPLOYED_1002 = true;
 const DEPLOYED_1003 = true;
 // 🛡 10/4(日)12:30 白天維護(能力頁受怪傷害減免、隊伍能力說明):第二台回報驗收後才翻 true。
 const DEPLOYED_1004 = true;
-const DEPLOYED_1005 = false;   // 10/5 白天維護(娃娃帳號共用;第二台驗收後翻 true)
 const MOON_MINLV = DEPLOYED_0927 ? ((((GD.items || {}).mat_moon_shard || {}).eventDrop || {}).minLv || 35) : 40;
 const MOON_KEY_P = ((GD.items || {}).item_moon_key || {}).p || 2000000;
 
