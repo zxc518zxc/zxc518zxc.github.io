@@ -23,7 +23,7 @@ const LINKS = {
 };
 
 const GD = JSON.parse(fs.readFileSync(path.join(__dirname, "../go端專案/gamedata.json"), "utf8"));
-const DEPLOYED_1005 = false;   // 10/5 白天維護(娃娃帳號共用;第二台驗收後翻 true)   // ⚠ 放這麼前面是因為上面的技能說明表(SK_DESC 那張)在載入時就要讀它
+const DEPLOYED_1005 = true;   // 10/5 白天維護(娃娃帳號共用;第二台驗收後翻 true)   // ⚠ 放這麼前面是因為上面的技能說明表(SK_DESC 那張)在載入時就要讀它
 const OUT = __dirname;
 
 // ---- 🎁 兌換配方(2026-09-19:玩家找不到「解除詛咒的卷軸」的出處)----
@@ -1172,7 +1172,7 @@ const MOON_BADGE = ((GD.items || {}).badge_moon || {}).moonEx || { need: 30, gol
 const DEPLOYED_0927 = true; // 2026-09-27 12:33 第二台部署驗收通過(pid 12372 / cv 1943a129)後翻開
 // 🎑 10/5 活動收尾(麥哥 10/3 改期:原 10/3):第二台跑完 moonwipe 回收、goline 重新起來之後才翻 true ⇒ 活動頁變暗標「已結束」+ changelog 10/5 那條(gate MOON_OVER)才印。
 //    (指令包 go端專案/.ai/2026-10-05-活動收尾-第二台指令.md;翻開前 gen 一律當作活動還在)
-const MOON_OVER = false;
+const MOON_OVER = true;
 // 🏷 交易所賤賣防呆(近期成交行情 + 低價確認框):程式 go端專案 b41efbda,**還沒上正式服**(排下次白天維護,指令包
 //    go端專案/.ai/2026-09-28-交易所賤賣防呆-第二台指令.md)。第二台部署驗收後翻 true 再 gen+push:changelog 條目(gate 欄位)+ 系統說明那一列才印。
 //    麥哥 9/27 拍板「可以上官網」。門檻百分比與樣本筆數刻意不寫死在官網(以後調常數不用改官網)。翻旗標時順便把 changelog.json 那塊的 date 改成實際部署日。
