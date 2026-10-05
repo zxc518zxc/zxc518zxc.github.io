@@ -716,6 +716,8 @@ td.num{text-align:right;white-space:nowrap;color:#b6a684}
 .tag{display:inline-block;background:#2a2014;border:1px solid #3a2f1c;border-radius:6px;padding:1px 7px;margin:2px 3px 0 0;font-size:12px;color:#cbbb9b;white-space:nowrap}
 .tag.lg{color:#ffd700;border-color:#6b5a20}
 .tag.zn{color:#7bd14a;border-color:#2f4a24}
+a.tag{text-decoration:none;cursor:pointer}
+a.tag:hover{border-color:#f5c451;color:#f5c451}
 .tag.wb{color:#f5a97f;border-color:#6b3f28;background:rgba(245,169,127,.08)}
 .wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 
@@ -1077,9 +1079,11 @@ document.querySelectorAll("#lvchips .chip").forEach(c=>c.onclick=()=>{document.q
 function inLv(m){if(lv==="all")return true;if(lv==="61+")return m.lv>=61;const p=lv.split("-");return m.lv>=+p[0]&&m.lv<=+p[1];}
 function render(){const q=$("q").value.trim().toLowerCase();
 const list=WIKI.mobs.filter(m=>inLv(m)&&(!q||m.n.toLowerCase().includes(q)||m.drops.some(d=>d.n.toLowerCase().includes(q))));
+if(q)list.sort((a,b)=>(b.n.toLowerCase()===q)-(a.n.toLowerCase()===q));   // 名字完全相同的排最前(從獵場頁點怪物名連過來時,第一列就是牠)
 $("tb").innerHTML=list.map(m=>"<tr><td class='nm'>"+esc(m.n)+"</td><td class='num' data-l='等級'>Lv "+m.lv+"</td><td class='num' data-l='HP'>"+m.hp.toLocaleString()+"</td><td class='num' data-l='經驗'>"+m.exp.toLocaleString()+"</td><td class='num' data-l='屬性'>"+m.e+"</td>"+
 "<td data-l='出沒地點'>"+(m.wbOnly?"<span class='tag wb'>🐉 世界王房限定</span>":(m.zones.length?m.zones.map(z=>"<span class='tag zn'>"+esc(z)+"</span>").join(""):"<span class='tag'>—</span>"))+"</td>"+
 "<td data-l='掉落'>"+(m.drops.length?m.drops.map(d=>"<span class='tag"+(d.legend?" lg":"")+"'>"+(d.legend?"★":"")+esc(d.n)+"</span>").join(""):"<span style='color:#6b5f4c'>—</span>")+"</td></tr>").join("")||"<tr><td colspan=7 style='color:#8f8067'>查無符合</td></tr>";}
+try{const pq=new URLSearchParams(location.search).get("q");if(pq)$("q").value=pq;}catch(e){}   // 獵場頁的怪物名連結帶 ?q=怪物名 進來
 $("q").oninput=render;render();
 </script>`));
 
@@ -1478,11 +1482,12 @@ ${chips([[zones.length, "獵場"], [zones.filter(z => z.cat === "野外").length
 const $=id=>document.getElementById(id);
 ${ESC}
 const CS=["全部","野外","地監","特殊"];let cf="全部";
+const MOBSET={};WIKI.mobs.forEach(m=>MOBSET[m.n]=1);   // 出沒怪點了連到怪物掉落圖鑑(玩家建議 2026-10-05);圖鑑裡沒有的怪不做連結
 $("cchips").innerHTML=CS.map(t=>'<span class="chip'+(t==="全部"?" on":"")+'" data-t="'+t+'">'+t+'</span>').join("");
 document.querySelectorAll("#cchips .chip").forEach(c=>c.onclick=()=>{document.querySelectorAll("#cchips .chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");cf=c.dataset.t;render();});
 function render(){const q=$("q").value.trim().toLowerCase();
 const list=WIKI.zones.filter(z=>(cf==="全部"||z.cat===cf)&&(!q||z.n.toLowerCase().includes(q)||z.mobs.some(m=>m.toLowerCase().includes(q))));
-$("tb").innerHTML=list.map(z=>"<tr><td class='nm'>"+esc(z.n)+(z.area?"<div style='font-weight:normal;color:#7bd14a;font-size:12px'>⛏ 採集:"+z.area.map(x=>esc(x)).join("、")+"</div>":"")+"</td><td class='num' data-l='類型'>"+z.cat+"</td><td class='num' data-l='怪物等級'>"+(z.lvMin?"Lv"+z.lvMin+"~"+z.lvMax:"—")+"</td><td class='num' data-l='AC門檻'>"+(z.ac?"<b style='color:#f5a97f'>"+z.ac+" 以下</b>"+(z.acx?"<div style='font-size:12px;color:#c9b88f;font-weight:normal'>"+z.acx+"</div>":""):"<span style='color:#6b5f4c'>無</span>")+"</td><td data-l='出沒怪'>"+z.mobs.map(m=>"<span class='tag'>"+esc(m)+"</span>").join("")+"</td></tr>").join("")||"<tr><td colspan=5 style='color:#8f8067'>查無符合</td></tr>";}
+$("tb").innerHTML=list.map(z=>"<tr><td class='nm'>"+esc(z.n)+(z.area?"<div style='font-weight:normal;color:#7bd14a;font-size:12px'>⛏ 採集:"+z.area.map(x=>esc(x)).join("、")+"</div>":"")+"</td><td class='num' data-l='類型'>"+z.cat+"</td><td class='num' data-l='怪物等級'>"+(z.lvMin?"Lv"+z.lvMin+"~"+z.lvMax:"—")+"</td><td class='num' data-l='AC門檻'>"+(z.ac?"<b style='color:#f5a97f'>"+z.ac+" 以下</b>"+(z.acx?"<div style='font-size:12px;color:#c9b88f;font-weight:normal'>"+z.acx+"</div>":""):"<span style='color:#6b5f4c'>無</span>")+"</td><td data-l='出沒怪'>"+z.mobs.map(m=>MOBSET[m]?"<a class='tag' href='monsters.html?q="+encodeURIComponent(m)+"' title='看「"+esc(m)+"」的掉落'>"+esc(m)+"</a>":"<span class='tag'>"+esc(m)+"</span>").join("")+"</td></tr>").join("")||"<tr><td colspan=5 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script>`));
 
