@@ -23,7 +23,7 @@ const LINKS = {
 };
 
 const GD = JSON.parse(fs.readFileSync(path.join(__dirname, "../go端專案/gamedata.json"), "utf8"));
-const DEPLOYED_1006 = false;   // 10/6 白天維護(世界王攻擊技能選單;第二台驗收後翻 true)
+const DEPLOYED_1006 = true;   // 10/6 白天維護(世界王攻擊技能選單;第二台驗收後翻 true)
 const DEPLOYED_1005 = true;
 // 📈 伺服器等級(= 遊戲後台 svlv;系統說明頁用)。⚠ 遊戲裡 svlv 改了這裡要跟著改(9/26 升 54 時漏改,頁面一直停在 52)。
 const SV_LV = DEPLOYED_1006 ? 55 : 54, SV_LV_SINCE = DEPLOYED_1006 ? "10/6" : "9/26";   // 10/5 白天維護(娃娃帳號共用;第二台驗收後翻 true)   // ⚠ 放這麼前面是因為上面的技能說明表(SK_DESC 那張)在載入時就要讀它
@@ -69,8 +69,8 @@ const FEAT = {
   mcard:   false, // 商城:精通轉換卡(💎500;2026-09-28 起洗鍊卡拆出去了,這個只剩轉換卡)
   trial50: false, // 📜 50 級試煉(燃柳村 迪嘉勒廷)——麥哥 2026-09-16 拍板收起,遊戲內 NPC 也一起收
                   //    ⚠ 必須與遊戲的 `feature trial50` 同步:那邊開放了,這裡才改 true 重發布
-  twilight: false, // 🏔 黃昏山脈(2026-10-06 從 tianfa 拆出的獨立開關;遊戲 `feature twilight on` 之後才改 true)
-  snail:    true,  // 🐌 蝸牛賽跑(2026-10-06 麥哥收起;遊戲 `feature snail off` 之後改 false ⇒ 系統說明卡加「暫停開放」)
+  twilight: true,  // 🏔 黃昏山脈(2026-10-06 從 tianfa 拆出的獨立開關;遊戲 `feature twilight on` 之後才改 true)
+  snail:    false, // 🐌 蝸牛賽跑(2026-10-06 麥哥收起;遊戲 `feature snail off` 之後改 false ⇒ 系統說明卡加「暫停開放」)
   rastabad: true, // 🗺 新地區 拉斯塔巴德(2026-09-29 起分批開放;遊戲 `feature rastabad on` 之後才改 true)
                    //    true 時也只列 gamedata 裡真的有的頻道(分批還沒放的那幾張本來就不在),那些圖專屬的怪/新裝備一併不列
 };
