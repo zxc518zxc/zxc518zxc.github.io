@@ -67,6 +67,8 @@ const FEAT = {
   mcard:   false, // 商城:精通轉換卡(💎500;2026-09-28 起洗鍊卡拆出去了,這個只剩轉換卡)
   trial50: false, // 📜 50 級試煉(燃柳村 迪嘉勒廷)——麥哥 2026-09-16 拍板收起,遊戲內 NPC 也一起收
                   //    ⚠ 必須與遊戲的 `feature trial50` 同步:那邊開放了,這裡才改 true 重發布
+  twilight: false, // 🏔 黃昏山脈(2026-10-06 從 tianfa 拆出的獨立開關;遊戲 `feature twilight on` 之後才改 true)
+  snail:    true,  // 🐌 蝸牛賽跑(2026-10-06 麥哥收起;遊戲 `feature snail off` 之後改 false ⇒ 系統說明卡加「暫停開放」)
   rastabad: true, // 🗺 新地區 拉斯塔巴德(2026-09-29 起分批開放;遊戲 `feature rastabad on` 之後才改 true)
                    //    true 時也只列 gamedata 裡真的有的頻道(分批還沒放的那幾張本來就不在),那些圖專屬的怪/新裝備一併不列
 };
@@ -105,7 +107,8 @@ const RASTA_NEW_ITEMS = new Set(["wpn_spear_rasta", "amr_rasta_robe", "wpn_wand_
   "wpn_blood_2hsword", "wpn_red_crystalwand", "clk_blacktiger", "acc_summoner_amulet", "amr_summoner_robe"]);
 const hiddenZone = z =>
   BLOCKED_ZONES.has(z) ||
-  (!FEAT.tianfa && (z === "twilight_mt" || z.startsWith("pride_"))) ||
+  (!FEAT.tianfa && z.startsWith("pride_")) ||
+  (!FEAT.twilight && z === "twilight_mt") ||
   (!FEAT.castle && z.startsWith("siege_")) ||
   (!FEAT.rastabad && RASTA_ZONES.has(z)) ||
   z.startsWith("pk_") || z === "lobby";
@@ -1819,7 +1822,7 @@ fs.writeFileSync(path.join(OUT, "systems.html"), page("系統說明", "sys", `
 </tbody></table></div></div>
 
 ${DEPLOYED_1002 ? `<div class="mcard"><div class="ttl">🐌 蝸牛賽跑</div>
-<div class="sub">在「聊天」分頁的「蝸牛賽跑」。每場 5 隻蝸牛同場競速,挑你看好的那隻投入金幣應援,牠拿下冠軍就能分到獎金!</div>
+${FEAT.snail ? "" : `<div class="sub" style="color:#f5a97f"><b>⏸ 目前暫停開放</b>,重新開放時會另行公告。以下為開放時的規則。</div>`}<div class="sub">在「聊天」分頁的「蝸牛賽跑」。每場 5 隻蝸牛同場競速,挑你看好的那隻投入金幣應援,牠拿下冠軍就能分到獎金!</div>
 <div class="wrap"><table><thead><tr><th>項目</th><th>規則</th></tr></thead><tbody>
 <tr><td>每場時間</td><td>約 2 分鐘一場:前 <b>90 秒</b>開放應援,最後 <b>30 秒</b>截止,接著開跑、公布冠軍,然後自動開下一場</td></tr>
 <tr><td>應援金額</td><td>目前每次 <b>5 萬</b>起(5 萬的倍數),<b>每人每場合計最多 50 萬</b>;可分開支持好幾隻。金額以遊戲內畫面顯示為準</td></tr>
