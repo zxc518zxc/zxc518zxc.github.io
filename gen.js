@@ -23,6 +23,7 @@ const LINKS = {
 };
 
 const GD = JSON.parse(fs.readFileSync(path.join(__dirname, "../go端專案/gamedata.json"), "utf8"));
+const DEPLOYED_1008 = false;   // 10/8 白天維護(娃娃十連抽 41 級/每日 4 次;第二台驗收後翻 true)
 const DEPLOYED_1007 = false;   // 10/7 白天維護(交易所紀錄分頁;第二台驗收後翻 true)
 const DEPLOYED_1006 = true;   // 10/6 白天維護(世界王攻擊技能選單;第二台驗收後翻 true)
 const DEPLOYED_1005 = true;
@@ -1626,10 +1627,10 @@ ${chips([[cnt(1), "白娃娃"], [cnt(2), "綠娃娃"], [cnt(3), "藍娃娃"]])}
 
 <div class="mcard"><div class="ttl">🪆 怎麼玩</div>
 <div class="wrap"><table><thead><tr><th>項目</th><th>說明</th></tr></thead><tbody>
-<tr><td>取得娃娃</td><td>活動期間：使用中秋禮盒開出的「<b>娃娃契約書</b>」（白／綠／藍），會<b>隨機解鎖該階的一隻</b>；抽到已擁有的會轉成該階<b>碎片 ×1</b>。其他取得方式將另行公告。</td></tr>
+<tr><td>取得娃娃</td><td>${DEPLOYED_1008 ? `「抽卡」頁的<b>十連抽</b>：角色 <b>Lv${cfg.minLv}</b> 以上，<b>每個帳號每天 ${cfg.maxPerDay} 次</b>（清晨 5 點重置），價格依序 ${(cfg.goldPrices || []).map(x => `<b>${(x / 10000).toLocaleString()} 萬金幣</b>`).concat((cfg.diaPrices || []).map(x => `<b>${x} 藍鑽</b>`)).join(" → ")}；每次抽之前都會跳確認。抽到已擁有的會轉成該階<b>碎片 ×1</b>。` : `活動期間：使用中秋禮盒開出的「<b>娃娃契約書</b>」（白／綠／藍），會<b>隨機解鎖該階的一隻</b>；抽到已擁有的會轉成該階<b>碎片 ×1</b>。其他取得方式將另行公告。`}</td></tr>
 <tr><td>召喚</td><td>在卡冊點已解鎖的娃娃 → 召喚。召喚中每 <b>${upMin} 分鐘</b>扣一次維持費：白 <b>${upkeep(1)} 萬</b>／綠 <b>${upkeep(2)} 萬</b>／藍 <b>${upkeep(3)} 萬</b>金幣；<b>金幣不夠會自動收回</b>。可隨時收回（已扣的不退）。</td></tr>
 <tr><td>合成</td><td>同階碎片 <b>${cfg.synthNeed || 4} 片</b>賭一次升上一階：白 → 綠 <b>${rate(1)}%</b>、綠 → 藍 <b>${rate(2)}%</b>；成功得到上一階隨機一隻（已擁有則轉碎片），失敗退回 1 片。白／綠可用「快速合成」一次連賭多次。</td></tr>
-<tr><td>門檻</td><td>合成需角色 <b>Lv${cfg.minLv || 45}</b>；召喚不限等級。</td></tr>
+<tr><td>門檻</td><td>${DEPLOYED_1008 ? `抽卡與合成` : `合成`}需角色 <b>Lv${DEPLOYED_1008 ? cfg.minLv : 45}</b>；召喚不限等級。</td></tr>
 <tr><td>效果</td><td>只有<b>召喚中</b>的那一隻生效；經驗％與血盟、勳章等加成<b>相加</b>；離線掛機照樣生效（維持費也照扣）。</td></tr>
 </tbody></table></div></div>
 
@@ -1939,7 +1940,7 @@ try { STATS = JSON.parse(fs.readFileSync(path.join(OUT, "stats.json"), "utf8"));
   const today = new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD(本地時區)
   const future = CHANGES.filter(d => d.date > today);
   if (future.length) console.log(`⏳ 跳過未來日期的更新日誌 ${future.length} 區塊:${future.map(d => d.date).join(", ")}(到當天才會發布)`);
-  CHANGES = CHANGES.filter(d => d.date <= today && !(d.date === "2026-09-27" && !DEPLOYED_0927) && !(d.gate === "MOON_OVER" && !MOON_OVER) && !(d.gate === "DEPLOYED_MKT" && !DEPLOYED_MKT) && !(d.gate === "DEPLOYED_0929" && !DEPLOYED_0929) && !(d.gate === "MCARD_RESET" && !FEAT.mcardreset) && !(d.gate === "RASTABAD" && !FEAT.rastabad) && !(d.gate === "DEPLOYED_BK" && !DEPLOYED_BK) && !(d.gate === "DEPLOYED_1001" && !DEPLOYED_1001) && !(d.gate === "DEPLOYED_1002" && !DEPLOYED_1002) && !(d.gate === "DEPLOYED_1003" && !DEPLOYED_1003) && !(d.gate === "DEPLOYED_1004" && !DEPLOYED_1004) && !(d.gate === "DEPLOYED_1005" && !DEPLOYED_1005) && !(d.gate === "DEPLOYED_1006" && !DEPLOYED_1006) && !(d.gate === "DEPLOYED_1007" && !DEPLOYED_1007)); // 9/27 區塊另受 DEPLOYED_0927 旗標(部署後才印);10/3 區塊受 MOON_OVER(回收跑完才印);精通洗鍊卡那條受 FEAT.mcardreset(跟商城實際可買同步,避免公告先出、卡還買不到)
+  CHANGES = CHANGES.filter(d => d.date <= today && !(d.date === "2026-09-27" && !DEPLOYED_0927) && !(d.gate === "MOON_OVER" && !MOON_OVER) && !(d.gate === "DEPLOYED_MKT" && !DEPLOYED_MKT) && !(d.gate === "DEPLOYED_0929" && !DEPLOYED_0929) && !(d.gate === "MCARD_RESET" && !FEAT.mcardreset) && !(d.gate === "RASTABAD" && !FEAT.rastabad) && !(d.gate === "DEPLOYED_BK" && !DEPLOYED_BK) && !(d.gate === "DEPLOYED_1001" && !DEPLOYED_1001) && !(d.gate === "DEPLOYED_1002" && !DEPLOYED_1002) && !(d.gate === "DEPLOYED_1003" && !DEPLOYED_1003) && !(d.gate === "DEPLOYED_1004" && !DEPLOYED_1004) && !(d.gate === "DEPLOYED_1005" && !DEPLOYED_1005) && !(d.gate === "DEPLOYED_1006" && !DEPLOYED_1006) && !(d.gate === "DEPLOYED_1007" && !DEPLOYED_1007) && !(d.gate === "DEPLOYED_1008" && !DEPLOYED_1008)); // 9/27 區塊另受 DEPLOYED_0927 旗標(部署後才印);10/3 區塊受 MOON_OVER(回收跑完才印);精通洗鍊卡那條受 FEAT.mcardreset(跟商城實際可買同步,避免公告先出、卡還買不到)
 }
 {
   const TCOL = { "新增": "#7bd14a", "調整": "#5b9bff", "修復": "#f5c451", "活動": "#f5a97f" };
