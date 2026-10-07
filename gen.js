@@ -24,7 +24,7 @@ const LINKS = {
 
 const GD = JSON.parse(fs.readFileSync(path.join(__dirname, "../go端專案/gamedata.json"), "utf8"));
 const DEPLOYED_1008 = false;   // 10/8 白天維護(娃娃十連抽 41 級/每日 4 次;第二台驗收後翻 true)
-const DEPLOYED_1007 = false;   // 10/7 白天維護(交易所紀錄分頁;第二台驗收後翻 true)
+const DEPLOYED_1007 = true;   // 10/7 白天維護(交易所紀錄分頁;第二台驗收後翻 true)
 const DEPLOYED_1006 = true;   // 10/6 白天維護(世界王攻擊技能選單;第二台驗收後翻 true)
 const DEPLOYED_1005 = true;
 // 📈 伺服器等級(= 遊戲後台 svlv;系統說明頁用)。⚠ 遊戲裡 svlv 改了這裡要跟著改(9/26 升 54 時漏改,頁面一直停在 52)。
