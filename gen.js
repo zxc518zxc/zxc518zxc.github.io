@@ -1218,7 +1218,7 @@ const PROMO3_BOX_ROWS = (() => {
     .map(r => [`　└ 娃娃盲盒開出:${(GD.items[r.id] || {}).n || r.id} ×${r.n || 1}`, `${+((+r.w) / tot * 100).toFixed(2)}%`]);
 })();
 // 🎬 錄影推廣III 推廣到 10/7 23:59、10/8 中午回收:第二台跑完 badgewipe 回收、goline 起來之後才翻 true(同 MOON_OVER 的作法)。
-const PROMO3_OVER = false;
+const PROMO3_OVER = true;   // 10/8 00:06 麥哥:推廣已於 10/7 23:59 結束 ⇒ 先變暗標已結束(回收公告照舊寫 10/8 中午)
 const PROMO3_BADGE = (GD.items || {}).badge_promo_video || {};
 const PROMO3_EVENT = {
   title: "🎬 錄影推廣大作戰 III",
