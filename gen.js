@@ -2237,7 +2237,8 @@ if (WD.enh && WD.enh.length) {
 // 🎭 變身表來源(2026-09-21 起):優先讀 poly.json(cmd/polydump 匯出,含 Lv55 段與開啟條件),
 //    沒有才退回 mastery.json 裡的舊 poly。理由:wikidump 不能重跑(會曝光強化機率),變身表要更新只能另開工具。
 //    重生指令:cd go端專案/engine && go run ./cmd/polydump -gd ../gamedata.json -json ../../玩家資料站/poly.json
-try { const pj = JSON.parse(fs.readFileSync(path.join(OUT, "poly.json"), "utf8")); if (Array.isArray(pj) && pj.length) WD.poly = pj; } catch (e) { }
+// 🔄 10/9 Lv55 五隻改名:新表在 poly-1009.json,部署驗收翻 DEPLOYED_1009 才用(之前發官網不會提早曝光)
+try { const pj = JSON.parse(fs.readFileSync(path.join(OUT, DEPLOYED_1009 ? "poly-1009.json" : "poly.json"), "utf8")); if (Array.isArray(pj) && pj.length) WD.poly = pj; } catch (e) { }
 if (WD.poly && WD.poly.length) {
   // AC 在引擎是「越低越好」,polyAbilityTextGo 直接輸出 AC-1,玩家會誤讀成防禦下降 → 翻成白話。
   // AC 在引擎是「越低越好」,polyAbilityTextGo 直接輸出 AC-1,玩家會誤讀成防禦下降 → 翻成白話。
