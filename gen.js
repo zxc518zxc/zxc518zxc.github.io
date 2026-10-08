@@ -486,13 +486,21 @@ const TEMP_NOTE = {
   //    機制保留給下次用:寫法 `道具id: "附註文字"`,只出現在官網、不會進 gamedata(遊戲內說明是同一份)。
 };
 
+// 🎲 帶「暗黑詞條」的裝備(2026-10-08 玩家問「泰坦皮帶的遠程命中怎麼來的,官網找不到」):
+//    詞條說明早就在 affix.html,但道具圖鑑那格只寫基本效果、沒連過去 ⇒ 這裡補一行說明+連結,並加可搜尋的標籤。
+//    名單讀 mastery.json 的 affixes(**只讀**;⚠ 絕不重跑 wikidump,見強化機率暗改的記憶)。
+const AFFIX_ITEMS = new Set();
+try { for (const a of JSON.parse(fs.readFileSync(path.join(OUT, "mastery.json"), "utf8")).affixes || []) AFFIX_ITEMS.add(a.item); } catch (e) { }
+const affixNote = id => AFFIX_ITEMS.has(id)
+  ? "<br>🎲 <b>掉落時會隨機附帶 0~2 條「暗黑詞條」</b>(例:遠距離命中 +1、額外傷害 +1、最大HP +20…),每一件都不同,掉落當下就決定、之後不能改。<a href='affix.html' style='color:#f5c451'>👉 看詞條種類與機率</a>"
+  : "";
 const items = Object.entries(GD.items || {}).filter(([id, v]) => !hiddenItem(id, v)).map(([id, v]) => ({
   id, n: v.n || id, t: TYPE_NAME[v.type] || v.type || "其他",
-  d: (v.d || "") + (TEMP_NOTE[id] ? "\n" + TEMP_NOTE[id] : ""), legend: v.gachaWeight === 1,   // ⏳ TEMP_NOTE:官網限定附註(見上)
+  d: (v.d || "") + (TEMP_NOTE[id] ? "\n" + TEMP_NOTE[id] : "") + affixNote(id), legend: v.gachaWeight === 1,   // ⏳ TEMP_NOTE:官網限定附註(見上);🎲 affixNote:暗黑詞條說明
   dmg: v.dmgS ? `${v.dmgS}/${v.dmgL || v.dmgS}` : "", ac: v.ac || 0, safe: v.safe ?? "",
   slot: SLOT_N[v.slot] || "", req: reqStr(v.req), wcat: v.wcat || "",
   p: v.p || 0, sell: v.sellP ? v.sellP : Math.floor((v.p || 0) * 3 / 10), buy: SHOP_SELL.has(id),   // 💰 sellP=回收價覆寫(2026-09-23 二級黑魔石;與 Go sellPriceOf / adapter itemSell 三份同步,Go 守門會掃這行)
-  fx: itemFx(v),
+  fx: AFFIX_ITEMS.has(id) ? [...itemFx(v), "隨機暗黑詞條 0~2 條"] : itemFx(v),
   src: [],
   ex: exByOut[id] || [], // 🎁 兌換取得(見上方 EXCHANGE);怪不掉、商店沒賣的道具只有這條線索
 })).sort((a, b) => a.n.localeCompare(b.n, "zh-Hant"));
