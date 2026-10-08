@@ -825,7 +825,7 @@ const NAV_GROUPS = [
 // 📖 圖鑑登錄:內容開關開了才進導覽(放在「練功打怪」的世界王之後)
 if (FEAT.codex) NAV_GROUPS[1][2].splice(3, 0, ["codex.html", "codex", "📖", "怪物圖鑑登錄", "殺幾隻點亮・登錄要多少・給什麼加成"]);
 // 🪆 娃娃卡片:內容開關開了才進導覽(放在「角色變強」最後)。麥哥 2026-09-25:官網只介紹白/綠/藍
-if (FEAT.doll) NAV_GROUPS[3][2].push(["doll.html", "doll", "🪆", "娃娃卡片", "白・綠・藍娃娃能力・合成・召喚維持費"]);
+if (FEAT.doll) NAV_GROUPS[3][2].push(["doll.html", "doll", "🪆", "娃娃卡片", "白・綠・藍・紅娃娃能力・合成・召喚維持費"]);
 
 // ❓ 首頁引導:用玩家會問的話當入口(不用先猜分類)。[問題, 連結]
 const ASK = [
@@ -1602,7 +1602,7 @@ $("q").oninput=render;render();
 
 
 // ---- 🪆 娃娃卡片(2026-09-26 隨中秋活動開放;FEAT.doll 開放後才生成)----
-// 資料來源:gamedata.dolls(n/g/fx)+ dollCfg(維持費/合成率/門檻)。🔴 麥哥 2026-09-25 拍板:**只介紹白・綠・藍(g≤3)**,
+// 資料來源:gamedata.dolls(n/g/fx)+ dollCfg(維持費/合成率/門檻)。🔴 麥哥 2026-09-25 拍板:**只介紹白・綠・藍(g≤3)**;10/8 麥哥:紅(g=4)也上(含藍→紅合成率),紫與紅→紫仍不上,
 // 紅/紫與抽卡機率一律不上(遊戲內未解鎖也是零洩漏);取得方式只寫「活動期間=契約書,其他另行公告」(免費/金幣十連別寫死)。
 // 效果中文對照抄自 public/index.html DOLL_FX_N(改那邊要同步)。
 if (FEAT.doll && Array.isArray(GD.dolls) && GD.dollCfg) {
@@ -1611,30 +1611,30 @@ if (FEAT.doll && Array.isArray(GD.dolls) && GD.dollCfg) {
     critM: ["近距離爆擊", "%"], critR: ["遠距離爆擊", "%"], hpRegen: ["HP回復", ""], int: ["智力", ""], potion: ["藥水恢復", "%"],
     petHit: ["寵物/召喚獸命中", ""], petDmg: ["寵物/召喚獸傷害", ""], str: ["力量", ""], dex: ["敏捷", ""], cha: ["魅力", ""],
     mcrit: ["魔法爆擊", "%"], physPct: ["對怪物理增傷", "%"], fireChance: ["屬火發動率", "%"], flameSoul: ["烈焰之魂倍率", ""], triPct: ["三重矢傷害", "%"], meteorPct: ["流星雨傷害", "%"] };
-  const GN = { 1: "白", 2: "綠", 3: "藍" };
-  const GC = { 1: "#e8e8e8", 2: "#7bd14a", 3: "#5b9bff" };
+  const GN = { 1: "白", 2: "綠", 3: "藍", 4: "紅" };
+  const GC = { 1: "#e8e8e8", 2: "#7bd14a", 3: "#5b9bff", 4: "#f87171" };
   const cfg = GD.dollCfg;
   const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
   const fxTxt = fx => Object.entries(fx || {}).map(([k, v]) => { const d = FXN[k] || [k, ""]; return `${d[0]} ${v > 0 ? "+" : ""}${v}${d[1]}`; }).join("、");
-  const dolls = GD.dolls.filter(d => d.g >= 1 && d.g <= 3).sort((a, b) => (a.g - b.g) || String(a.n).localeCompare(String(b.n)));
+  const dolls = GD.dolls.filter(d => d.g >= 1 && d.g <= 4).sort((a, b) => (a.g - b.g) || String(a.n).localeCompare(String(b.n)));
   const upkeep = g => Math.round((cfg.upkeepGold || {})[g] / 10000) || 0;
   const upMin = Math.round((cfg.upkeepMs || 1800000) / 60000);
   const rate = g => Math.round(((cfg.synthRate || {})[g] || 0) * 100);
   const cnt = g => dolls.filter(d => d.g === g).length;
   fs.writeFileSync(path.join(OUT, "doll.html"), page("娃娃卡片", "doll", `
-${chips([[cnt(1), "白娃娃"], [cnt(2), "綠娃娃"], [cnt(3), "藍娃娃"]])}
+${chips([[cnt(1), "白娃娃"], [cnt(2), "綠娃娃"], [cnt(3), "藍娃娃"], [cnt(4), "紅娃娃"]])}
 <div class="hint">「背包 → 🪆 娃娃」。娃娃是<b>解鎖制</b>的收藏：解鎖後永久記在角色上（不佔背包、不能交易），<b>召喚</b>其中一隻就能吃到它的能力加成；同一時間只能召喚一隻。</div>
 
 <div class="mcard"><div class="ttl">🪆 怎麼玩</div>
 <div class="wrap"><table><thead><tr><th>項目</th><th>說明</th></tr></thead><tbody>
 <tr><td>取得娃娃</td><td>${DEPLOYED_1008 ? `「抽卡」頁的<b>十連抽</b>：角色 <b>Lv${cfg.minLv}</b> 以上，<b>每個帳號每天 ${cfg.maxPerDay} 次</b>（清晨 5 點重置），價格依序 ${(cfg.goldPrices || []).map(x => `<b>${(x / 10000).toLocaleString()} 萬金幣</b>`).concat((cfg.diaPrices || []).map(x => `<b>${x} 藍鑽</b>`)).join(" → ")}；每次抽之前都會跳確認。抽到已擁有的會轉成該階<b>碎片 ×1</b>。` : `活動期間：使用中秋禮盒開出的「<b>娃娃契約書</b>」（白／綠／藍），會<b>隨機解鎖該階的一隻</b>；抽到已擁有的會轉成該階<b>碎片 ×1</b>。其他取得方式將另行公告。`}</td></tr>
-<tr><td>召喚</td><td>在卡冊點已解鎖的娃娃 → 召喚。召喚中每 <b>${upMin} 分鐘</b>扣一次維持費：白 <b>${upkeep(1)} 萬</b>／綠 <b>${upkeep(2)} 萬</b>／藍 <b>${upkeep(3)} 萬</b>金幣；<b>金幣不夠會自動收回</b>。可隨時收回（已扣的不退）。</td></tr>
-<tr><td>合成</td><td>同階碎片 <b>${cfg.synthNeed || 4} 片</b>賭一次升上一階：白 → 綠 <b>${rate(1)}%</b>、綠 → 藍 <b>${rate(2)}%</b>；成功得到上一階隨機一隻（已擁有則轉碎片），失敗退回 1 片。白／綠可用「快速合成」一次連賭多次。</td></tr>
+<tr><td>召喚</td><td>在卡冊點已解鎖的娃娃 → 召喚。召喚中每 <b>${upMin} 分鐘</b>扣一次維持費：白 <b>${upkeep(1)} 萬</b>／綠 <b>${upkeep(2)} 萬</b>／藍 <b>${upkeep(3)} 萬</b>／紅 <b>${upkeep(4)} 萬</b>金幣；<b>金幣不夠會自動收回</b>。可隨時收回（已扣的不退）。</td></tr>
+<tr><td>合成</td><td>同階碎片 <b>${cfg.synthNeed || 4} 片</b>挑戰一次升上一階：白 → 綠 <b>${rate(1)}%</b>、綠 → 藍 <b>${rate(2)}%</b>、藍 → 紅 <b>${rate(3)}%</b>；成功得到上一階隨機一隻（已擁有則轉碎片），失敗退回 1 片。白／綠可用「快速合成」一次連續合成多次。</td></tr>
 <tr><td>門檻</td><td>${DEPLOYED_1008 ? `抽卡與合成` : `合成`}需角色 <b>Lv${DEPLOYED_1008 ? cfg.minLv : 45}</b>；召喚不限等級。</td></tr>
 <tr><td>效果</td><td>只有<b>召喚中</b>的那一隻生效；經驗％與血盟、勳章等加成<b>相加</b>；離線掛機照樣生效（維持費也照扣）。</td></tr>
 </tbody></table></div></div>
 
-${[1, 2, 3].map(g => `<div class="mcard"><div class="ttl" style="color:${GC[g]}">${GN[g]}娃娃（${cnt(g)} 隻）</div>
+${[1, 2, 3, 4].map(g => `<div class="mcard"><div class="ttl" style="color:${GC[g]}">${GN[g]}娃娃（${cnt(g)} 隻）</div>
 <div class="wrap"><table><thead><tr><th>娃娃</th><th>召喚效果</th></tr></thead><tbody>
 ${dolls.filter(d => d.g === g).map(d => `<tr><td class="nm">${esc(d.n)}</td><td>${esc(fxTxt(d.fx))}</td></tr>`).join("\n")}
 </tbody></table></div></div>`).join("\n")}
