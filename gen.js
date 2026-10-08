@@ -25,12 +25,12 @@ const LINKS = {
 const GD = JSON.parse(fs.readFileSync(path.join(__dirname, "../go端專案/gamedata.json"), "utf8"));
 const DEPLOYED_1008 = true;   // 10/8 白天維護(娃娃十連抽 41 級/每日 4 次;第二台驗收後翻 true)
 const DEPLOYED_1009 = false;   // 10/9 維護(iPhone 加入主畫面底部空白修正;第二台驗收後翻 true)
-const DEPLOYED_1010 = false;   // 10/10 維護(雙十活動+等級上限 60;第二台驗收後翻 true)
+const DEPLOYED_1010 = false;   // 10/10 維護(雙十活動;第二台驗收後翻 true)
 const DEPLOYED_1007 = true;   // 10/7 白天維護(交易所紀錄分頁;第二台驗收後翻 true)
 const DEPLOYED_1006 = true;   // 10/6 白天維護(世界王攻擊技能選單;第二台驗收後翻 true)
 const DEPLOYED_1005 = true;
 // 📈 伺服器等級(= 遊戲後台 svlv;系統說明頁用)。⚠ 遊戲裡 svlv 改了這裡要跟著改(9/26 升 54 時漏改,頁面一直停在 52)。
-const SV_LV = DEPLOYED_1006 ? 55 : 54, SV_LV_SINCE = DEPLOYED_1006 ? "10/6" : "9/26";   // 10/5 白天維護(娃娃帳號共用;第二台驗收後翻 true)   // ⚠ 放這麼前面是因為上面的技能說明表(SK_DESC 那張)在載入時就要讀它
+const SV_LV = DEPLOYED_1009 ? 56 : DEPLOYED_1006 ? 55 : 54, SV_LV_SINCE = DEPLOYED_1009 ? "10/9" : DEPLOYED_1006 ? "10/6" : "9/26";   // 10/9 麥哥:55→56   // 10/5 白天維護(娃娃帳號共用;第二台驗收後翻 true)   // ⚠ 放這麼前面是因為上面的技能說明表(SK_DESC 那張)在載入時就要讀它
 const OUT = __dirname;
 
 // ---- 🎁 兌換配方(2026-09-19:玩家找不到「解除詛咒的卷軸」的出處)----
@@ -1061,7 +1061,7 @@ fs.writeFileSync(path.join(OUT, "pets.html"), page("寵物與召喚", "pets", `
 <div class="wrap" style="margin-top:8px"><table><thead><tr><th>角色等級</th><th>召喚</th></tr></thead><tbody>
 <tr><td>未滿 32</td><td>哈柏哥布林</td></tr><tr><td>32</td><td>甘地妖魔</td></tr><tr><td>40</td><td>食人妖精</td></tr><tr><td>52</td><td>魔狼</td></tr><tr><td>60</td><td>地獄奴隸</td></tr><tr><td>64</td><td>地獄束縛犬</td></tr><tr><td>72</td><td>黑豹</td></tr>
 </tbody></table></div>
-<div class="sub" style="margin-top:8px">${DEPLOYED_1010 ? "目前等級上限 60(10/10 起),60 級可召喚地獄奴隸;64 級以上的召喚物要等上限開放。" : "目前等級上限 58,60 級以上的召喚物要等上限開放。"}</div></div>
+<div class="sub" style="margin-top:8px">${DEPLOYED_1009 ? "目前等級上限 60(10/9 起),60 級可召喚地獄奴隸;64 級以上的召喚物要等上限開放。" : "目前等級上限 58,60 級以上的召喚物要等上限開放。"}</div></div>
 
 <div class="mcard"><div class="ttl">🧚 妖精「召喚屬性精靈」</div>
 <div class="sub">召喚屬性精靈(敏 40)與召喚強力屬性精靈(敏 50)也是<b>一次一隻</b>,精靈的屬性跟著妖精自己選的屬性走。兩支互斥:勾強力會自動取消普通並換成上級精靈。</div></div>
@@ -1817,7 +1817,7 @@ fs.writeFileSync(path.join(OUT, "systems.html"), page("系統說明", "sys", `
 
 <div class="mcard"><div class="ttl">📈 經驗與伺服器等級</div>
 <div class="wrap"><table><thead><tr><th>項目</th><th>規則</th></tr></thead><tbody>
-<tr><td>等級上限</td><td>${DEPLOYED_1010 ? "<b>60 級</b>(2026-10-10 起;原 58)" : "<b>58 級</b>(2026-09-26 起;原 55)"};滿級後經驗不再累積,頂欄顯示 MAX。50 級起每級經驗衰減:50~55 級為 1/2、1/3…1/7,56 級起每升一級再減半</td></tr>
+<tr><td>等級上限</td><td>${DEPLOYED_1009 ? "<b>60 級</b>(2026-10-09 起;原 58)" : "<b>58 級</b>(2026-09-26 起;原 55)"};滿級後經驗不再累積,頂欄顯示 MAX。50 級起每級經驗衰減:50~55 級為 1/2、1/3…1/7,56 級起每升一級再減半</td></tr>
 <tr><td>伺服器等級</td><td>目前 <b>${SV_LV}</b>(${SV_LV_SINCE} 起;營運視全服進度調整)。角色<b>低於</b>伺服器等級時打怪經驗有追趕加成:<b>每差 1 級 +100%</b>,差 10 級以上封頂 <b>+1000%</b>。例:伺服器 ${SV_LV},角色 ${SV_LV - 10} → +1000%(差 10 級封頂)。高於伺服器等級沒有加成也沒有懲罰</td></tr>
 <tr><td>升級門檻</td><td>Lv45 起每級需求跳升:729,360 → 1,508,416 → 3,495,263 → 9,912,189,Lv49 起每級固定 36,065,092</td></tr>
 <tr><td>升級獎勵</td><td>升級當下 HP／MP 補滿;<b>Lv50 起每升一級多 1 點自由屬性點</b></td></tr>
