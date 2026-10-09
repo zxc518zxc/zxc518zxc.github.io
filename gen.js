@@ -346,6 +346,10 @@ const SK_BADGE = {
   sk_cold_shiver: "不會吸血", sk_vampire: "不會吸血", sk_ice_lance: "不會冰凍",
   sk_antidote: "未實裝", sk_holy_light: "未實裝", sk_cancel: "未實裝", sk_reveal: "未實裝", sk_invisible: "未實裝",
   sk_elf_earthshield: "未實裝", sk_load_up: "未實裝", sk_resurrection: "未實裝",
+  // 🚫 2026-10-09 麥哥:妖精學得到的負面狀態/控制技能一律關閉(共用的法師也一起)。⚠ 遊戲端 skills.go unimplementedSkills / skills2b.go ElfDebuffOff 同批。
+  sk_elf_groundtrap: "未實裝", sk_elf_magicerase: "未實裝", sk_elf_seal: "未實裝",
+  sk_poison_curse: "未實裝", sk_dark_blind: "未實裝", sk_dark_shadow: "未實裝", sk_break: "未實裝",
+  sk_slow: "未實裝", sk_mummy_curse: "未實裝", sk_weaken: "未實裝",
   // 🛡 2026-09-17:神聖疾走 sk_holy_dash / 迴避提升 sk_dark_erup 隨「迴避 ER 實裝」上線 ⇒ 已從未實裝名單移除。
   //    ⚠ 遊戲端 engine/afk/skills.go 的 unimplementedSkills 同日移除,**兩張名單必須一致**。
 };
@@ -358,6 +362,8 @@ const SK_NOTE = {
   sk_elf_earthshield: "未實裝:目前沒有任何效果,設定頁不會出現、不會施放。",
   sk_load_up: "未實裝:目前沒有任何效果。",
   sk_resurrection: "未實裝:目前沒有任何效果。",
+  ...Object.fromEntries(["sk_elf_groundtrap", "sk_elf_magicerase", "sk_elf_seal", "sk_poison_curse", "sk_dark_blind", "sk_dark_shadow", "sk_break", "sk_slow", "sk_mummy_curse", "sk_weaken"]
+    .map(id => [id, "未實裝:2026-10-10 維護後起,設定頁(自動設定/世界王/PK 設定)無法選擇,也不會施放。"])),   // 🚫 2026-10-09 麥哥
   // 🛡 2026-09-17「迴避 ER 實裝」上線 ⇒ 神聖疾走 / 迴避提升的「未實裝」說明已移除,
   //    效果文字改由 fx 的 er 分支輸出「迴避 ER +N(降低怪物命中你的機率)」。🔒 不公開換算式。
   sk_sunlight: "狩獵場出怪間隔由 4 秒縮短為 2 秒(擁擠地圖的出怪延遲也減 2 秒),等於打怪節奏快一倍。只影響狩獵場。",
