@@ -50,7 +50,11 @@ const recipeCost = r => [
 ].filter(Boolean).join(" + ");
 // NPC id → 該 NPC 的兌換清單(給 NPC 頁);產物 id → 在哪裡換得到(給道具頁)
 const exByNpc = {}, exByOut = {};
+// 🙈 2026-10-10 麥哥(玩家拿傳送控制戒指問):遊戲裡 hide:true 的 NPC(煉戒術士/冰涼商人…)玩家根本找不到,
+//    官網道具卡卻寫「威頓村『猥瑣的流浪者』兌換」⇒ 隱藏中的 NPC 配方一律不列(NPC 重新開放時拿掉 gamedata 的 hide 即自動恢復)。
+const HIDDEN_NPC = new Set(Object.values(GD.towns || {}).flatMap(t => (t.npcs || []).filter(n => n.hide).map(n => n.id)));
 for (const n of EXCHANGE) {
+  if (HIDDEN_NPC.has(n.id)) continue;
   exByNpc[n.id] = (n.recipes || []).map(r => (r.name ? r.name + "：" : "") + recipeCost(r) + " → " + r.out);
   for (const r of n.recipes || []) (exByOut[r.outId] ||= []).push(`${n.town}「${n.n}」兌換：${recipeCost(r)}`);
 }
@@ -488,6 +492,12 @@ const ELE_NAME = { fire: "火", water: "水", wind: "風", earth: "地", none: "
 //    要清掉還得再改 gamedata + 再重啟一次伺服器。放在這裡只影響官網,
 //    上線後把那一行刪掉、重跑 gen 就乾淨了(官網 push 不需要重啟遊戲)。
 // 🔴 上線後**一定要回來刪**——留著就是對玩家說謊。
+// ✏ D_FIX — 官網限定「整句取代」遊戲說明(gamedata 的 d 寫了程式沒有的效果、又還沒排維護改遊戲時用;遊戲改好後就刪掉這一筆)。
+const D_FIX = {
+  // 2026-10-10 麥哥:玩家以為帶著就能手動傳送打 BOSS。程式查證:acc_116 沒有任何效果、放置版也沒有手動傳送術;
+  //   唯一用途=兌換變形控制戒指的材料(煉戒術士目前隱藏)。
+  acc_116: "目前沒有特殊效果(放置版沒有「手動施放傳送術」,帶在身上或裝備都不會觸發任何事件)。",
+};
 const TEMP_NOTE = {
   // ✅ 2026-09-23 12:27 BOSS結晶掉率修正已上線 ⇒ 那句臨時附註已移除(留著就是對玩家說謊)。
   //    機制保留給下次用:寫法 `道具id: "附註文字"`,只出現在官網、不會進 gamedata(遊戲內說明是同一份)。
@@ -503,7 +513,7 @@ const affixNote = id => AFFIX_ITEMS.has(id)
   : "";
 const items = Object.entries(GD.items || {}).filter(([id, v]) => !hiddenItem(id, v)).map(([id, v]) => ({
   id, n: v.n || id, t: TYPE_NAME[v.type] || v.type || "其他",
-  d: (v.d || "") + (TEMP_NOTE[id] ? "\n" + TEMP_NOTE[id] : "") + affixNote(id), legend: v.gachaWeight === 1,   // ⏳ TEMP_NOTE:官網限定附註(見上);🎲 affixNote:暗黑詞條說明
+  d: (D_FIX[id] || v.d || "") + (TEMP_NOTE[id] ? "\n" + TEMP_NOTE[id] : "") + affixNote(id), legend: v.gachaWeight === 1,   // ⏳ TEMP_NOTE:官網限定附註(見上);🎲 affixNote:暗黑詞條說明
   dmg: v.dmgS ? `${v.dmgS}/${v.dmgL || v.dmgS}` : "", ac: v.ac || 0, safe: v.safe ?? "",
   slot: SLOT_N[v.slot] || "", req: reqStr(v.req), wcat: v.wcat || "",
   p: v.p || 0, sell: v.sellP ? v.sellP : Math.floor((v.p || 0) * 3 / 10), buy: SHOP_SELL.has(id),   // 💰 sellP=回收價覆寫(2026-09-23 二級黑魔石;與 Go sellPriceOf / adapter itemSell 三份同步,Go 守門會掃這行)
@@ -609,7 +619,7 @@ const HIDE_NPC = new Set([
 ].filter(Boolean));
 const towns = Object.entries(GD.towns || {}).map(([id, t]) => ({
   id, n: t.n || id,
-  npcs: (t.npcs || []).filter(n => !HIDE_NPC.has(n.type)).map(n => ({
+  npcs: (t.npcs || []).filter(n => !HIDE_NPC.has(n.type) && !n.hide).map(n => ({   // 🙈 gamedata hide:true(遊戲 adapter 也濾掉)官網同樣不列(2026-10-10)
     n: n.n || "", title: n.title || "", t: NPC_TYPE[n.type] || n.type || "", d: n.d || "",
     ex: exByNpc[n.id] || [] })), // 🎁 兌換 NPC 的完整配方(gamedata 那句說明常常不完整)
 })).filter(t => t.npcs.length > 0);
