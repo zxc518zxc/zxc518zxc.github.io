@@ -1301,14 +1301,16 @@ const PROMO3_EVENT = {
     "官方保留活動修改與最終判定之權利。",
   ],
 };
-// 🎌 雙十國慶慶典(2026-10-10 12:30 ~ 10/31 12:30;麥哥 10/9 拍板:公布成功率 0.5% + 好言相勸、不列 67 件寶物清單、五種變身附能力表)。
-//    七條挑戰/成功率/福袋數/變身能力一律從 go端專案/engine/afk/doubleten.go 讀(不手抄);讀不到就停,不要印錯的數字。
-//    gate:DEPLOYED_1010(10/10 第二台驗收後翻 true);PREVIEW_1010=1 只給本機預覽,不要帶著它 gen+push。
+// 🎌 雙十國慶慶典 第一波(2026-10-10 12:30 開始;福袋 67 個當天半小時就被換完)。
+//    10/10 晚麥哥「國慶新活動加碼」後,doubleten.go 已改成加碼版 ⇒ 第一波的數字**凍結寫在這裡**(不再從程式讀,
+//    否則舊活動卡會印出新數字)。DEPLOYED_1011(加碼上線)後這張卡變暗標「已結束」(麥哥:原本的活動變暗底、備註已結束)。
 const PREVIEW_1010 = process.env.PREVIEW_1010 === "1";
 const DT = (() => {
+  // 只讀「沒有改」的部分:等級門檻、成功率、變身能力;加碼版的條件另外讀(DT2)
   const src = fs.readFileSync(path.join(__dirname, "../go端專案/engine/afk/doubleten.go"), "utf8");
   const num = k => { const m = src.match(new RegExp(k + "\\s*=\\s*([0-9.]+)")); if (!m) throw new Error("doubleten.go 讀不到 " + k); return +m[1]; };
-  const gold = num("DtGold"), rate = num("DtWinRate"), cap = num("DtBagCap"), minLv = num("DtMinLv");
+  const str = k => { const m = src.match(new RegExp(k + "\\s*=\\s*\"([^\"]+)\"")); if (!m) throw new Error("doubleten.go 讀不到 " + k); return m[1]; };
+  const rate = num("DtWinRate"), minLv = num("DtMinLv"), gold = num("DtGold"), daily = num("DtDailyCap"), prizeId = str("DtPrizeId");
   const recipes = [...src.matchAll(/\{Name: "([^"]+)" \+ dtRecipeTag, Gold: DtGold, Req: \[\]CraftReq\{\{"(\w+)", (\d+)\}\}\}/g)]
     .map(m => ({ name: m[1] + "挑戰", id: m[2], cnt: +m[3] }));
   const LBL = [["Md", "近傷"], ["Mh", "近命中"], ["Rd", "遠傷"], ["Rh", "遠命中"], ["Mgd", "魔傷"], ["Sp", "額外MP"], ["Mpr", "MP恢復"], ["Sh", "召喚獸命中"], ["Spd", "攻速"]];
@@ -1316,46 +1318,83 @@ const DT = (() => {
     const v = {}; for (const [, k, n] of m[2].matchAll(/(\w+): (-?\d+)/g)) v[k] = +n;
     return { name: m[1], eff: LBL.filter(([k]) => v[k]).map(([k, l]) => l + "+" + v[k] + (k === "Spd" ? "%" : "")).join("、") };
   });
-  if (recipes.length !== 7 || forms.length !== 5 || forms.some(f => !f.eff)) throw new Error("doubleten.go 解析失敗:挑戰 " + recipes.length + " 條 / 變身 " + forms.length + " 種");
-  return { gold, rate, cap, minLv, recipes, forms };
+  if (recipes.length !== 6 || forms.length !== 5 || forms.some(f => !f.eff) || !GD.items[prizeId]) throw new Error("doubleten.go 解析失敗:挑戰 " + recipes.length + " 條 / 變身 " + forms.length + " 種 / 大獎 " + prizeId);
+  return { rate, minLv, gold, daily, prizeId, recipes, forms };
 })();
+// 第一波凍結值(10/10 上線版:七條、20 萬、福袋 67 個)
+const DT1 = { gold: 200000, cap: 67, recipes: [["武器卷軸挑戰", "scroll_weapon", 10], ["盔甲卷軸挑戰", "scroll_armor", 20], ["飾品卷軸挑戰", "scroll_acc", 5],
+  ["賦予武器祝福挑戰", "new_item_bless_wpn", 3], ["賦予盔甲祝福挑戰", "new_item_bless_arm", 3], ["賦予飾品祝福挑戰", "new_item_bless_acc", 3], ["BOSS結晶挑戰", "mat_boss_crystal", 2]] };
 const DT_LV55 = (() => { try { const p = JSON.parse(fs.readFileSync(path.join(OUT, "poly-1009.json"), "utf8")); return (p.find(t => t.min === 55) || {}).forms || []; } catch (e) { return []; } })();
-const DT_EVENT = {
-  title: "🎌 雙十國慶慶典",
-  when: "2026/10/10(六) 中午維護後 至 2026/10/31(六) 中午維護（福袋 " + DT.cap + " 個換完即提前結束）",
+const DT_FORMS_TABLE = {
+  head: "🧙 變身卷軸指定箱：五種變身能力",
+  cols: ["變身", "能力", "對照：Lv55 同類型"],
+  rows: DT.forms.map((f, i) => [f.name, f.eff + (f.name.includes("弓") ? "（持弓有元素箭特效）" : ""), DT_LV55[i] ? `${DT_LV55[i].name}：${DT_LV55[i].eff}` : "—"]),
+  foot: "※ <b>需要 " + DT.minLv + " 級以上</b>才能使用，每張變身 <b>30 分鐘</b>。「攻速」是百分比加成，其餘都是直接加上去的數值；召喚獸命中只影響法師的召喚獸。",
+};
+// 🎌 國慶新活動加碼(10/10 晚麥哥拍板;10/11 12:30 ~ 10/16 12:30):六條挑戰、材料減半、10 萬金幣、0.5% BOSS結晶 ×1、每帳號每天 5 次。
+//    條件一律從 doubleten.go 讀(DT);gate:DEPLOYED_1011。
+const DT2_EVENT = {
+  title: "🎌 國慶新活動加碼",
+  when: "2026/10/11(日) 中午維護後 至 2026/10/16(五) 中午維護",
   over: false,
-  intro: `雙十國慶快樂！活動期間<b>說話之島</b>會出現「<b>國慶使者</b>」。<b>${DT.minLv} 級以上</b>的冒險者帶著指定材料和 <b>${DT.gold / 10000} 萬金幣</b>去挑戰，<b>挑戰成功就能拿到「🎁 雙十國慶福袋」</b>，打開必定獲得一件<b>潘朵拉傳說級寶物</b>。<br><b>福袋全服只有 ${DT.cap} 個</b>，換完活動就結束。挑戰沒成功也不會空手，一定會拿到一個「<b>📦 變身卷軸指定箱</b>」，可以自己挑一張紫色變身卷軸。`,
-  rewardTitle: "⚔️ 七種挑戰（每次另收 " + DT.gold / 10000 + " 萬金幣）",
+  intro: `感謝大家熱烈參加雙十活動！第一波福袋當天就被換完了，所以我們<b>加碼再開一週</b>。<b>${DT.minLv} 級以上</b>的冒險者到<b>說話之島</b>找「<b>國慶使者</b>」，帶著指定材料和 <b>${DT.gold / 10000} 萬金幣</b>就能挑戰一次。<br>這次<b>材料全部減半</b>，<b>挑戰成功獲得「💎 ${GD.items[DT.prizeId].n}」×1</b>（全服跑馬燈恭喜），沒成功一樣拿到「<b>📦 變身卷軸指定箱</b>」，可以自己挑一張紫色變身卷軸。<br><b>每個帳號每天可以挑戰 ${DT.daily} 次</b>（同帳號所有角色合計），每天中午 12:30 刷新。`,
+  rewardTitle: "⚔️ 六種挑戰（每次另收 " + DT.gold / 10000 + " 萬金幣）",
   rewardHead: "挑戰",
   rewardCol: "需要材料",
   rewards: DT.recipes.map(r => [r.name, `${(GD.items[r.id] || {}).n || r.id} ×${r.cnt}`]),
+  notice: `<b>每次挑戰的成功率是 ${+(DT.rate * 100).toFixed(2)}%</b>（大約 ${Math.round(1 / DT.rate)} 次會成功 1 次），六種挑戰的成功率都一樣。挑戰沒成功也一定會拿到一個「變身卷軸指定箱」。
+<div style="margin-top:10px;color:#f5c451;font-weight:bold">🙏 好言相勸</div>
+${GD.items[DT.prizeId].n}是稀有大獎，<b>不是每個人都拿得到</b>。這個活動主要是讓大家把多的卷軸換成變身卷軸，<b>請量力而為</b>，不要把升級要用的材料都投進去。<b>快樂玩遊戲比什麼都重要！</b>`,
+  tables: [DT_FORMS_TABLE],
+  steps: [
+    `<b>${DT.minLv} 級以上</b>到<b>說話之島</b>找「<b>國慶使者</b>」，選一種挑戰。只會用到<b>背包裡沒上鎖</b>的材料，挑戰前請確認要保留的東西已經上鎖。`,
+    `挑戰成功：獲得「<b>${GD.items[DT.prizeId].n}</b>」×1，全服跑馬燈恭喜。挑戰失敗：獲得「<b>變身卷軸指定箱</b>」。`,
+    `每個帳號每天 <b>${DT.daily} 次</b>，國慶使者的清單會顯示「今日 已用/${DT.daily} 次」；用完要等隔天中午 12:30 刷新。`,
+    `打開指定箱：從五張變身卷軸中<b>自己選一張</b>（可以填數量一次開多個）：${DT.forms.map(f => f.name).join("／")}。`,
+    `想掛機時自動變身：到「<b>設定 → 輔助道具</b>」勾選要自動使用的變身卡。變身卡和「變形卷軸」<b>只能勾一個</b>，變身卡用完就不再變身。`,
+  ],
+  rules: [
+    `<b>等級限制：國慶使者的挑戰、五種變身卷軸（含自動使用變身卡）都要 ${DT.minLv} 級以上</b>。`,
+    `<b>每個帳號每天 ${DT.daily} 次</b>（同帳號所有角色合計），每天中午 12:30 刷新。`,
+    `變身卷軸每張變身 30 分鐘，時間到<b>不會自動接著變同一隻</b>（有勾自動使用變身卡的話會再用一張）。`,
+    `變身卷軸指定箱、五種變身卷軸：不能交易、不能賣店。`,
+    `到 10/16(五) 中午維護，國慶使者就停止兌換。<b>已經拿到的${GD.items[DT.prizeId].n}、指定箱、變身卷軸、福袋都不回收</b>，活動結束後一樣可以使用。`,
+    `如遇異常或爭議，以遊戲內紀錄為準；官方保留活動修改與最終判定之權利。`,
+  ],
+};
+const DT_EVENT = {
+  title: "🎌 雙十國慶慶典",
+  when: DEPLOYED_1011 ? "2026/10/10(六) 中午維護後開始・福袋 " + DT1.cap + " 個已於當天全部換完，本活動已結束（加碼活動請看上方「國慶新活動加碼」）"
+    : "2026/10/10(六) 中午維護後 至 2026/10/31(六) 中午維護（福袋 " + DT1.cap + " 個換完即提前結束）",
+  over: DEPLOYED_1011,
+  intro: `雙十國慶快樂！活動期間<b>說話之島</b>會出現「<b>國慶使者</b>」。<b>${DT.minLv} 級以上</b>的冒險者帶著指定材料和 <b>${DT1.gold / 10000} 萬金幣</b>去挑戰，<b>挑戰成功就能拿到「🎁 雙十國慶福袋」</b>，打開必定獲得一件<b>潘朵拉傳說級寶物</b>。<br><b>福袋全服只有 ${DT1.cap} 個</b>，換完活動就結束。挑戰沒成功也不會空手，一定會拿到一個「<b>📦 變身卷軸指定箱</b>」，可以自己挑一張紫色變身卷軸。`,
+  rewardTitle: "⚔️ 七種挑戰（每次另收 " + DT1.gold / 10000 + " 萬金幣）",
+  rewardHead: "挑戰",
+  rewardCol: "需要材料",
+  rewards: DT1.recipes.map(([name, id, cnt]) => [name, `${(GD.items[id] || {}).n || id} ×${cnt}`]),
   notice: `<b>每次挑戰的成功率是 ${+(DT.rate * 100).toFixed(2)}%</b>（大約 ${Math.round(1 / DT.rate)} 次會成功 1 次），七種挑戰的成功率都一樣。挑戰沒成功也一定會拿到一個「變身卷軸指定箱」。
 <div style="margin-top:10px;color:#f5c451;font-weight:bold">🙏 好言相勸</div>
 福袋是限量的稀有大獎，<b>不是每個人都拿得到</b>。運氣好的人可能第一次就成功，也有人挑戰很多次都沒成功，這都是正常的。<br>
 <b>請量力而為</b>，用自己用得起的卷軸和金幣參加就好，不要為了福袋把升級要用的材料或生活費都投進去。<b>快樂玩遊戲比什麼都重要！</b>`,
-  tables: [{
-    head: "🧙 變身卷軸指定箱：五種變身能力",
-    cols: ["變身", "能力", "對照：Lv55 同類型"],
-    rows: DT.forms.map((f, i) => [f.name, f.eff + (f.name.includes("弓") ? "（持弓有元素箭特效）" : ""), DT_LV55[i] ? `${DT_LV55[i].name}：${DT_LV55[i].eff}` : "—"]),
-    foot: "※ <b>需要 " + DT.minLv + " 級以上</b>才能使用，每張變身 <b>30 分鐘</b>。「攻速」是百分比加成，其餘都是直接加上去的數值；召喚獸命中只影響法師的召喚獸。",
-  }],
+  tables: [DT_FORMS_TABLE],
   steps: [
     `<b>${DT.minLv} 級以上</b>到<b>說話之島</b>找「<b>國慶使者</b>」，選一種挑戰。只會用到<b>背包裡沒上鎖</b>的材料，挑戰前請確認要保留的東西已經上鎖。`,
     `挑戰成功：獲得「<b>雙十國慶福袋</b>」，全服跑馬燈恭喜。挑戰失敗：獲得「<b>變身卷軸指定箱</b>」。`,
-    `打開福袋：從 ${DT.cap} 件傳說寶物中隨機獲得一件。被開走的寶物就從獎池消失，<b>每件寶物全服只有一件</b>。在國慶使者第一列點「<b>查看福袋剩餘寶物</b>」，可以看到還剩哪些、已經被誰開走。`,
+    `打開福袋：從 ${DT1.cap} 件傳說寶物中隨機獲得一件。被開走的寶物就從獎池消失，<b>每件寶物全服只有一件</b>。在國慶使者第一列點「<b>查看福袋剩餘寶物</b>」，可以看到還剩哪些、已經被誰開走。`,
     `打開指定箱：從五張變身卷軸中<b>自己選一張</b>（可以填數量一次開多個）：${DT.forms.map(f => f.name).join("／")}。`,
     `想掛機時自動變身：到「<b>設定 → 輔助道具</b>」勾選要自動使用的變身卡。變身卡和「變形卷軸」<b>只能勾一個</b>，變身卡用完就不再變身。`,
   ],
   rules: [
     `<b>等級限制：國慶使者的挑戰、五種變身卷軸（含自動使用變身卡）都要 ${DT.minLv} 級以上</b>。`,
     `變身卷軸每張變身 30 分鐘，時間到<b>不會自動接著變同一隻</b>（有勾自動使用變身卡的話會再用一張）。`,
-    `雙十國慶福袋：不能交易、不能賣店、不能存倉庫。${DT.cap} 件寶物全部開完後，福袋就打不開了（不會被扣掉）。`,
+    `雙十國慶福袋：不能交易、不能賣店、不能存倉庫。${DT1.cap} 件寶物全部開完後，福袋就打不開了（不會被扣掉）。`,
     `變身卷軸指定箱、五種變身卷軸：不能交易、不能賣店。`,
-    `福袋 ${DT.cap} 個全部被換完，或到 10/31(六) 中午維護，國慶使者就停止兌換。<b>已經拿到的福袋、指定箱、變身卷軸都不回收</b>，活動結束後一樣可以使用。`,
+    `福袋 ${DT1.cap} 個全部被換完，或到 10/31(六) 中午維護，國慶使者就停止兌換。<b>已經拿到的福袋、指定箱、變身卷軸都不回收</b>，活動結束後一樣可以使用。`,
     `如遇異常或爭議，以遊戲內紀錄為準；官方保留活動修改與最終判定之權利。`,
   ],
 };
 const EVENTS = [
+  ...(DEPLOYED_1011 ? [DT2_EVENT] : []),
   ...(DEPLOYED_1010 || PREVIEW_1010 ? [DT_EVENT] : []),
   ...(DEPLOYED_1001 || PREVIEW_1001 ? [PROMO3_EVENT] : []),
   {
