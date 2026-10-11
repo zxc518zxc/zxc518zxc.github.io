@@ -2035,6 +2035,15 @@ if (MASTERY.length) {
       ${eff}${ab}${aura}</div>`;
   }).join("");
 
+  // 🎵 武器共鳴說明卡(2026-10-11 麥哥:騎士武器共鳴沒有上官網)。數字一律從程式常數讀(wiki-data-from-code):
+  //    engine/afk/mastery.go WmTypeAuraCost / MasteryAuraStep / MasteryAuraMax、stage3.go wmCap。
+  //    規則依 afk/wmact.go WeaponmasterTypeAura / WmWieldOk;歸零點:綁定(Bind/Unbind)、切換、重置、突破、wmtransfer。
+  const RES = (() => {
+    const src = ["mastery.go", "stage3.go"].map(f => fs.readFileSync(path.join(__dirname, "../go端專案/engine/afk/" + f), "utf8")).join("\n");
+    const num = k => { const m = src.match(new RegExp(k + "\\s*=\\s*(?:int64\\()?([0-9 *]+)\\)?")); if (!m) throw new Error("讀不到 " + k); return Function("return " + m[1])(); };
+    return { cost: num("WmTypeAuraCost"), stepH: num("MasteryAuraStep") / 3600000, maxH: num("MasteryAuraMax") / 3600000, cap: num("const wmCap") };
+  })();
+  if (!(RES.cost > 0 && RES.stepH > 0 && RES.maxH > RES.stepH && RES.cap > 0)) throw new Error("武器共鳴常數解析異常:" + JSON.stringify(RES));
   fs.writeFileSync(path.join(OUT, "mastery.html"), page("精通升級數據", "mastery", `
 ${chips([[MASTERY.length, "種精通"]])}
 <div class="hint">各精通升到滿級需要什麼、練起來加多少。<b>光環要另外花金幣啟用</b>,而且大多在突破後歸零、需重新啟用。</div>
@@ -2043,6 +2052,12 @@ ${chips([[MASTERY.length, "種精通"]])}
 ・開通<b>第二武器精通</b>後,兩把武器各有一個精通槽;<b>沒拿在手上的那一把</b>(待命槽)只要<b>已滿級且已選能力</b>,它的能力值 <b>÷3(無條件捨去)</b> 會疊到你手上這把上:命中型 +5、傷害型 +5、平衡型 命中 +3、傷害 +3。<br>
 ・共享加成<b>跟著手上這把的能力光環走</b>:主武器的光環開著、且手持綁定武器時才一起生效;光環沒開或換拿別的武器,主加成與共享加成一起消失。<br>
 ・待命槽沒滿級、或還沒選能力,就沒有共享加成。切換/指定第二武器精通每次 100 萬金幣。精通分頁的「共享」欄顯示的數字就是實際生效的值。</div></div>
+<div class="mcard" style="margin-bottom:12px"><div class="ttl">🎵 騎士武器精通:武器共鳴(換拿同類型武器也有精通加成)</div>
+<div class="sub" style="line-height:1.9">・平常武器精通的能力加成,只有<b>手持綁定的那把武器</b>才生效;開啟「武器共鳴」後,手上拿<b>跟綁定武器同類型</b>的任何武器(例如綁定雙手劍,換拿另一把雙手劍)也一樣生效。<br>
+・開啟條件:武器精通 <b>Lv${RES.cap}(滿級)</b>、已選能力,且綁定的武器有武器類型。<br>
+・<b>要和能力光環一起開</b>:武器共鳴只是放寬「拿哪把武器算數」,加成本身來自能力光環;能力光環沒開,只開共鳴不會有加成。<br>
+・費用:每次 <b>${(RES.cost / 10000).toLocaleString()} 萬金幣、+${RES.stepH} 小時</b>,最多累積 <b>${RES.maxH} 小時</b>,離線也會照常倒數。<br>
+・突破、重新綁定/解除綁定、切換第二武器精通、重置精通、轉移精通時,武器共鳴剩餘時間會<b>歸零</b>(和能力光環一樣)。</div></div>
 <div class="bar"><input id="q" placeholder="🔍 搜精通名 或 職業(例:妖精)"></div>
 <div id="list">${secs}</div>`,
   `<script>
