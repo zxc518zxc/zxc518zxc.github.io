@@ -513,6 +513,21 @@ try { for (const a of JSON.parse(fs.readFileSync(path.join(OUT, "mastery.json"),
 const affixNote = id => AFFIX_ITEMS.has(id)
   ? "<br>🎲 <b>掉落時會隨機附帶 0~2 條「暗黑詞條」</b>(例:遠距離命中 +1、額外傷害 +1、最大HP +20…),每一件都不同,掉落當下就決定、之後不能改。<a href='affix.html' style='color:#f5c451'>👉 看詞條種類與機率</a>"
   : "";
+// 🎲 2026-10-13 麥哥:賦予武器/盔甲/飾品祝福卷軸的掉落率**公開**(鐵律①的唯一例外,只限這三種;其他怪物掉率照樣不公開)。
+//    規則與數字一律從 engine/afk/sim.go 讀(怪物等級門檻 + 每種各自的 rng() < X),不手抄;讀不到就中止產生,不印錯的數字。
+const BLESS_DROP = (() => {
+  const src = fs.readFileSync(path.join(__dirname, "../go端專案/engine/afk/sim.go"), "utf8");
+  const lv = src.match(/if m\.Lv >= (\d+) \{\s*if rng\(\) < [0-9.]+ \{\s*blessDrop\("new_item_bless_wpn"\)/);
+  if (!lv) throw new Error("sim.go 讀不到賦予祝福卷軸的怪物等級門檻");
+  const out = {};
+  for (const id of ["new_item_bless_wpn", "new_item_bless_arm", "new_item_bless_acc"]) {
+    const m = src.match(new RegExp("if rng\\(\\) < ([0-9.]+) \\{\\s*blessDrop\\(\"" + id + "\"\\)"));
+    if (!m) throw new Error("sim.go 讀不到 " + id + " 的掉落率");
+    const pct = +(+m[1] * 100).toPrecision(6);
+    out[id] = [`怪物等級 ${lv[1]} 以上的怪,每次擊殺有 ${pct}% 機率掉落(三種賦予祝福卷軸各自判定)`];
+  }
+  return out;
+})();
 const items = Object.entries(GD.items || {}).filter(([id, v]) => !hiddenItem(id, v)).map(([id, v]) => ({
   id, n: v.n || id, t: TYPE_NAME[v.type] || v.type || "其他",
   d: (D_FIX[id] || v.d || "") + (TEMP_NOTE[id] ? "\n" + TEMP_NOTE[id] : "") + affixNote(id), legend: v.gachaWeight === 1,   // ⏳ TEMP_NOTE:官網限定附註(見上);🎲 affixNote:暗黑詞條說明
@@ -521,6 +536,7 @@ const items = Object.entries(GD.items || {}).filter(([id, v]) => !hiddenItem(id,
   p: v.p || 0, sell: v.sellP ? v.sellP : Math.floor((v.p || 0) * 3 / 10), buy: SHOP_SELL.has(id),   // 💰 sellP=回收價覆寫(2026-09-23 二級黑魔石;與 Go sellPriceOf / adapter itemSell 三份同步,Go 守門會掃這行)
   fx: AFFIX_ITEMS.has(id) ? [...itemFx(v), "隨機暗黑詞條 0~2 條"] : itemFx(v),
   src: [],
+  drop: BLESS_DROP[id] || [], // 🎲 公開掉落率(只限三種賦予祝福卷軸,見 BLESS_DROP)
   ex: exByOut[id] || [], // 🎁 兌換取得(見上方 EXCHANGE);怪不掉、商店沒賣的道具只有這條線索
 })).sort((a, b) => a.n.localeCompare(b.n, "zh-Hant"));
 const itemOk = new Set(items.map(i => i.id));
@@ -1142,12 +1158,13 @@ const desc=i.d?"<div style='color:#b6a684;font-size:13px;margin-top:3px'>"+i.d+"
 const src=(i.src&&i.src.length)?"<div style='margin-top:3px;font-size:12px;color:#7bd14a'>📍 掉落:"+i.src.map(x=>esc(x)).join("、")+(i.src.length>=8?" …等":"")+"</div>":"";
 const area=(i.area&&i.area.length)?"<div style='margin-top:3px;font-size:12px;color:#7bd14a'>⛏ 採集地區:"+i.area.map(x=>esc(x)).join("、")+"(在這些地方打任何怪都可能掉)</div>":"";
 const ex=(i.ex&&i.ex.length)?"<div style='margin-top:3px;font-size:12px;color:#f5c451'>🎁 "+i.ex.map(x=>esc(x)).join("<br>🎁 ")+"</div>":"";
+const drop=(i.drop&&i.drop.length)?"<div style='margin-top:3px;font-size:12px;color:#7bd14a'>🎲 "+i.drop.map(x=>esc(x)).join("<br>🎲 ")+"</div>":"";
 return "<tr><td class='nm'"+(i.legend?" style='color:#ffd700'":"")+">"+(i.legend?"★":"")+esc(i.n)+"</td>"+
 "<td class='num' data-l='類型'>"+i.t+"</td><td class='num' data-l='部位'>"+esc(i.slot||i.wcat||"—")+"</td><td class='num' data-l='職業'>"+esc(i.req||"—")+"</td>"+
 "<td class='num' data-l='傷害'>"+(i.dmg||"—")+"</td><td class='num' data-l='防禦'>"+(i.ac||"—")+"</td>"+
 "<td class='num' data-l='安定'>"+((i.safe!==""&&(i.t==="武器"||i.t==="防具"))?"+"+i.safe:"—")+"</td>"+
 "<td class='num' data-l='價格'>"+(i.p?((i.buy?"<div style='color:#7bd14a'>商店賣 "+i.p.toLocaleString()+"</div>":"")+"<div style='color:#b6a684'>賣店回收 "+i.sell.toLocaleString()+"</div>"):"—")+"</td>"+
-"<td data-l='效果'>"+(fx||desc||src||area||ex?fx+desc+src+area+ex:"<span style='color:#6b5f4c'>—</span>")+"</td></tr>";}).join("")||"<tr><td colspan=9 style='color:#8f8067'>查無符合</td></tr>";}
+"<td data-l='效果'>"+(fx||desc||src||area||drop||ex?fx+desc+src+area+drop+ex:"<span style='color:#6b5f4c'>—</span>")+"</td></tr>";}).join("")||"<tr><td colspan=9 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script>`));
 
