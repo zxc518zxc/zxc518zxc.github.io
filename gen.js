@@ -1072,7 +1072,7 @@ fs.writeFileSync(path.join(OUT, "pets.html"), page("寵物與召喚", "pets", `
 <div class="sub" style="margin-top:8px">・表格列到魅力 71;更高的魅力照「魅力 ÷ 6」算,沒有上限。<br>・魅力<b>不影響</b>寵物的命中與傷害,那些看狗自己的等級(1~50)。<br>・喝「萬能藥」可永久 +1 魅力,最多 20 瓶。<br>・<b>寵物優先</b>:有召喚物時吹哨子叫狗,召喚物會被收掉。</div></div>
 
 <div class="mcard"><div class="ttl">🐕 四種狗怎麼得到</div>
-<div class="sub">用「肉」啟動<b>誘捕 300 秒</b>(名額滿不能啟動),期間殺到對應的怪 <b>100% 掉項圈</b>,拿到項圈就能吹哨子叫牠出來。項圈不可交易、不可存倉庫。</div>
+<div class="sub">用「肉」啟動<b>誘捕 300 秒</b>(名額滿不能啟動),期間殺到對應的怪 <b>100% 掉項圈</b>,拿到項圈就能吹哨子叫牠出來。項圈不可交易${DEPLOYED_1013 ? "；<b>可以存倉庫</b>(同帳號角色互相搬),但<b>取出時項圈總數不能超過魅力上限</b>(魅力 ÷ 6)" : "、不可存倉庫"}。</div>
 <div class="wrap" style="margin-top:8px"><table><thead><tr><th>狗</th><th>誘捕時要殺的怪</th></tr></thead><tbody>
 <tr><td>杜賓狗</td><td>杜賓狗</td></tr><tr><td>狼</td><td>狼</td></tr><tr><td>哈士奇</td><td>哈士奇</td></tr><tr><td>牧羊犬</td><td>牧羊犬</td></tr>
 </tbody></table></div></div>
@@ -1884,7 +1884,8 @@ fs.writeFileSync(path.join(OUT, "systems.html"), page("系統說明", "sys", `
 <tr><td>共用</td><td><b>整個帳號共用</b>一個倉庫,三隻角色互相搬東西就靠它</td></tr>
 <tr><td>容量</td><td><b>50 格</b>道具 + 金幣 + 藍鑽(金幣藍鑽不佔格)</td></tr>
 <tr><td>合併</td><td>同一款道具(同強化、同祝福、同詞條)存進去會<b>合併成一格</b>;之前分開存的,下次開倉庫會自動整理(9/15 起)</td></tr>
-<tr><td>不能存</td><td>鎖定中的道具;藍鑽請用上方「倉庫藍鑽」存入</td></tr>
+<tr><td>不能存</td><td>鎖定中的道具;藍鑽請用上方「倉庫藍鑽」存入</td></tr>${DEPLOYED_1013 ? `
+<tr><td>寵物項圈</td><td>可以存(10/13 起);<b>取出時項圈總數不能超過魅力 ÷ 6</b>,超過就領不出來</td></tr>` : ""}
 </tbody></table></div></div>
 
 <div class="mcard"><div class="ttl">🌙 月卡</div>
