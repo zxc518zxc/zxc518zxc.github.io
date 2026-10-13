@@ -153,6 +153,7 @@ if (!OFFICIAL_PRIEST_LIVE) for (const id of [
   "wpn_priestwand", "amr_priest", "hlm_priest", "clk_priest", "glv_priest", "bot_priest", "shd_priest",
 ]) { HIDDEN_ITEM_ID.add(id); OFFICIAL_PRIEST_IDS.add(id); }
 const hiddenItem = (id, v) => {
+  if (id === "item_pride_unseal" && DEPLOYED_1014) return false; // 🗼 10/14 麥哥:塔還沒開,但封印開始掉 ⇒ 道具頁先放出(名稱含「天罰」會被下面的 tianfa 規則擋)
   if (HIDDEN_ITEM_ID.has(id) && !(OFFICIAL_PRIEST_IDS.has(id) && rastaItemVisible(id))) return true;
   if (RASTA_NEW_ITEMS.has(id) && !rastaItemVisible(id)) return true;
   const s = (v.n || "") + " " + (v.d || "");
@@ -566,6 +567,8 @@ for (const i of items) {
   i.src = [...(srcByItem[i.id] || [])].slice(0, 8);
   if (AREA.items.includes(i.id) && areaZoneNames.length) i.area = areaZoneNames;
 }
+// 🗼 10/14 麥哥:解除天罰封印的道具介紹寫明「黃昏山脈怪物掉落」;塔還沒開就加一句尚未開放(不寫掉率,鐵律①)
+{ const u = items.find(i => i.id === "item_pride_unseal"); if (u) u.d = (u.d || "") + "【取得方式】黃昏山脈的巨人、巨人戰士、巨人長老掉落。" + (FEAT.tianfa ? "" : "【傲慢之塔尚未開放,開放時間另行公告,在那之前封印暫時無法使用】"); }
 
 // 🐉 世界王(受 WB_MAX_LV 管制,與遊戲的 wbmax 一致)
 const wbSet = new Set();
