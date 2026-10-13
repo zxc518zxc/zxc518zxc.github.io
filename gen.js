@@ -217,7 +217,7 @@ const rastaItemVisible = id => Object.entries(GD.mobDrops || {}).some(([mobN, ro
 // 先前只讀了 d/dmg/ac/safe,其餘欄位全被忽略。這裡把它們渲染成看得懂的中文。
 // ⚠ 只翻譯**確認過語意**的欄位;沒把握的寧可不顯示,也不要寫錯給玩家看。
 const SLOT_N = { helm: "頭盔", armor: "盔甲", tshirt: "內衣", cloak: "斗篷", boots: "靴子",
-  gloves: "手套", shield: "盾牌", ring: "戒指", amulet: "項鍊", belt: "腰帶", pet: "寵物裝備" };
+  gloves: "手套", shield: "盾牌", ring: "戒指", amulet: "項鍊", belt: "腰帶", pet: "寵物裝備(限狗)" }; // 🐕 2026-10-13 麥哥:之牙只加狗,召喚獸/迷魅獸吃不到(遊戲內同步寫限狗)
 const REQ_N = { all: "全職業", knight: "騎士", mage: "法師", elf: "妖精", dark: "黑暗妖精" };
 const reqStr = r => !r || r === "all" ? "全職業" : r.split(",").map(x => REQ_N[x.trim()] || x).join("／");
 // 武器特殊效果(對照 engine 內的 eff 分支;只列玩家打得到、意義明確的)
