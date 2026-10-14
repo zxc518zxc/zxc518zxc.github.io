@@ -541,7 +541,8 @@ const MOONBURST_DESC = (() => {
   const w = body.match(/E == "water" \{\s*dmg \+= (\d+)/);
   if (!p || !d || !w) throw new Error("sim.go 讀不到月光爆裂的機率/傷害");
   const pct = +(+p[1] * 100).toPrecision(6);
-  return `【月光爆裂】每次攻擊有 ${pct}% 機率發動(射空也會判定),對目標造成 1~${d[1]} + 強化值×${d[2]} 的魔法傷害,打水屬性怪物再 +${w[1]}。觸發時會出現標示「爆裂」的傷害數字;屬於魔法傷害,會受怪物的魔法抗性影響。`;
+  const ex = [0, 7, 9].map(en => { const lo = 1 + en * +d[2], hi = +d[1] + en * +d[2]; return `+${en} 約 ${lo}~${hi}(平均 ${(lo + hi) / 2})`; }).join("、");   // 例子由上面讀到的數字算出
+  return `【月光爆裂】每次攻擊有 ${pct}% 機率發動(射空也會判定),對目標造成 1~${d[1]} + 強化值×${d[2]} 的魔法傷害,打水屬性怪物再 +${w[1]}。觸發時會出現標示「爆裂」的傷害數字;屬於魔法傷害,會受怪物的魔法抗性影響。\n例:${ex},尚未計入怪物魔法抗性。`;
 })();
 const items = Object.entries(GD.items || {}).filter(([id, v]) => !hiddenItem(id, v)).map(([id, v]) => ({
   id, n: v.n || id, t: TYPE_NAME[v.type] || v.type || "其他",
