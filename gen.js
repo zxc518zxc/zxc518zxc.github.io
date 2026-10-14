@@ -531,9 +531,21 @@ const BLESS_DROP = (() => {
   }
   return out;
 })();
+// 🌙 熾炎天使弓「月光爆裂」說明(2026-10-15 麥哥:玩家問觸發率/傷害)——數字從 sim.go moonburstGo 讀,讀不到就中止(鐵律:資料站數字不手抄)
+const MOONBURST_DESC = (() => {
+  const src = fs.readFileSync(path.join(__dirname, "../go端專案/engine/afk/sim.go"), "utf8");
+  const i = src.indexOf("func (gd *GameData) moonburstGo(");
+  const body = i < 0 ? "" : src.slice(i, src.indexOf("\nfunc ", i + 10));
+  const p = body.match(/if rng\(\) >= ([0-9.]+) \{/);
+  const d = body.match(/rollDice\(rng, 1, (\d+)\) \+ (\d+)\*eqEnOf\(c\.Ch\)/);
+  const w = body.match(/E == "water" \{\s*dmg \+= (\d+)/);
+  if (!p || !d || !w) throw new Error("sim.go 讀不到月光爆裂的機率/傷害");
+  const pct = +(+p[1] * 100).toPrecision(6);
+  return `【月光爆裂】每次攻擊有 ${pct}% 機率發動(射空也會判定),對目標造成 1~${d[1]} + 強化值×${d[2]} 的魔法傷害,打水屬性怪物再 +${w[1]}。觸發時會出現標示「爆裂」的傷害數字;屬於魔法傷害,會受怪物的魔法抗性影響。`;
+})();
 const items = Object.entries(GD.items || {}).filter(([id, v]) => !hiddenItem(id, v)).map(([id, v]) => ({
   id, n: v.n || id, t: TYPE_NAME[v.type] || v.type || "其他",
-  d: (D_FIX[id] || v.d || "") + (TEMP_NOTE[id] ? "\n" + TEMP_NOTE[id] : "") + affixNote(id), legend: v.gachaWeight === 1,   // ⏳ TEMP_NOTE:官網限定附註(見上);🎲 affixNote:暗黑詞條說明
+  d: (D_FIX[id] || v.d || "") + (v.eff === "moonburst" ? ((D_FIX[id] || v.d) ? "\n" : "") + MOONBURST_DESC : "") + (TEMP_NOTE[id] ? "\n" + TEMP_NOTE[id] : "") + affixNote(id), legend: v.gachaWeight === 1,   // ⏳ TEMP_NOTE:官網限定附註(見上);🎲 affixNote:暗黑詞條說明
   dmg: v.dmgS ? `${v.dmgS}/${v.dmgL || v.dmgS}` : "", ac: v.ac || 0, safe: v.safe ?? "",
   slot: SLOT_N[v.slot] || "", req: reqStr(v.req), wcat: v.wcat || "",
   p: v.p || 0, sell: v.sellP ? v.sellP : Math.floor((v.p || 0) * 3 / 10), buy: SHOP_SELL.has(id),   // 💰 sellP=回收價覆寫(2026-09-23 二級黑魔石;與 Go sellPriceOf / adapter itemSell 三份同步,Go 守門會掃這行)
