@@ -253,7 +253,8 @@ function itemFx(v) {
     ...num(v.resWind, "風抗 N"), ...num(v.resEarth, "地抗 N"));
   // 🔴 盾牌 block(格擋)未實作,刻意不顯示(2026-09-30 麥哥:沒有的特效不要顯示;Go 引擎零引用,同上面 EFF_N 的原則)
   if (v.magicDrNonEle) t.push("無屬性魔法傷害 -" + v.magicDrNonEle + "%");
-  if (v.immStone) t.push("有機率抵擋石化");   // ⚠ 2026-10-15 更正:immStone 實際是「被石化命中後 30% 機率抵擋」(pstatus.go stoneResistPct),不是免疫;麥哥:官網不寫數字
+  // 🗿 immStone(石化抵擋)不另外標:2026-10-15 起寫在 gamedata 說明 d「被石化時有30%機率抵擋」
+  //    (Go 守門 TestStoneResistDescMatchesCode 對 stoneResistPct);這裡再標一次=多一份數字抄本,不要加回來。
   if (v.immPoison) t.push("免疫中毒");
   // 🚫 weightCap(負重上限)2026-10-15 拿掉:遊戲沒有負重系統,這個效果不存在(泰坦皮帶的欄位也已從 gamedata 移除)
   if (v.extraMpPerEn) t.push("每強化 +1:額外MP +" + v.extraMpPerEn);      // derived.go: ExtraMp += wEn * ExtraMpPerEn
