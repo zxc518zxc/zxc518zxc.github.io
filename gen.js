@@ -253,10 +253,9 @@ function itemFx(v) {
     ...num(v.resWind, "風抗 N"), ...num(v.resEarth, "地抗 N"));
   // 🔴 盾牌 block(格擋)未實作,刻意不顯示(2026-09-30 麥哥:沒有的特效不要顯示;Go 引擎零引用,同上面 EFF_N 的原則)
   if (v.magicDrNonEle) t.push("無屬性魔法傷害 -" + v.magicDrNonEle + "%");
-  // 🗿 immStone(石化抵擋)不另外標:2026-10-15 起寫在 gamedata 說明 d「被石化時有30%機率抵擋」
-  //    (Go 守門 TestStoneResistDescMatchesCode 對 stoneResistPct);這裡再標一次=多一份數字抄本,不要加回來。
+  if (v.immStone) t.push("有機率抵擋石化");   // ⚠ 2026-10-15 更正:immStone 實際是「被石化命中後 30% 機率抵擋」(pstatus.go stoneResistPct),不是免疫;麥哥:官網不寫數字
   if (v.immPoison) t.push("免疫中毒");
-  if (v.weightCap) t.push("負重上限 +" + v.weightCap);
+  // 🚫 weightCap(負重上限)2026-10-15 拿掉:遊戲沒有負重系統,這個效果不存在(泰坦皮帶的欄位也已從 gamedata 移除)
   if (v.extraMpPerEn) t.push("每強化 +1:額外MP +" + v.extraMpPerEn);      // derived.go: ExtraMp += wEn * ExtraMpPerEn
   if (v.meleeHitPerEn) t.push("每強化 +1:近距離命中 +" + v.meleeHitPerEn); // derived.go: MeleeHit += wEn * MeleeHitPerEn
   if (v.mrPerEn) t.push("每強化 +1:魔防 +" + v.mrPerEn);
@@ -475,6 +474,8 @@ try {
 // 🔍 偷窺卡 2026-09-11 起重新在各村雜貨商販售(30 萬)。mastery.json 是舊匯出、還沒有它,
 //    而 wikidump **不能重跑**(會讓強化機率暗改曝光)⇒ 在這裡手動補一筆。日後能重跑 wikidump 時這行可刪。
 SHOP_SELL.add("peek_card");
+// 🚫 瞬間移動卷軸 2026-10-16 起從所有商店下架(Go afk/shop_extra.go ShopDelisted;遊戲沒有傳送功能,買了沒用)。同上理由手動拿掉,跟 10/16 閘門一起生效。
+if (DEPLOYED_1016) SHOP_SELL.delete("scroll_teleport");
 SHOP_SELL.add("item_moon_key");     // 🎑 中秋鑰匙 2026-09-26 起各村雜貨商販售(200 萬;Go ExtraShopDefault,活動開關 moon 開著才上架)。同上理由手動補。
 SHOP_SELL.add("mat_blackstone2");   // 🌑 二級黑魔石 2026-09-23 起沉默洞穴販售(2,500;回收 300 靠 sellP)。同上:mastery.json 是舊匯出,手動補。
 // 🌑 沉默洞穴史克瓦提整家店都不在舊匯出裡(2026-09-23 抓到:一級黑魔石 + 四種鋼爪 + 四種雙刀在道具頁全標「商店沒賣」)。
@@ -506,9 +507,7 @@ const ELE_NAME = { fire: "火", water: "水", wind: "風", earth: "地", none: "
 // 🔴 上線後**一定要回來刪**——留著就是對玩家說謊。
 // ✏ D_FIX — 官網限定「整句取代」遊戲說明(gamedata 的 d 寫了程式沒有的效果、又還沒排維護改遊戲時用;遊戲改好後就刪掉這一筆)。
 const D_FIX = {
-  // 2026-10-10 麥哥:玩家以為帶著就能手動傳送打 BOSS。程式查證:acc_116 沒有任何效果、放置版也沒有手動傳送術;
-  //   唯一用途=兌換變形控制戒指的材料(煉戒術士目前隱藏)。
-  acc_116: "目前沒有特殊效果(放置版沒有「手動施放傳送術」,帶在身上或裝備都不會觸發任何事件)。",
+  // (2026-10-15 移除 acc_116 那筆:10/16 起遊戲 gamedata 的說明已改成同樣的「目前沒有特殊效果」,不需要官網另外蓋掉)
 };
 for (const k of ["mat_chimera_snake", "mat_chimera_dragon", "mat_chimera_goat", "mat_chimera_lion"]) { const d0 = GD.items?.[k]?.d || ""; if (!d0.includes("在傲慢之塔入口交給巴姆特")) throw new Error(k + " 說明格式變了,請檢查巴姆特地點"); D_FIX[k] = d0.replace("在傲慢之塔入口交給巴姆特", "在威頓村交給巴姆特"); }   // 🗼 巴姆特已在威頓村
 const TEMP_NOTE = {
