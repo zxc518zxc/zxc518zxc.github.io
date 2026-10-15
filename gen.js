@@ -615,6 +615,7 @@ const worldbosses = Object.entries(GD.worldBosses || {}).map(([id, v]) => {
 
 const mobs = Object.entries(GD.mobs || {}).map(([key, v]) => ({
   key, n: v.n || key, lv: v.lv || 0, hp: v.hp || 0, exp: v.exp || 0,
+  ac: v.ac || 0, // 🛡 2026-10-15 玩家:「怪物沒有 AC」。= gamedata 原值,引擎不在執行期改它(afk/gamedata.go Ac: gm.Ac;世界王 bossmob.go 同);同名怪 AC 全一致(合併不失真)
   e: ELE_NAME[v.e] || "無", race: v.race || "", boss: !!v.boss,
   // 🔴 世界王本尊怪永遠不會在一般獵場出生(RemoveBossMobs),出沒地點一律標「世界王房」
   wbOnly: WB_MOB_NAMES.has(v.n || key),
@@ -1143,9 +1144,9 @@ fs.writeFileSync(path.join(OUT, "pets.html"), page("寵物與召喚", "pets", `
 fs.writeFileSync(path.join(OUT, "monsters.html"), page("怪物掉落圖鑑", "mob", `
 ${chips([[mobList.length, "怪物"], [mobList.filter(m => m.drops.length).length, "有掉落"], [worldbosses.length, "世界王"]])}
 <div class="bar"><input id="q" placeholder="🔍 搜怪物名,或輸入「道具名」找會掉它的怪"></div>
-<div class="hint">例:搜「銀長劍」→ 列出所有會掉它的怪物。</div>
+<div class="hint">例:搜「銀長劍」→ 列出所有會掉它的怪物。<br>🛡 <b>AC</b>=怪物的防禦,<b>數字越低(負越多)越難打中</b>。命中怎麼算可看<a href="pets.html" style="color:#f5c451">寵物與召喚</a>頁的召喚獸命中公式。</div>
 <div class="chips" id="lvchips"></div>
-<div class="wrap" id="tb-wrap"><table><thead><tr><th>怪物</th><th>Lv</th><th>HP</th><th>經驗</th><th>屬性</th><th>出沒地點</th><th>掉落</th></tr></thead><tbody id="tb"></tbody></table></div>`,
+<div class="wrap" id="tb-wrap"><table><thead><tr><th>怪物</th><th>Lv</th><th>HP</th><th>AC</th><th>經驗</th><th>屬性</th><th>出沒地點</th><th>掉落</th></tr></thead><tbody id="tb"></tbody></table></div>`,
 `<script src="data.js"></script><script>
 const $=id=>document.getElementById(id);
 ${ESC}
@@ -1156,9 +1157,9 @@ function inLv(m){if(lv==="all")return true;if(lv==="61+")return m.lv>=61;const p
 function render(){const q=$("q").value.trim().toLowerCase();
 const list=WIKI.mobs.filter(m=>inLv(m)&&(!q||m.n.toLowerCase().includes(q)||m.drops.some(d=>d.n.toLowerCase().includes(q))));
 if(q)list.sort((a,b)=>(b.n.toLowerCase()===q)-(a.n.toLowerCase()===q));   // 名字完全相同的排最前(從獵場頁點怪物名連過來時,第一列就是牠)
-$("tb").innerHTML=list.map(m=>"<tr><td class='nm'>"+esc(m.n)+"</td><td class='num' data-l='等級'>Lv "+m.lv+"</td><td class='num' data-l='HP'>"+m.hp.toLocaleString()+"</td><td class='num' data-l='經驗'>"+m.exp.toLocaleString()+"</td><td class='num' data-l='屬性'>"+m.e+"</td>"+
+$("tb").innerHTML=list.map(m=>"<tr><td class='nm'>"+esc(m.n)+"</td><td class='num' data-l='等級'>Lv "+m.lv+"</td><td class='num' data-l='HP'>"+m.hp.toLocaleString()+"</td><td class='num' data-l='AC'>"+m.ac+"</td><td class='num' data-l='經驗'>"+m.exp.toLocaleString()+"</td><td class='num' data-l='屬性'>"+m.e+"</td>"+
 "<td data-l='出沒地點'>"+(m.wbOnly?"<span class='tag wb'>🐉 世界王房限定</span>":(m.zones.length?m.zones.map(z=>"<span class='tag zn'>"+esc(z)+"</span>").join(""):"<span class='tag'>—</span>"))+"</td>"+
-"<td data-l='掉落'>"+(m.drops.length?m.drops.map(d=>"<span class='tag"+(d.legend?" lg":"")+"'>"+(d.legend?"★":"")+esc(d.n)+"</span>").join(""):"<span style='color:#6b5f4c'>—</span>")+"</td></tr>").join("")||"<tr><td colspan=7 style='color:#8f8067'>查無符合</td></tr>";}
+"<td data-l='掉落'>"+(m.drops.length?m.drops.map(d=>"<span class='tag"+(d.legend?" lg":"")+"'>"+(d.legend?"★":"")+esc(d.n)+"</span>").join(""):"<span style='color:#6b5f4c'>—</span>")+"</td></tr>").join("")||"<tr><td colspan=8 style='color:#8f8067'>查無符合</td></tr>";}
 try{const pq=new URLSearchParams(location.search).get("q");if(pq)$("q").value=pq;}catch(e){}   // 獵場頁的怪物名連結帶 ?q=怪物名 進來
 $("q").oninput=render;render();
 </script>`));

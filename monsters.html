@@ -173,9 +173,9 @@ a.tag:hover{border-color:#f5c451;color:#f5c451}
 </nav></header><main>
 <div class="stats"><div class="stat-chip"><b>216</b>怪物</div><div class="stat-chip"><b>210</b>有掉落</div><div class="stat-chip"><b>17</b>世界王</div></div>
 <div class="bar"><input id="q" placeholder="🔍 搜怪物名,或輸入「道具名」找會掉它的怪"></div>
-<div class="hint">例:搜「銀長劍」→ 列出所有會掉它的怪物。</div>
+<div class="hint">例:搜「銀長劍」→ 列出所有會掉它的怪物。<br>🛡 <b>AC</b>=怪物的防禦,<b>數字越低(負越多)越難打中</b>。命中怎麼算可看<a href="pets.html" style="color:#f5c451">寵物與召喚</a>頁的召喚獸命中公式。</div>
 <div class="chips" id="lvchips"></div>
-<div class="wrap" id="tb-wrap"><table><thead><tr><th>怪物</th><th>Lv</th><th>HP</th><th>經驗</th><th>屬性</th><th>出沒地點</th><th>掉落</th></tr></thead><tbody id="tb"></tbody></table></div></main>
+<div class="wrap" id="tb-wrap"><table><thead><tr><th>怪物</th><th>Lv</th><th>HP</th><th>AC</th><th>經驗</th><th>屬性</th><th>出沒地點</th><th>掉落</th></tr></thead><tbody id="tb"></tbody></table></div></main>
 <script>
 /* 📱 手機卡片式:值是「—」的欄位加 .e 由 CSS 隱藏,免得每張卡都一堆空白列。
    各頁 render 是各自的 innerHTML 賦值,所以用 MutationObserver 統一處理一次就好。 */
@@ -198,7 +198,7 @@ a.tag:hover{border-color:#f5c451;color:#f5c451}
 })();
 </script>
 <footer>資料自動同步自遊戲檔 · 產生於 2026-10-15<br>本站資料僅供參考,阿肥放置天地官方保留最終解釋權。<br>一切贊助皆為玩家自願,款項全數用於伺服器維護與研究開發。</footer>
-<script src="data.js?v=5d1536ac"></script><script>
+<script src="data.js?v=1c639690"></script><script>
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
 const LV=[["all","全部"],["1-20","1~20"],["21-40","21~40"],["41-60","41~60"],["61+","61+"]];let lv="all";
@@ -208,9 +208,9 @@ function inLv(m){if(lv==="all")return true;if(lv==="61+")return m.lv>=61;const p
 function render(){const q=$("q").value.trim().toLowerCase();
 const list=WIKI.mobs.filter(m=>inLv(m)&&(!q||m.n.toLowerCase().includes(q)||m.drops.some(d=>d.n.toLowerCase().includes(q))));
 if(q)list.sort((a,b)=>(b.n.toLowerCase()===q)-(a.n.toLowerCase()===q));   // 名字完全相同的排最前(從獵場頁點怪物名連過來時,第一列就是牠)
-$("tb").innerHTML=list.map(m=>"<tr><td class='nm'>"+esc(m.n)+"</td><td class='num' data-l='等級'>Lv "+m.lv+"</td><td class='num' data-l='HP'>"+m.hp.toLocaleString()+"</td><td class='num' data-l='經驗'>"+m.exp.toLocaleString()+"</td><td class='num' data-l='屬性'>"+m.e+"</td>"+
+$("tb").innerHTML=list.map(m=>"<tr><td class='nm'>"+esc(m.n)+"</td><td class='num' data-l='等級'>Lv "+m.lv+"</td><td class='num' data-l='HP'>"+m.hp.toLocaleString()+"</td><td class='num' data-l='AC'>"+m.ac+"</td><td class='num' data-l='經驗'>"+m.exp.toLocaleString()+"</td><td class='num' data-l='屬性'>"+m.e+"</td>"+
 "<td data-l='出沒地點'>"+(m.wbOnly?"<span class='tag wb'>🐉 世界王房限定</span>":(m.zones.length?m.zones.map(z=>"<span class='tag zn'>"+esc(z)+"</span>").join(""):"<span class='tag'>—</span>"))+"</td>"+
-"<td data-l='掉落'>"+(m.drops.length?m.drops.map(d=>"<span class='tag"+(d.legend?" lg":"")+"'>"+(d.legend?"★":"")+esc(d.n)+"</span>").join(""):"<span style='color:#6b5f4c'>—</span>")+"</td></tr>").join("")||"<tr><td colspan=7 style='color:#8f8067'>查無符合</td></tr>";}
+"<td data-l='掉落'>"+(m.drops.length?m.drops.map(d=>"<span class='tag"+(d.legend?" lg":"")+"'>"+(d.legend?"★":"")+esc(d.n)+"</span>").join(""):"<span style='color:#6b5f4c'>—</span>")+"</td></tr>").join("")||"<tr><td colspan=8 style='color:#8f8067'>查無符合</td></tr>";}
 try{const pq=new URLSearchParams(location.search).get("q");if(pq)$("q").value=pq;}catch(e){}   // 獵場頁的怪物名連結帶 ?q=怪物名 進來
 $("q").oninput=render;render();
 </script></body></html>
