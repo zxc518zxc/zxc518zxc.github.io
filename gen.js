@@ -122,13 +122,13 @@ const RASTA_NEW_ITEMS = new Set(["wpn_spear_rasta", "amr_rasta_robe", "wpn_wand_
   "wpn_blood_2hsword", "wpn_red_crystalwand", "clk_blacktiger", "acc_summoner_amulet", "amr_summoner_robe"]);
 const hiddenZone = z =>
   BLOCKED_ZONES.has(z) ||
-  (!FEAT.tianfa && z.startsWith("pride_")) ||
+  (!FEAT.tianfa && z.startsWith("pride_") && !(DEPLOYED_1015 && +z.slice(7) >= 1 && +z.slice(7) <= 9)) ||   // 🗼 10/15 起先開 1~9F(遊戲 pridehi 收起=10F 王與 11F 以上仍隱藏)
   (!FEAT.twilight && z === "twilight_mt") ||
   (!FEAT.castle && z.startsWith("siege_")) ||
   (!FEAT.rastabad && RASTA_ZONES.has(z)) ||
   z.startsWith("pk_") || z === "lobby";
 const HIDDEN_ITEM_RE = [];
-if (!FEAT.tianfa) HIDDEN_ITEM_RE.push(/傲慢之塔|天罰|奇美拉之皮/);
+if (!FEAT.tianfa) HIDDEN_ITEM_RE.push(/傲慢之塔|天罰|奇美拉之皮/);   // 🗼 10/15 開 1~9F 後仍先隱藏塔專屬道具(奇美拉之皮→巴姆特製作線待整理;移動卷軸是 11F 以上用)
 if (!FEAT.doll)   HIDDEN_ITEM_RE.push(/娃娃/);
 if (!FEAT.castle) HIDDEN_ITEM_RE.push(/攻城|城堡/);
 // 用 id 精準擋(比對名稱會誤傷:「精通」兩字還有別的道具在用)
@@ -582,7 +582,7 @@ for (const i of items) {
   if (AREA.items.includes(i.id) && areaZoneNames.length) i.area = areaZoneNames;
 }
 // 🗼 10/14 麥哥:解除天罰封印的道具介紹寫明「黃昏山脈怪物掉落」;塔還沒開就加一句尚未開放(不寫掉率,鐵律①)
-{ const u = items.find(i => i.id === "item_pride_unseal"); if (u) u.d = (u.d || "") + "【取得方式】黃昏山脈的巨人、巨人戰士、巨人長老掉落。" + (FEAT.tianfa ? "" : "【傲慢之塔尚未開放,開放時間另行公告,在那之前封印暫時無法使用】"); }
+{ const u = items.find(i => i.id === "item_pride_unseal"); if (u) u.d = (u.d || "") + "【取得方式】黃昏山脈的巨人、巨人戰士、巨人長老掉落。" + (FEAT.tianfa ? "" : (DEPLOYED_1015 ? "【傲慢之塔目前開放 1~9 樓;10 樓以上尚未開放】" : "【傲慢之塔尚未開放,開放時間另行公告,在那之前封印暫時無法使用】")); }
 
 // 🐉 世界王(受 WB_MAX_LV 管制,與遊戲的 wbmax 一致)
 const wbSet = new Set();
