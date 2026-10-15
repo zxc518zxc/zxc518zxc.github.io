@@ -155,6 +155,7 @@ if (!OFFICIAL_PRIEST_LIVE) for (const id of [
 ]) { HIDDEN_ITEM_ID.add(id); OFFICIAL_PRIEST_IDS.add(id); }
 const hiddenItem = (id, v) => {
   if (id === "item_pride_unseal" && DEPLOYED_1014) return false; // 🗼 10/14 麥哥:塔還沒開,但封印開始掉 ⇒ 道具頁先放出(名稱含「天罰」會被下面的 tianfa 規則擋)
+  if (/^mat_chimera_(snake|dragon|goat|lion)$/.test(id) && DEPLOYED_1015) return false; // 🗼 10/15 麥哥:塔 1~9F 開放、威頓村巴姆特製作線也上 ⇒ 奇美拉之皮放出(說明裡的「傲慢之塔」會被上面的 tianfa 規則擋)
   if (HIDDEN_ITEM_ID.has(id) && !(OFFICIAL_PRIEST_IDS.has(id) && rastaItemVisible(id))) return true;
   if (RASTA_NEW_ITEMS.has(id) && !rastaItemVisible(id)) return true;
   const s = (v.n || "") + " " + (v.d || "");
@@ -504,6 +505,7 @@ const D_FIX = {
   //   唯一用途=兌換變形控制戒指的材料(煉戒術士目前隱藏)。
   acc_116: "目前沒有特殊效果(放置版沒有「手動施放傳送術」,帶在身上或裝備都不會觸發任何事件)。",
 };
+for (const k of ["mat_chimera_snake", "mat_chimera_dragon", "mat_chimera_goat", "mat_chimera_lion"]) { const d0 = GD.items?.[k]?.d || ""; if (!d0.includes("在傲慢之塔入口交給巴姆特")) throw new Error(k + " 說明格式變了,請檢查巴姆特地點"); D_FIX[k] = d0.replace("在傲慢之塔入口交給巴姆特", "在威頓村交給巴姆特"); }   // 🗼 巴姆特已在威頓村
 const TEMP_NOTE = {
   // ✅ 2026-09-23 12:27 BOSS結晶掉率修正已上線 ⇒ 那句臨時附註已移除(留著就是對玩家說謊)。
   //    機制保留給下次用:寫法 `道具id: "附註文字"`,只出現在官網、不會進 gamedata(遊戲內說明是同一份)。
