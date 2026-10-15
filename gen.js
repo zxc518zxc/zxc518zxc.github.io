@@ -20,7 +20,10 @@ const LINKS = {
     discord: "https://discord.gg/cP7fh2jRXA",
     lineGroup: "https://line.me/ti/g2/qRBgqtR_BIo7qZ9fd5ZDPV3wLehoG9gkTUtk0w",
     lineId: "@068ivpaq",
+    community: "https://afei.gg/community.html", // 💬 2026-10-15 玩家社群(遊戲帳號登入)
 };
+// 💬 玩家社群首頁連結的閘門:遊戲那邊 `feature community on` 開放後才翻 true(還沒開就放連結=玩家點進去只看到「尚未開放」)。
+const COMMUNITY_OPEN = false;
 
 const GD = JSON.parse(fs.readFileSync(path.join(__dirname, "../go端專案/gamedata.json"), "utf8"));
 const DEPLOYED_1008 = true;   // 10/8 白天維護(娃娃十連抽 41 級/每日 4 次;第二台驗收後翻 true)
@@ -1069,6 +1072,7 @@ ${NAV_GROUPS.map(([gname, gicon, links]) => `<div class="sechd">${gicon} ${gname
 <div class="sub">有問題到社群問,或加官方帳號私訊客服</div>
 <div class="links">
 <a class="link play" href="${LINKS.game}" target="_blank" rel="noopener"><div class="em">🎮</div><div><div class="tt">進入遊戲</div><div class="dd">${LINKS.gameLabel}</div></div></a>
+${COMMUNITY_OPEN ? `<a class="link" href="${LINKS.community}" target="_blank" rel="noopener"><div class="em">🗣</div><div><div class="tt">玩家社群</div><div class="dd">聊天・交易・私訊・聯繫客服(用遊戲帳號登入)</div></div></a>` : ""}
 <a class="link" href="${LINKS.discord}" target="_blank" rel="noopener"><div class="em">💬</div><div><div class="tt">Discord</div><div class="dd">公告・討論・找隊友</div></div></a>
 <a class="link" href="${LINKS.lineGroup}" target="_blank" rel="noopener"><div class="em">👥</div><div><div class="tt">LINE 社群</div><div class="dd">玩家交流・活動通知</div></div></a>
 <a class="link" href="https://line.me/R/ti/p/${encodeURIComponent(LINKS.lineId)}" target="_blank" rel="noopener"><div class="em">📮</div><div><div class="tt">LINE 官方帳號</div><div class="dd">客服私訊 <span class="lineid">${LINKS.lineId}</span></div></div></a>
