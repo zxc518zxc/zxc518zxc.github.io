@@ -22,8 +22,6 @@ const LINKS = {
     lineId: "@068ivpaq",
     community: "https://afei.gg/community.html", // 💬 2026-10-15 玩家社群(遊戲帳號登入)
 };
-// 💬 玩家社群首頁連結的閘門:遊戲那邊 `feature community on` 開放後才翻 true(還沒開就放連結=玩家點進去只看到「尚未開放」)。
-const COMMUNITY_OPEN = false;
 
 const GD = JSON.parse(fs.readFileSync(path.join(__dirname, "../go端專案/gamedata.json"), "utf8"));
 const DEPLOYED_1008 = true;   // 10/8 白天維護(娃娃十連抽 41 級/每日 4 次;第二台驗收後翻 true)
@@ -34,7 +32,9 @@ const DEPLOYED_1012 = true;    // 10/12 維護(Lv55 變身恢復武器揮砍聲;
 const DEPLOYED_1013 = true;    // 10/13 維護(維護前 60 秒預告;第二台驗收後翻 true)
 const DEPLOYED_1014 = true;    // 10/14 維護(交易所金額欄千分位;第二台驗收後翻 true)
 const DEPLOYED_1015 = true;   // 10/15 維護(推播改回一機多帳號+只接收這個帳號按鈕;第二台驗收後翻 true)
-const DEPLOYED_1016 = false;  // 10/16 維護(中毒扣血標「中毒」+ 自動賣出下拉不列鎖定道具;第二台驗收後翻 true)
+const DEPLOYED_1016 = false;  // 10/16 維護(中毒扣血標「中毒」+ 自動賣出下拉不列鎖定道具 + 玩家社群開放;第二台驗收後翻 true)
+// 💬 玩家社群首頁連結:麥哥 10/15 定 10/16 開放 ⇒ 跟 10/16 閘門一起翻(還沒開就放連結=玩家點進去只看到「尚未開放」)。
+const COMMUNITY_OPEN = DEPLOYED_1016;
 const DEPLOYED_1007 = true;   // 10/7 白天維護(交易所紀錄分頁;第二台驗收後翻 true)
 const DEPLOYED_1006 = true;   // 10/6 白天維護(世界王攻擊技能選單;第二台驗收後翻 true)
 const DEPLOYED_1005 = true;
@@ -1072,7 +1072,7 @@ ${NAV_GROUPS.map(([gname, gicon, links]) => `<div class="sechd">${gicon} ${gname
 <div class="sub">有問題到社群問,或加官方帳號私訊客服</div>
 <div class="links">
 <a class="link play" href="${LINKS.game}" target="_blank" rel="noopener"><div class="em">🎮</div><div><div class="tt">進入遊戲</div><div class="dd">${LINKS.gameLabel}</div></div></a>
-${COMMUNITY_OPEN ? `<a class="link" href="${LINKS.community}" target="_blank" rel="noopener"><div class="em">🗣</div><div><div class="tt">玩家社群</div><div class="dd">聊天・交易・私訊・聯繫客服(用遊戲帳號登入)</div></div></a>` : ""}
+${COMMUNITY_OPEN ? `<a class="link" href="${LINKS.community}" target="_blank" rel="noopener"><div class="em">🗣</div><div><div class="tt">玩家社群</div><div class="dd">聊天・交易・私訊(用遊戲帳號登入)</div></div></a>` : ""}
 <a class="link" href="${LINKS.discord}" target="_blank" rel="noopener"><div class="em">💬</div><div><div class="tt">Discord</div><div class="dd">公告・討論・找隊友</div></div></a>
 <a class="link" href="${LINKS.lineGroup}" target="_blank" rel="noopener"><div class="em">👥</div><div><div class="tt">LINE 社群</div><div class="dd">玩家交流・活動通知</div></div></a>
 <a class="link" href="https://line.me/R/ti/p/${encodeURIComponent(LINKS.lineId)}" target="_blank" rel="noopener"><div class="em">📮</div><div><div class="tt">LINE 官方帳號</div><div class="dd">客服私訊 <span class="lineid">${LINKS.lineId}</span></div></div></a>
