@@ -258,7 +258,7 @@ function itemFx(v) {
   //    (Go 守門 TestStoneResistDescMatchesCode 對 stoneResistPct);這裡再標一次=多一份數字抄本,不要加回來。
   if (v.immPoison) t.push("免疫中毒");
   // 🚫 weightCap(負重上限)2026-10-15 拿掉:遊戲沒有負重系統,這個效果不存在(泰坦皮帶的欄位也已從 gamedata 移除)
-  if (v.extraMpPerEn) t.push("每強化 +1:額外MP +" + v.extraMpPerEn);      // derived.go: ExtraMp += wEn * ExtraMpPerEn
+  if (v.extraMpPerEn) t.push("每強化 +1:額外魔法點數 +" + v.extraMpPerEn);      // derived.go: ExtraMp += wEn * ExtraMpPerEn
   if (v.meleeHitPerEn) t.push("每強化 +1:近距離命中 +" + v.meleeHitPerEn); // derived.go: MeleeHit += wEn * MeleeHitPerEn
   if (v.mrPerEn) t.push("每強化 +1:魔防 +" + v.mrPerEn);
   if (v.rangedHit) t.push("遠距離命中 +" + v.rangedHit);
@@ -1363,7 +1363,7 @@ const DT = (() => {
   const rate = num("DtWinRate"), minLv = num("DtMinLv"), gold = num("DtGold"), daily = num("DtDailyCap"), prizeId = str("DtPrizeId");
   const recipes = [...src.matchAll(/\{Name: "([^"]+)" \+ dtRecipeTag, Gold: DtGold, Req: \[\]CraftReq\{\{"(\w+)", (\d+)\}\}\}/g)]
     .map(m => ({ name: m[1] + "挑戰", id: m[2], cnt: +m[3] }));
-  const LBL = [["Md", "近傷"], ["Mh", "近命中"], ["Rd", "遠傷"], ["Rh", "遠命中"], ["Mgd", "魔傷"], ["Sp", "額外MP"], ["Mpr", "MP恢復"], ["Sh", "召喚獸命中"], ["Spd", "攻速"]];
+  const LBL = [["Md", "近傷"], ["Mh", "近命中"], ["Rd", "遠傷"], ["Rh", "遠命中"], ["Mgd", "魔傷"], ["Sp", "額外魔法點數"], ["Mpr", "MP恢復"], ["Sh", "召喚獸命中"], ["Spd", "攻速"]];
   const forms = [...src.matchAll(/^\s*"([^"]+)":\s*\{N: "[^"]+",([^}]*)\}/gm)].map(m => {
     const v = {}; for (const [, k, n] of m[2].matchAll(/(\w+): (-?\d+)/g)) v[k] = +n;
     return { name: m[1], eff: LBL.filter(([k]) => v[k]).map(([k, l]) => l + "+" + v[k] + (k === "Spd" ? "%" : "")).join("、") };
@@ -1378,7 +1378,7 @@ const DT_LV55 = (() => { try { const p = JSON.parse(fs.readFileSync(path.join(OU
 const DT_FORMS_TABLE = {
   head: "🧙 變身卷軸指定箱：五種變身能力",
   cols: ["變身", "能力", "對照：Lv55 同類型"],
-  rows: DT.forms.map((f, i) => [f.name, f.eff + (f.name.includes("弓") ? "（持弓有元素箭特效）" : ""), DT_LV55[i] ? `${DT_LV55[i].name}：${DT_LV55[i].eff}` : "—"]),
+  rows: DT.forms.map((f, i) => [f.name, f.eff + (f.name.includes("弓") ? "（持弓有元素箭特效）" : ""), DT_LV55[i] ? `${DT_LV55[i].name}：${String(DT_LV55[i].eff).split("額外MP").join("額外魔法點數")}` : "—"]),
   foot: "※ <b>需要 " + DT.minLv + " 級以上</b>才能使用，每張變身 <b>30 分鐘</b>。「攻速」是百分比加成，其餘都是直接加上去的數值；召喚獸命中只影響法師的召喚獸。",
 };
 // 🎌 國慶新活動加碼(10/10 晚麥哥拍板;10/11 12:30 ~ 10/16 12:30):六條挑戰、材料減半、10 萬金幣、0.5% BOSS結晶 ×1、每帳號每天 5 次。
@@ -2240,7 +2240,7 @@ if (STATS.length) {
     ["int", "智力", "🧠", "魔法攻擊。法師主要靠它。", [
       ["魔法傷害", "intDmg", "攻擊魔法的傷害加值"],
       ["魔法命中", "intHit", "魔法打得中目標的能力"],
-      ["額外魔法點數", "intExtraMp", "上限 MP 加值"],
+      ["額外魔法點數", "intExtraMp", "攻擊魔法的固定加傷(天堂的 SP),不是加 MP 上限"],
       ["消耗魔力減少", "intMpReduce", "%"],
       ["魔法爆擊率", "intCrit", "%"],
     ]],
@@ -2483,7 +2483,7 @@ if (WD.poly && WD.poly.length) {
   // AC 在引擎是「越低越好」,polyAbilityTextGo 直接輸出 AC-1,玩家會誤讀成防禦下降 → 翻成白話。
   // AC 在引擎是「越低越好」,polyAbilityTextGo 直接輸出 AC-1,玩家會誤讀成防禦下降 → 翻成白話。
   // ⚠ 刻意不用正則(這份檔案是腳本生成的,反斜線會被吃掉一層)。
-  const POLY_T = [["AC-", "防禦 AC 提升 "], ["AC+", "防禦 AC 下降 "], ["MR+", "魔防 MR+"], ["ER+", "閃避 ER+"]];
+  const POLY_T = [["AC-", "防禦 AC 提升 "], ["AC+", "防禦 AC 下降 "], ["MR+", "魔防 MR+"], ["ER+", "閃避 ER+"], ["額外MP", "額外魔法點數"]]; // 額外MP=天堂 SP(魔法固定加傷),跟遊戲能力頁統一叫「額外魔法點數」(10/16 玩家回報被誤會成加 MP)
   const polyEff = t => String(t || "—").split("、").map(x => {
     for (const [k, v] of POLY_T) if (x.indexOf(k) === 0) return v + x.slice(k.length);
     return x;
