@@ -526,6 +526,29 @@ try { for (const a of JSON.parse(fs.readFileSync(path.join(OUT, "mastery.json"),
 const affixNote = id => AFFIX_ITEMS.has(id)
   ? "<br>🎲 <b>掉落時會隨機附帶 0~2 條「暗黑詞條」</b>(例:遠距離命中 +1、額外傷害 +1、最大HP +20…),每一件都不同,掉落當下就決定、之後不能改。<a href='affix.html' style='color:#f5c451'>👉 看詞條種類與機率</a>"
   : "";
+// 👥 2026-10-17 麥哥:擁擠系統「人數 → 補怪秒數」公開到系統說明。數字一律從程式讀(不手抄),讀不到就中止產生:
+//    afk/sim.go 的 spawnDelayMs / sunlightDelay / crowdPenaltyMsGo(原階梯)+ afk/crowdext.go 的 crowdExtTiers(10/17 起 feature crowdx 開)。
+const CROWD_ROWS = (() => {
+  const sim = fs.readFileSync(path.join(__dirname, "../go端專案/engine/afk/sim.go"), "utf8");
+  const ext = fs.readFileSync(path.join(__dirname, "../go端專案/engine/afk/crowdext.go"), "utf8");
+  const base = sim.match(/spawnDelayMs\s*=\s*(\d+)/), sun = sim.match(/sunlightDelay\s*=\s*(\d+)/);
+  const fn = sim.match(/func crowdPenaltyMsGo\(n int\) int64 \{([\s\S]*?)\n\}/);
+  if (!base || !sun || !fn) throw new Error("sim.go 讀不到擁擠/補怪參數");
+  const tiers = [...fn[1].matchAll(/case n >= (\d+):\s*return (\d+)/g)].map(m => [+m[1], +m[2]]);
+  const blk = ext.match(/var crowdExtTiers = \[\]struct \{[\s\S]*?\}\{([\s\S]*?)\n\}/);
+  if (!blk) throw new Error("crowdext.go 讀不到 crowdExtTiers");
+  for (const m of blk[1].matchAll(/\{(\d+), (\d+)\}/g)) tiers.push([+m[1], +m[2]]);
+  tiers.sort((a, b) => a[0] - b[0]);
+  if (tiers.length !== 11 || tiers[0][0] !== 20 || tiers[tiers.length - 1][0] !== 400) throw new Error("擁擠階梯解析異常:" + JSON.stringify(tiers));
+  const B = +base[1], S = +sun[1], sec = ms => +(ms / 1000).toFixed(1) + " 秒";
+  const rows = [[`${tiers[0][0] - 1} 人以下`, sec(B), sec(S)]];
+  tiers.forEach(([n, ms], i) => {
+    const next = tiers[i + 1];
+    const label = next ? `${n} ~ ${next[0] - 1} 人` : `${n} 人以上`;
+    rows.push([label, sec(B + ms), sec(Math.max(S, B + ms - (B - S)))]);
+  });
+  return rows;
+})();
 // 🎲 2026-10-13 麥哥:賦予武器/盔甲/飾品祝福卷軸的掉落率**公開**(鐵律①的唯一例外,只限這三種;其他怪物掉率照樣不公開)。
 //    規則與數字一律從 engine/afk/sim.go 讀(怪物等級門檻 + 每種各自的 rng() < X),不手抄;讀不到就中止產生,不印錯的數字。
 const BLESS_DROP = (() => {
@@ -2010,6 +2033,10 @@ fs.writeFileSync(path.join(OUT, "systems.html"), page("系統說明", "sys", `
 <div class="sub">同一個獵場裡一起打怪的人太多時,<b>怪物重生會變慢</b> —— 人越多、要等越久。這不是卡頓,也不是你的網路有問題。<br>
 ✅ <b>只影響「怪物重生的速度」</b>:經驗、金幣、掉落機率<b>完全不受影響</b>,打到的東西一樣多、機率一樣。<br>
 💡 <b>解法很簡單:換去人比較少的獵場。</b>狩獵場列表每個獵場旁邊會顯示<b>(當前 N 人)</b>,挑冷一點的那個,重生速度就恢復正常。<br>
+<div class="wrap"><table><thead><tr><th>同獵場戰鬥人數</th><th>怪物重生</th><th>有日光術</th></tr></thead><tbody>
+${CROWD_ROWS.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("\n")}
+</tbody></table></div>
+・人數以伺服器統計的<b>同獵場正在戰鬥</b>人數為準,與列表顯示的人數可能略有差異。新兵修練場不受擁擠影響。<br>
 ⚠ 換獵場會清掉<b>王房的入場資格</b>(傲慢之塔 10F／20F、需付費的世界王房)—— 要打王請先打完再換場。</div></div>
 <div class="mcard"><div class="ttl">⚔ 血盟</div>
 <div class="wrap"><table><thead><tr><th>項目</th><th>規則</th></tr></thead><tbody>
