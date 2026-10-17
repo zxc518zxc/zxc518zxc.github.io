@@ -230,6 +230,20 @@ const REQ_N = { all: "全職業", knight: "騎士", mage: "法師", elf: "妖精
 const reqStr = r => !r || r === "all" ? "全職業" : r.split(",").map(x => REQ_N[x.trim()] || x).join("／");
 // 武器特殊效果(對照 engine 內的 eff 分支;只列玩家打得到、意義明確的)
 // ✅ 已確認**程式碼裡真的有實作**的武器效果(逐一 grep engine/ 驗過)
+// 🌑 2026-10-18 麥哥:爪痕/雙擊的白話補充(玩家問「爪痕有實裝嗎?雙刀好像比較強」)。
+//    數字一律從武器資料算(不手抄):機率=effPct(缺省 爪痕 25 / 雙擊 15,對齊 afk/darkelf.go darkWpnEffPct);
+//    爪痕=engine/combat.go PlayerAttackOpt forceHeavy ⇒ 只有武器骰取最大值;雙擊=darkDmgMultGo 整刀 ×2。
+const fmt1 = x => String(Math.round(x * 10) / 10);
+const darkEffNote = v => {
+  if (v.eff === "clawmark" && v.dmgS) {
+    const pct = (v.effPct || 25) / 100, s = v.dmgS, avg = (s + 1) / 2, gain = s - avg;
+    return `💡 爪痕只把「武器骰」那一小段改成最大值:對小型怪的骰子是 1~${s},平均 ${fmt1(avg)},觸發時變 ${s},只多 ${fmt1(gain)} 點;換算下來,每一刀平均只多約 ${fmt1(gain * pct)} 點。`;
+  }
+  if (v.eff === "doublehit") {
+    return `💡 雙擊把「整刀的傷害」加倍,連角色的力量、強化、各種加成一起翻倍,平均每刀多 ${v.effPct || 15}%。` + (v.hit ? `這把另外還多命中 +${v.hit},比較容易打中。` : "");
+  }
+  return "";
+};
 const EFF_N = {
   doublehit: "雙擊:機率傷害加倍", // afk/darkelf.go:53
   clawmark: "爪痕:機率造成武器最大傷害", // afk/darkelf.go:33
@@ -583,7 +597,7 @@ const MOONBURST_DESC = (() => {
 })();
 const items = Object.entries(GD.items || {}).filter(([id, v]) => !hiddenItem(id, v)).map(([id, v]) => ({
   id, n: v.n || id, t: TYPE_NAME[v.type] || v.type || "其他",
-  d: (D_FIX[id] || v.d || "") + (v.eff === "moonburst" ? ((D_FIX[id] || v.d) ? "\n" : "") + MOONBURST_DESC : "") + (TEMP_NOTE[id] ? "\n" + TEMP_NOTE[id] : "") + affixNote(id), legend: v.gachaWeight === 1,   // ⏳ TEMP_NOTE:官網限定附註(見上);🎲 affixNote:暗黑詞條說明
+  d: (D_FIX[id] || v.d || "") + (v.eff === "moonburst" ? ((D_FIX[id] || v.d) ? "\n" : "") + MOONBURST_DESC : "") + (TEMP_NOTE[id] ? "\n" + TEMP_NOTE[id] : "") + (darkEffNote(v) ? "\n" + darkEffNote(v) : "") + affixNote(id), legend: v.gachaWeight === 1,   // ⏳ TEMP_NOTE:官網限定附註(見上);🎲 affixNote:暗黑詞條說明
   dmg: v.dmgS ? `${v.dmgS}/${v.dmgL || v.dmgS}` : "", ac: v.ac || 0, safe: v.safe ?? "",
   slot: SLOT_N[v.slot] || "", req: reqStr(v.req), wcat: v.wcat || "",
   p: v.p || 0, sell: v.sellP ? v.sellP : Math.floor((v.p || 0) * 3 / 10), buy: SHOP_SELL.has(id),   // 💰 sellP=回收價覆寫(2026-09-23 二級黑魔石;與 Go sellPriceOf / adapter itemSell 三份同步,Go 守門會掃這行)
