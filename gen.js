@@ -527,19 +527,23 @@ const affixNote = id => AFFIX_ITEMS.has(id)
   ? "<br>🎲 <b>掉落時會隨機附帶 0~2 條「暗黑詞條」</b>(例:遠距離命中 +1、額外傷害 +1、最大HP +20…),每一件都不同,掉落當下就決定、之後不能改。<a href='affix.html' style='color:#f5c451'>👉 看詞條種類與機率</a>"
   : "";
 // 👥 2026-10-17 麥哥:擁擠系統「人數 → 補怪秒數」公開到系統說明。數字一律從程式讀(不手抄),讀不到就中止產生:
-//    afk/sim.go 的 spawnDelayMs / sunlightDelay / crowdPenaltyMsGo(原階梯)+ afk/crowdext.go 的 crowdExtTiers(10/17 起 feature crowdx 開)。
+//    afk/sim.go 的 spawnDelayMs / sunlightDelay / crowdPenaltyMsGo(原階梯)+ afk/crowdext.go 的 crowdExtTiers(加階,只有 CROWD_EXT_ON 才列)。
+// ⚠ 10/17 麥哥把加階關掉(後台 feature crowdx off)並要求官網「只介紹到原本的」⇒ CROWD_EXT_ON = false。哪天重開加階,改 true 再發官網。
+const CROWD_EXT_ON = false;
 const CROWD_ROWS = (() => {
   const sim = fs.readFileSync(path.join(__dirname, "../go端專案/engine/afk/sim.go"), "utf8");
-  const ext = fs.readFileSync(path.join(__dirname, "../go端專案/engine/afk/crowdext.go"), "utf8");
   const base = sim.match(/spawnDelayMs\s*=\s*(\d+)/), sun = sim.match(/sunlightDelay\s*=\s*(\d+)/);
   const fn = sim.match(/func crowdPenaltyMsGo\(n int\) int64 \{([\s\S]*?)\n\}/);
   if (!base || !sun || !fn) throw new Error("sim.go 讀不到擁擠/補怪參數");
   const tiers = [...fn[1].matchAll(/case n >= (\d+):\s*return (\d+)/g)].map(m => [+m[1], +m[2]]);
-  const blk = ext.match(/var crowdExtTiers = \[\]struct \{[\s\S]*?\}\{([\s\S]*?)\n\}/);
-  if (!blk) throw new Error("crowdext.go 讀不到 crowdExtTiers");
-  for (const m of blk[1].matchAll(/\{(\d+), (\d+)\}/g)) tiers.push([+m[1], +m[2]]);
+  if (CROWD_EXT_ON) {
+    const ext = fs.readFileSync(path.join(__dirname, "../go端專案/engine/afk/crowdext.go"), "utf8");
+    const blk = ext.match(/var crowdExtTiers = \[\]struct \{[\s\S]*?\}\{([\s\S]*?)\n\}/);
+    if (!blk) throw new Error("crowdext.go 讀不到 crowdExtTiers");
+    for (const m of blk[1].matchAll(/\{(\d+), (\d+)\}/g)) tiers.push([+m[1], +m[2]]);
+  }
   tiers.sort((a, b) => a[0] - b[0]);
-  if (tiers.length !== 11 || tiers[0][0] !== 20 || tiers[tiers.length - 1][0] !== 400) throw new Error("擁擠階梯解析異常:" + JSON.stringify(tiers));
+  if (tiers.length !== (CROWD_EXT_ON ? 11 : 4) || tiers[0][0] !== 20 || tiers[tiers.length - 1][0] !== (CROWD_EXT_ON ? 400 : 90)) throw new Error("擁擠階梯解析異常:" + JSON.stringify(tiers));
   const B = +base[1], S = +sun[1], sec = ms => +(ms / 1000).toFixed(1) + " 秒";
   const rows = [[`${tiers[0][0] - 1} 人以下`, sec(B), sec(S)]];
   tiers.forEach(([n, ms], i) => {
