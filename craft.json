@@ -1,0 +1,3115 @@
+[
+ {
+  "id": "npc_tas",
+  "town": "象牙塔",
+  "n": "塔斯",
+  "title": "製作",
+  "recipes": [
+   {
+    "req": [
+     {
+      "id": "panacea_white",
+      "n": "純白的萬能藥",
+      "cnt": 3
+     }
+    ],
+    "outId": "panacea_str",
+    "out": "萬能藥(STR)",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "panacea_white",
+      "n": "純白的萬能藥",
+      "cnt": 3
+     }
+    ],
+    "outId": "panacea_dex",
+    "out": "萬能藥(DEX)",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "panacea_white",
+      "n": "純白的萬能藥",
+      "cnt": 3
+     }
+    ],
+    "outId": "panacea_int",
+    "out": "萬能藥(INT)",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "panacea_white",
+      "n": "純白的萬能藥",
+      "cnt": 3
+     }
+    ],
+    "outId": "panacea_con",
+    "out": "萬能藥(CON)",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "panacea_white",
+      "n": "純白的萬能藥",
+      "cnt": 3
+     }
+    ],
+    "outId": "panacea_wis",
+    "out": "萬能藥(WIS)",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "panacea_white",
+      "n": "純白的萬能藥",
+      "cnt": 3
+     }
+    ],
+    "outId": "panacea_cha",
+    "out": "萬能藥(CHA)",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_moli",
+  "town": "銀騎士村",
+  "n": "茉莉",
+  "title": "製作",
+  "recipes": [
+   {
+    "req": [
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_179",
+      "n": "皮革",
+      "cnt": 5
+     }
+    ],
+    "outId": "arm_48",
+    "out": "皮帽子",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_179",
+      "n": "皮革",
+      "cnt": 7
+     }
+    ],
+    "outId": "arm_111",
+    "out": "皮盾牌",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 2
+     },
+     {
+      "id": "new_item_179",
+      "n": "皮革",
+      "cnt": 6
+     }
+    ],
+    "outId": "arm_91",
+    "out": "皮涼鞋",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_179",
+      "n": "皮革",
+      "cnt": 10
+     }
+    ],
+    "outId": "arm_75",
+    "out": "皮背心",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "arm_48",
+      "n": "皮帽子",
+      "cnt": 1
+     },
+     {
+      "id": "arm_42",
+      "n": "頭盔",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 5
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 5
+     }
+    ],
+    "outId": "arm_49",
+    "out": "皮頭盔",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "arm_77",
+      "n": "銀釘皮背心",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 15
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 15
+     }
+    ],
+    "outId": "arm_78",
+    "out": "硬皮背心",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 5
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 2
+     }
+    ],
+    "outId": "new_item_181",
+    "out": "皮帶",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "arm_75",
+      "n": "皮背心",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_181",
+      "n": "皮帶",
+      "cnt": 1
+     }
+    ],
+    "outId": "arm_76",
+    "out": "皮盔甲",
+    "yield": 1
+   },
+   {
+    "gold": 300,
+    "req": [
+     {
+      "id": "arm_92",
+      "n": "銀釘皮涼鞋",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 10
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 10
+     }
+    ],
+    "outId": "arm_93",
+    "out": "皮長靴",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_179",
+      "n": "皮革",
+      "cnt": 20
+     }
+    ],
+    "outId": "new_item_182",
+    "out": "高級皮革",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_brabo",
+  "town": "妖精森林",
+  "n": "布拉伯",
+  "title": "製作",
+  "recipes": [
+   {
+    "req": [
+     {
+      "id": "wpn_39",
+      "n": "潘的角",
+      "cnt": 2
+     },
+     {
+      "id": "new_item_169",
+      "n": "純粹的米索莉塊",
+      "cnt": 80
+     }
+    ],
+    "outId": "wpn_40",
+    "out": "覆上米索莉的角",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "wpn_39",
+      "n": "潘的角",
+      "cnt": 4
+     },
+     {
+      "id": "new_item_173",
+      "n": "奧里哈魯根",
+      "cnt": 80
+     },
+     {
+      "id": "new_item_157",
+      "n": "紅寶石",
+      "cnt": 3
+     }
+    ],
+    "outId": "wpn_41",
+    "out": "覆上奧里哈魯根的角",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_elfwing",
+      "n": "精靈羽翼",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_169",
+      "n": "純粹的米索莉塊",
+      "cnt": 50
+     }
+    ],
+    "outId": "wpn_34",
+    "out": "短劍的劍身",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_elfwing",
+      "n": "精靈羽翼",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_169",
+      "n": "純粹的米索莉塊",
+      "cnt": 150
+     }
+    ],
+    "outId": "wpn_35",
+    "out": "長劍的劍身",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_elfwing",
+      "n": "精靈羽翼",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_157",
+      "n": "紅寶石",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_173",
+      "n": "奧里哈魯根",
+      "cnt": 150
+     }
+    ],
+    "outId": "wpn_36",
+    "out": "奧里哈魯根的劍身",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_finn",
+  "town": "銀騎士村",
+  "n": "芬",
+  "title": "製作",
+  "recipes": [
+   {
+    "req": [
+     {
+      "id": "arm_48",
+      "n": "皮帽子",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 2
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 10
+     }
+    ],
+    "outId": "hlm_silver",
+    "out": "銀釘皮帽",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "arm_111",
+      "n": "皮盾牌",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 5
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 20
+     }
+    ],
+    "outId": "arm_112",
+    "out": "銀釘皮盾",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "arm_91",
+      "n": "皮涼鞋",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 12
+     }
+    ],
+    "outId": "arm_92",
+    "out": "銀釘皮涼鞋",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "arm_75",
+      "n": "皮背心",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 2
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 10
+     }
+    ],
+    "outId": "arm_77",
+    "out": "銀釘皮背心",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_falin",
+  "town": "說話之島",
+  "n": "法林",
+  "title": "製作",
+  "recipes": [
+   {
+    "req": [
+     {
+      "id": "arm_48",
+      "n": "皮帽子",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 2
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 10
+     }
+    ],
+    "outId": "hlm_silver",
+    "out": "銀釘皮帽",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "arm_111",
+      "n": "皮盾牌",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 5
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 20
+     }
+    ],
+    "outId": "arm_112",
+    "out": "銀釘皮盾",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "arm_91",
+      "n": "皮涼鞋",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 12
+     }
+    ],
+    "outId": "arm_92",
+    "out": "銀釘皮涼鞋",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "arm_75",
+      "n": "皮背心",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 2
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 10
+     }
+    ],
+    "outId": "arm_77",
+    "out": "銀釘皮背心",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_joel",
+  "town": "銀騎士村",
+  "n": "喬爾",
+  "title": "製作",
+  "recipes": [
+   {
+    "gold": 800,
+    "req": [
+     {
+      "id": "arm_112",
+      "n": "銀釘皮盾",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_183",
+      "n": "骨頭碎片",
+      "cnt": 15
+     }
+    ],
+    "outId": "shd_bone",
+    "out": "骷髏盾牌",
+    "yield": 1
+   },
+   {
+    "gold": 500,
+    "req": [
+     {
+      "id": "arm_78",
+      "n": "硬皮背心",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_183",
+      "n": "骨頭碎片",
+      "cnt": 20
+     }
+    ],
+    "outId": "amr_bone",
+    "out": "骷髏盔甲",
+    "yield": 1
+   },
+   {
+    "gold": 800,
+    "req": [
+     {
+      "id": "arm_49",
+      "n": "皮頭盔",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_183",
+      "n": "骨頭碎片",
+      "cnt": 10
+     }
+    ],
+    "outId": "hlm_bone",
+    "out": "骷髏頭盔",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_ryan",
+  "town": "說話之島",
+  "n": "萊恩",
+  "title": "製作",
+  "recipes": [
+   {
+    "gold": 800,
+    "req": [
+     {
+      "id": "arm_112",
+      "n": "銀釘皮盾",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_183",
+      "n": "骨頭碎片",
+      "cnt": 15
+     }
+    ],
+    "outId": "shd_bone",
+    "out": "骷髏盾牌",
+    "yield": 1
+   },
+   {
+    "gold": 500,
+    "req": [
+     {
+      "id": "arm_78",
+      "n": "硬皮背心",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_183",
+      "n": "骨頭碎片",
+      "cnt": 20
+     }
+    ],
+    "outId": "amr_bone",
+    "out": "骷髏盔甲",
+    "yield": 1
+   },
+   {
+    "gold": 800,
+    "req": [
+     {
+      "id": "arm_49",
+      "n": "皮頭盔",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_183",
+      "n": "骨頭碎片",
+      "cnt": 10
+     }
+    ],
+    "outId": "hlm_bone",
+    "out": "骷髏頭盔",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_nalien",
+  "town": "妖精森林",
+  "n": "那翰",
+  "title": "製作",
+  "recipes": [
+   {
+    "req": [
+     {
+      "id": "new_item_172",
+      "n": "安特的樹皮",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_173",
+      "n": "奧里哈魯根",
+      "cnt": 10
+     }
+    ],
+    "outId": "new_item_176",
+    "out": "魔法笛子",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_rekne",
+  "town": "妖精森林",
+  "n": "芮克妮",
+  "title": "製作",
+  "recipes": [
+   {
+    "req": [
+     {
+      "id": "new_item_163",
+      "n": "潘的鬃毛",
+      "cnt": 1
+     }
+    ],
+    "outId": "new_item_168",
+    "out": "線",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_168",
+      "n": "線",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_169",
+      "n": "純粹的米索莉塊",
+      "cnt": 5
+     }
+    ],
+    "outId": "new_item_174",
+    "out": "米索莉線",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_237",
+      "n": "安特的樹枝",
+      "cnt": 2
+     }
+    ],
+    "outId": "new_item_171",
+    "out": "芮克妮的網",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_172",
+      "n": "安特的樹皮",
+      "cnt": 3
+     }
+    ],
+    "outId": "new_item_175",
+    "out": "芮克妮的蛻皮",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_narupa",
+  "town": "妖精森林",
+  "n": "娜魯帕",
+  "title": "製作",
+  "recipes": [
+   {
+    "req": [
+     {
+      "id": "wpn_34",
+      "n": "短劍的劍身",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_237",
+      "n": "安特的樹枝",
+      "cnt": 10
+     },
+     {
+      "id": "new_item_169",
+      "n": "純粹的米索莉塊",
+      "cnt": 90
+     },
+     {
+      "id": "new_item_171",
+      "n": "芮克妮的網",
+      "cnt": 10
+     }
+    ],
+    "outId": "wpn_15",
+    "out": "吉薩",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_172",
+      "n": "安特的樹皮",
+      "cnt": 2
+     },
+     {
+      "id": "new_item_163",
+      "n": "潘的鬃毛",
+      "cnt": 5
+     }
+    ],
+    "outId": "arm_70",
+    "out": "木甲",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_237",
+      "n": "安特的樹枝",
+      "cnt": 10
+     },
+     {
+      "id": "new_item_168",
+      "n": "線",
+      "cnt": 6
+     }
+    ],
+    "outId": "arm_74",
+    "out": "木製的夾克",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_172",
+      "n": "安特的樹皮",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_237",
+      "n": "安特的樹枝",
+      "cnt": 5
+     },
+     {
+      "id": "new_item_171",
+      "n": "芮克妮的網",
+      "cnt": 5
+     }
+    ],
+    "outId": "arm_109",
+    "out": "木盾",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "wpn_36",
+      "n": "奧里哈魯根的劍身",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_elfwing",
+      "n": "精靈羽翼",
+      "cnt": 2
+     },
+     {
+      "id": "new_item_171",
+      "n": "芮克妮的網",
+      "cnt": 25
+     },
+     {
+      "id": "new_item_173",
+      "n": "奧里哈魯根",
+      "cnt": 50
+     },
+     {
+      "id": "new_item_158",
+      "n": "品質紅寶石",
+      "cnt": 1
+     }
+    ],
+    "outId": "wpn_rapier",
+    "out": "細劍",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "wpn_34",
+      "n": "短劍的劍身",
+      "cnt": 1
+     },
+     {
+      "id": "wpn_40",
+      "n": "覆上米索莉的角",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_237",
+      "n": "安特的樹枝",
+      "cnt": 10
+     },
+     {
+      "id": "new_item_171",
+      "n": "芮克妮的網",
+      "cnt": 50
+     },
+     {
+      "id": "new_item_151",
+      "n": "鑽石",
+      "cnt": 1
+     }
+    ],
+    "outId": "wpn_mailbreaker",
+    "out": "鎖子甲破壞者",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_237",
+      "n": "安特的樹枝",
+      "cnt": 10
+     },
+     {
+      "id": "new_item_171",
+      "n": "芮克妮的網",
+      "cnt": 5
+     }
+    ],
+    "outId": "wpn_10",
+    "out": "木棒",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_237",
+      "n": "安特的樹枝",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_169",
+      "n": "純粹的米索莉塊",
+      "cnt": 1
+     }
+    ],
+    "outId": "wpn_30",
+    "out": "米索莉箭",
+    "yield": 10
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_175",
+      "n": "芮克妮的蛻皮",
+      "cnt": 2
+     },
+     {
+      "id": "new_item_168",
+      "n": "線",
+      "cnt": 10
+     }
+    ],
+    "outId": "arm_90",
+    "out": "長靴",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "hlm_elf",
+      "n": "精靈皮盔",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_178",
+      "n": "奧里哈魯根金屬板",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_174",
+      "n": "米索莉線",
+      "cnt": 150
+     },
+     {
+      "id": "new_item_150",
+      "n": "魔法寶石",
+      "cnt": 5
+     },
+     {
+      "id": "new_item_161",
+      "n": "品質藍寶石",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_155",
+      "n": "品質綠寶石",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_152",
+      "n": "品質鑽石",
+      "cnt": 1
+     }
+    ],
+    "outId": "arm_44",
+    "out": "艾爾穆的祝福",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_172",
+      "n": "安特的樹皮",
+      "cnt": 2
+     },
+     {
+      "id": "new_item_elfwing",
+      "n": "精靈羽翼",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_163",
+      "n": "潘的鬃毛",
+      "cnt": 10
+     },
+     {
+      "id": "new_item_171",
+      "n": "芮克妮的網",
+      "cnt": 20
+     }
+    ],
+    "outId": "hlm_elf",
+    "out": "精靈皮盔",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "wpn_35",
+      "n": "長劍的劍身",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_237",
+      "n": "安特的樹枝",
+      "cnt": 5
+     },
+     {
+      "id": "new_item_169",
+      "n": "純粹的米索莉塊",
+      "cnt": 150
+     },
+     {
+      "id": "new_item_171",
+      "n": "芮克妮的網",
+      "cnt": 50
+     }
+    ],
+    "outId": "wpn_elfsword",
+    "out": "精靈短劍",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_237",
+      "n": "安特的樹枝",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_164",
+      "n": "粗糙的米索莉塊",
+      "cnt": 1
+     }
+    ],
+    "outId": "wpn_dagger2",
+    "out": "精靈匕首",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_174",
+      "n": "米索莉線",
+      "cnt": 10
+     },
+     {
+      "id": "new_item_150",
+      "n": "魔法寶石",
+      "cnt": 2
+     },
+     {
+      "id": "new_item_165",
+      "n": "元素石",
+      "cnt": 6
+     }
+    ],
+    "outId": "clk_elf",
+    "out": "精靈斗篷",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "arm_109",
+      "n": "木盾",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_177",
+      "n": "米索莉金屬板",
+      "cnt": 2
+     },
+     {
+      "id": "new_item_171",
+      "n": "芮克妮的網",
+      "cnt": 5
+     }
+    ],
+    "outId": "shd_elf",
+    "out": "精靈盾牌",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_177",
+      "n": "米索莉金屬板",
+      "cnt": 4
+     },
+     {
+      "id": "new_item_174",
+      "n": "米索莉線",
+      "cnt": 10
+     }
+    ],
+    "outId": "arm_73",
+    "out": "精靈鏈甲",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "wpn_40",
+      "n": "覆上米索莉的角",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_237",
+      "n": "安特的樹枝",
+      "cnt": 10
+     },
+     {
+      "id": "new_item_171",
+      "n": "芮克妮的網",
+      "cnt": 30
+     }
+    ],
+    "outId": "wpn_24",
+    "out": "精靈之矛",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_178",
+      "n": "奧里哈魯根金屬板",
+      "cnt": 8
+     },
+     {
+      "id": "new_item_174",
+      "n": "米索莉線",
+      "cnt": 20
+     },
+     {
+      "id": "new_item_153",
+      "n": "高品質鑽石",
+      "cnt": 1
+     }
+    ],
+    "outId": "arm_72",
+    "out": "精靈金屬盔甲",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_237",
+      "n": "安特的樹枝",
+      "cnt": 10
+     },
+     {
+      "id": "new_item_164",
+      "n": "粗糙的米索莉塊",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_175",
+      "n": "芮克妮的蛻皮",
+      "cnt": 2
+     },
+     {
+      "id": "new_item_168",
+      "n": "線",
+      "cnt": 2
+     }
+    ],
+    "outId": "wpn_elfbow",
+    "out": "精靈弓",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_175",
+      "n": "芮克妮的蛻皮",
+      "cnt": 2
+     },
+     {
+      "id": "new_item_168",
+      "n": "線",
+      "cnt": 10
+     }
+    ],
+    "outId": "arm_71",
+    "out": "精靈護胸金屬板",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_178",
+      "n": "奧里哈魯根金屬板",
+      "cnt": 6
+     },
+     {
+      "id": "wpn_41",
+      "n": "覆上奧里哈魯根的角",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_174",
+      "n": "米索莉線",
+      "cnt": 40
+     },
+     {
+      "id": "new_item_175",
+      "n": "芮克妮的蛻皮",
+      "cnt": 5
+     },
+     {
+      "id": "new_item_155",
+      "n": "品質綠寶石",
+      "cnt": 2
+     },
+     {
+      "id": "new_item_152",
+      "n": "品質鑽石",
+      "cnt": 1
+     }
+    ],
+    "outId": "wpn_29",
+    "out": "尤米弓",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "wpn_34",
+      "n": "短劍的劍身",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_237",
+      "n": "安特的樹枝",
+      "cnt": 10
+     },
+     {
+      "id": "new_item_164",
+      "n": "粗糙的米索莉塊",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_171",
+      "n": "芮克妮的網",
+      "cnt": 5
+     }
+    ],
+    "outId": "wpn_battleaxe",
+    "out": "戰斧",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_172",
+      "n": "安特的樹皮",
+      "cnt": 2
+     },
+     {
+      "id": "new_item_168",
+      "n": "線",
+      "cnt": 4
+     }
+    ],
+    "outId": "bot_short",
+    "out": "短統靴",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_178",
+      "n": "奧里哈魯根金屬板",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_elfwing",
+      "n": "精靈羽翼",
+      "cnt": 8
+     },
+     {
+      "id": "new_item_174",
+      "n": "米索莉線",
+      "cnt": 20
+     },
+     {
+      "id": "new_item_171",
+      "n": "芮克妮的網",
+      "cnt": 30
+     }
+    ],
+    "outId": "wpn_31",
+    "out": "十字弓",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_174",
+      "n": "米索莉線",
+      "cnt": 20
+     },
+     {
+      "id": "new_item_175",
+      "n": "芮克妮的蛻皮",
+      "cnt": 5
+     },
+     {
+      "id": "new_item_152",
+      "n": "品質鑽石",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_167",
+      "n": "食人巨魔的血",
+      "cnt": 1
+     }
+    ],
+    "outId": "arm_99",
+    "out": "力量手套",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "wpn_24",
+      "n": "精靈之矛",
+      "cnt": 1
+     },
+     {
+      "id": "wpn_41",
+      "n": "覆上奧里哈魯根的角",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_173",
+      "n": "奧里哈魯根",
+      "cnt": 60
+     },
+     {
+      "id": "new_item_171",
+      "n": "芮克妮的網",
+      "cnt": 50
+     },
+     {
+      "id": "new_item_158",
+      "n": "品質紅寶石",
+      "cnt": 1
+     }
+    ],
+    "outId": "wpn_halberd",
+    "out": "法丘",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_237",
+      "n": "安特的樹枝",
+      "cnt": 10
+     }
+    ],
+    "outId": "wpn_5",
+    "out": "箭",
+    "yield": 100
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_237",
+      "n": "安特的樹枝",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_168",
+      "n": "線",
+      "cnt": 5
+     }
+    ],
+    "outId": "wpn_3",
+    "out": "弓",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_172",
+      "n": "安特的樹皮",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_174",
+      "n": "米索莉線",
+      "cnt": 20
+     }
+    ],
+    "outId": "arm_98",
+    "out": "腕甲",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_elfqueen",
+  "town": "妖精森林",
+  "n": "精靈女皇",
+  "title": "製作",
+  "recipes": [
+   {
+    "req": [
+     {
+      "id": "new_item_169",
+      "n": "純粹的米索莉塊",
+      "cnt": 10
+     }
+    ],
+    "outId": "new_item_173",
+    "out": "奧里哈魯根",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_elf",
+  "town": "妖精森林",
+  "n": "精靈",
+  "title": "製作",
+  "recipes": [
+   {
+    "req": [
+     {
+      "id": "new_item_164",
+      "n": "粗糙的米索莉塊",
+      "cnt": 1
+     }
+    ],
+    "outId": "new_item_169",
+    "out": "純粹的米索莉塊",
+    "yield": 20
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_165",
+      "n": "元素石",
+      "cnt": 1
+     }
+    ],
+    "outId": "new_item_170",
+    "out": "精靈粉末",
+    "yield": 20
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_174",
+      "n": "米索莉線",
+      "cnt": 5
+     },
+     {
+      "id": "new_item_165",
+      "n": "元素石",
+      "cnt": 2
+     }
+    ],
+    "outId": "new_item_elfwing",
+    "out": "精靈羽翼",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_ent",
+  "town": "妖精森林",
+  "n": "安特",
+  "title": "製作",
+  "recipes": [
+   {
+    "req": [
+     {
+      "id": "new_item_166",
+      "n": "蘑菇汁",
+      "cnt": 1
+     }
+    ],
+    "outId": "new_item_172",
+    "out": "安特的樹皮",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_pan",
+  "town": "妖精森林",
+  "n": "潘",
+  "title": "製作",
+  "recipes": [
+   {
+    "req": [
+     {
+      "id": "new_item_169",
+      "n": "純粹的米索莉塊",
+      "cnt": 50
+     },
+     {
+      "id": "new_item_175",
+      "n": "芮克妮的蛻皮",
+      "cnt": 1
+     }
+    ],
+    "outId": "new_item_177",
+    "out": "米索莉金屬板",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_173",
+      "n": "奧里哈魯根",
+      "cnt": 30
+     },
+     {
+      "id": "new_item_175",
+      "n": "芮克妮的蛻皮",
+      "cnt": 1
+     }
+    ],
+    "outId": "new_item_178",
+    "out": "奧里哈魯根金屬板",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_176",
+      "n": "魔法笛子",
+      "cnt": 1
+     }
+    ],
+    "outId": "wpn_39",
+    "out": "潘的角",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_moliya",
+  "town": "奇岩",
+  "n": "莫麗雅",
+  "title": "製作",
+  "recipes": [
+   {
+    "req": [
+     {
+      "id": "new_item_189",
+      "n": "白色布料",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_188",
+      "n": "紅色布料",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_187",
+      "n": "藍色布料",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_150",
+      "n": "魔法寶石",
+      "cnt": 20
+     },
+     {
+      "id": "new_item_155",
+      "n": "品質綠寶石",
+      "cnt": 2
+     }
+    ],
+    "outId": "hlm_mage",
+    "out": "法師之帽",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_189",
+      "n": "白色布料",
+      "cnt": 2
+     },
+     {
+      "id": "new_item_162",
+      "n": "高品質藍寶石",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_187",
+      "n": "藍色布料",
+      "cnt": 4
+     },
+     {
+      "id": "new_item_150",
+      "n": "魔法寶石",
+      "cnt": 25
+     }
+    ],
+    "outId": "amr_magerobe",
+    "out": "法師長袍",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_hector",
+  "town": "奇岩",
+  "n": "海克特",
+  "title": "製作",
+  "recipes": [
+   {
+    "gold": 16500,
+    "req": [
+     {
+      "id": "arm_43",
+      "n": "騎士面甲",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 120
+     }
+    ],
+    "outId": "hlm_steel",
+    "out": "鋼鐵頭盔",
+    "yield": 1
+   },
+   {
+    "gold": 16000,
+    "req": [
+     {
+      "id": "arm_108",
+      "n": "塔盾",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 200
+     }
+    ],
+    "outId": "arm_113",
+    "out": "鋼鐵盾牌",
+    "yield": 1
+   },
+   {
+    "gold": 8000,
+    "req": [
+     {
+      "id": "arm_90",
+      "n": "長靴",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 160
+     }
+    ],
+    "outId": "arm_94",
+    "out": "鋼鐵長靴",
+    "yield": 1
+   },
+   {
+    "gold": 25000,
+    "req": [
+     {
+      "id": "glv_glove",
+      "n": "手套",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 150
+     }
+    ],
+    "outId": "arm_100",
+    "out": "鋼鐵手套",
+    "yield": 1
+   },
+   {
+    "gold": 30000,
+    "req": [
+     {
+      "id": "amr_plate",
+      "n": "金屬盔甲",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 450
+     }
+    ],
+    "outId": "arm_79",
+    "out": "鋼鐵金屬盔甲",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_herbert",
+  "town": "奇岩",
+  "n": "哈巴特",
+  "title": "製作",
+  "recipes": [
+   {
+    "gold": 1000,
+    "req": [
+     {
+      "id": "new_item_189",
+      "n": "白色布料",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_188",
+      "n": "紅色布料",
+      "cnt": 10
+     },
+     {
+      "id": "new_item_187",
+      "n": "藍色布料",
+      "cnt": 2
+     }
+    ],
+    "outId": "clk_mr",
+    "out": "抗魔法斗篷",
+    "yield": 1
+   },
+   {
+    "gold": 20000,
+    "req": [
+     {
+      "id": "new_item_189",
+      "n": "白色布料",
+      "cnt": 10
+     },
+     {
+      "id": "new_item_188",
+      "n": "紅色布料",
+      "cnt": 5
+     },
+     {
+      "id": "new_item_187",
+      "n": "藍色布料",
+      "cnt": 5
+     }
+    ],
+    "outId": "arm_87",
+    "out": "保護者斗篷",
+    "yield": 1
+   },
+   {
+    "gold": 30000,
+    "req": [
+     {
+      "id": "new_item_189",
+      "n": "白色布料",
+      "cnt": 10
+     },
+     {
+      "id": "new_item_188",
+      "n": "紅色布料",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_187",
+      "n": "藍色布料",
+      "cnt": 2
+     }
+    ],
+    "outId": "tsh_tshirt",
+    "out": "T恤",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_lumiel",
+  "town": "海音",
+  "n": "琉米埃爾",
+  "title": "製作",
+  "recipes": [
+   {
+    "gold": 100000,
+    "req": [
+     {
+      "id": "blt_body",
+      "n": "身體腰帶",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_221",
+      "n": "光明的鱗片",
+      "cnt": 50
+     },
+     {
+      "id": "new_item_158",
+      "n": "品質紅寶石",
+      "cnt": 20
+     },
+     {
+      "id": "new_item_161",
+      "n": "品質藍寶石",
+      "cnt": 20
+     },
+     {
+      "id": "new_item_155",
+      "n": "品質綠寶石",
+      "cnt": 20
+     },
+     {
+      "id": "new_item_152",
+      "n": "品質鑽石",
+      "cnt": 20
+     }
+    ],
+    "outId": "acc_135",
+    "out": "光明身體腰帶",
+    "yield": 1
+   },
+   {
+    "gold": 100000,
+    "req": [
+     {
+      "id": "acc_131",
+      "n": "靈魂腰帶",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_221",
+      "n": "光明的鱗片",
+      "cnt": 50
+     },
+     {
+      "id": "new_item_158",
+      "n": "品質紅寶石",
+      "cnt": 20
+     },
+     {
+      "id": "new_item_161",
+      "n": "品質藍寶石",
+      "cnt": 20
+     },
+     {
+      "id": "new_item_155",
+      "n": "品質綠寶石",
+      "cnt": 20
+     },
+     {
+      "id": "new_item_152",
+      "n": "品質鑽石",
+      "cnt": 20
+     }
+    ],
+    "outId": "acc_137",
+    "out": "光明靈魂腰帶",
+    "yield": 1
+   },
+   {
+    "gold": 100000,
+    "req": [
+     {
+      "id": "acc_130",
+      "n": "精神腰帶",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_221",
+      "n": "光明的鱗片",
+      "cnt": 50
+     },
+     {
+      "id": "new_item_158",
+      "n": "品質紅寶石",
+      "cnt": 20
+     },
+     {
+      "id": "new_item_161",
+      "n": "品質藍寶石",
+      "cnt": 20
+     },
+     {
+      "id": "new_item_155",
+      "n": "品質綠寶石",
+      "cnt": 20
+     },
+     {
+      "id": "new_item_152",
+      "n": "品質鑽石",
+      "cnt": 20
+     }
+    ],
+    "outId": "acc_136",
+    "out": "光明精神腰帶",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "arm_90",
+      "n": "長靴",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_221",
+      "n": "光明的鱗片",
+      "cnt": 30
+     },
+     {
+      "id": "new_item_mermaid_scale",
+      "n": "人魚之鱗",
+      "cnt": 30
+     }
+    ],
+    "outId": "arm_95",
+    "out": "深水長靴",
+    "yield": 1
+   },
+   {
+    "gold": 50000,
+    "req": [
+     {
+      "id": "acc_127",
+      "n": "老舊的身體腰帶",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_221",
+      "n": "光明的鱗片",
+      "cnt": 20
+     },
+     {
+      "id": "new_item_157",
+      "n": "紅寶石",
+      "cnt": 30
+     },
+     {
+      "id": "new_item_160",
+      "n": "藍寶石",
+      "cnt": 30
+     },
+     {
+      "id": "new_item_154",
+      "n": "綠寶石",
+      "cnt": 30
+     },
+     {
+      "id": "new_item_151",
+      "n": "鑽石",
+      "cnt": 30
+     }
+    ],
+    "outId": "blt_body",
+    "out": "身體腰帶",
+    "yield": 1
+   },
+   {
+    "gold": 50000,
+    "req": [
+     {
+      "id": "acc_129",
+      "n": "老舊的靈魂腰帶",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_221",
+      "n": "光明的鱗片",
+      "cnt": 20
+     },
+     {
+      "id": "new_item_157",
+      "n": "紅寶石",
+      "cnt": 30
+     },
+     {
+      "id": "new_item_160",
+      "n": "藍寶石",
+      "cnt": 30
+     },
+     {
+      "id": "new_item_154",
+      "n": "綠寶石",
+      "cnt": 30
+     },
+     {
+      "id": "new_item_151",
+      "n": "鑽石",
+      "cnt": 30
+     }
+    ],
+    "outId": "acc_131",
+    "out": "靈魂腰帶",
+    "yield": 1
+   },
+   {
+    "gold": 50000,
+    "req": [
+     {
+      "id": "acc_128",
+      "n": "老舊的精神腰帶",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_221",
+      "n": "光明的鱗片",
+      "cnt": 20
+     },
+     {
+      "id": "new_item_157",
+      "n": "紅寶石",
+      "cnt": 30
+     },
+     {
+      "id": "new_item_160",
+      "n": "藍寶石",
+      "cnt": 30
+     },
+     {
+      "id": "new_item_154",
+      "n": "綠寶石",
+      "cnt": 30
+     },
+     {
+      "id": "new_item_151",
+      "n": "鑽石",
+      "cnt": 30
+     }
+    ],
+    "outId": "acc_130",
+    "out": "精神腰帶",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "arm_108",
+      "n": "塔盾",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_mermaid_scale",
+      "n": "人魚之鱗",
+      "cnt": 100
+     },
+     {
+      "id": "new_item_190",
+      "n": "水龍鱗",
+      "cnt": 10
+     }
+    ],
+    "outId": "arm_107",
+    "out": "伊娃之盾",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_ibelbin",
+  "town": "歐瑞村莊",
+  "n": "伊貝爾賓",
+  "title": "製作",
+  "recipes": [
+   {
+    "req": [
+     {
+      "id": "new_item_194",
+      "n": "阿西塔基奧的灰燼",
+      "cnt": 300
+     },
+     {
+      "id": "new_item_173",
+      "n": "奧里哈魯根",
+      "cnt": 500
+     },
+     {
+      "id": "new_item_159",
+      "n": "高品質紅寶石",
+      "cnt": 5
+     },
+     {
+      "id": "new_item_162",
+      "n": "高品質藍寶石",
+      "cnt": 5
+     },
+     {
+      "id": "new_item_156",
+      "n": "高品質綠寶石",
+      "cnt": 5
+     },
+     {
+      "id": "new_item_153",
+      "n": "高品質鑽石",
+      "cnt": 5
+     },
+     {
+      "id": "new_item_192",
+      "n": "火龍鱗",
+      "cnt": 3
+     }
+    ],
+    "outId": "wpn_siruge",
+    "out": "瑟魯基之劍",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_194",
+      "n": "阿西塔基奧的灰燼",
+      "cnt": 150
+     },
+     {
+      "id": "new_item_173",
+      "n": "奧里哈魯根",
+      "cnt": 1000
+     },
+     {
+      "id": "new_item_159",
+      "n": "高品質紅寶石",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_162",
+      "n": "高品質藍寶石",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_156",
+      "n": "高品質綠寶石",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_153",
+      "n": "高品質鑽石",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_174",
+      "n": "米索莉線",
+      "cnt": 500
+     },
+     {
+      "id": "new_item_190",
+      "n": "水龍鱗",
+      "cnt": 15
+     }
+    ],
+    "outId": "arm_80",
+    "out": "水龍鱗盔甲",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_194",
+      "n": "阿西塔基奧的灰燼",
+      "cnt": 150
+     },
+     {
+      "id": "new_item_173",
+      "n": "奧里哈魯根",
+      "cnt": 1000
+     },
+     {
+      "id": "new_item_159",
+      "n": "高品質紅寶石",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_162",
+      "n": "高品質藍寶石",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_156",
+      "n": "高品質綠寶石",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_153",
+      "n": "高品質鑽石",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_174",
+      "n": "米索莉線",
+      "cnt": 500
+     },
+     {
+      "id": "new_item_192",
+      "n": "火龍鱗",
+      "cnt": 15
+     }
+    ],
+    "outId": "arm_82",
+    "out": "火龍鱗盔甲",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_194",
+      "n": "阿西塔基奧的灰燼",
+      "cnt": 150
+     },
+     {
+      "id": "new_item_173",
+      "n": "奧里哈魯根",
+      "cnt": 1000
+     },
+     {
+      "id": "new_item_159",
+      "n": "高品質紅寶石",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_162",
+      "n": "高品質藍寶石",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_156",
+      "n": "高品質綠寶石",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_153",
+      "n": "高品質鑽石",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_174",
+      "n": "米索莉線",
+      "cnt": 500
+     },
+     {
+      "id": "new_item_191",
+      "n": "地龍鱗",
+      "cnt": 15
+     }
+    ],
+    "outId": "arm_81",
+    "out": "地龍鱗盔甲",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_194",
+      "n": "阿西塔基奧的灰燼",
+      "cnt": 150
+     },
+     {
+      "id": "new_item_173",
+      "n": "奧里哈魯根",
+      "cnt": 1000
+     },
+     {
+      "id": "new_item_159",
+      "n": "高品質紅寶石",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_162",
+      "n": "高品質藍寶石",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_156",
+      "n": "高品質綠寶石",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_153",
+      "n": "高品質鑽石",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_174",
+      "n": "米索莉線",
+      "cnt": 500
+     },
+     {
+      "id": "new_item_193",
+      "n": "風龍鱗",
+      "cnt": 15
+     }
+    ],
+    "outId": "arm_83",
+    "out": "風龍鱗盔甲",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_dytite",
+  "town": "象牙塔",
+  "n": "迪泰特",
+  "title": "解除封印",
+  "recipes": [
+   {
+    "req": [
+     {
+      "id": "item_forgotten_sword",
+      "n": "受封印 被遺忘的劍",
+      "cnt": 1
+     },
+     {
+      "id": "item_ancient_scroll",
+      "n": "古代的卷軸",
+      "cnt": 1
+     }
+    ],
+    "outId": "wpn_old_sword",
+    "out": "古老的劍",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "item_forgotten_greatsword",
+      "n": "受封印 被遺忘的巨劍",
+      "cnt": 1
+     },
+     {
+      "id": "item_ancient_scroll",
+      "n": "古代的卷軸",
+      "cnt": 1
+     }
+    ],
+    "outId": "wpn_old_greatsword",
+    "out": "古老的巨劍",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "item_forgotten_xbow",
+      "n": "受封印 被遺忘的弩槍",
+      "cnt": 1
+     },
+     {
+      "id": "item_ancient_scroll",
+      "n": "古代的卷軸",
+      "cnt": 1
+     }
+    ],
+    "outId": "wpn_old_xbow",
+    "out": "古老的弩槍",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "item_forgotten_scale",
+      "n": "被遺忘的鱗甲",
+      "cnt": 1
+     },
+     {
+      "id": "item_ancient_scroll",
+      "n": "古代的卷軸",
+      "cnt": 1
+     }
+    ],
+    "outId": "amr_old_scale",
+    "out": "古老的鱗甲",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "item_forgotten_leather",
+      "n": "被遺忘的皮盔甲",
+      "cnt": 1
+     },
+     {
+      "id": "item_ancient_scroll",
+      "n": "古代的卷軸",
+      "cnt": 1
+     }
+    ],
+    "outId": "amr_old_leather",
+    "out": "古老的皮盔甲",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "item_forgotten_robe",
+      "n": "被遺忘的長袍",
+      "cnt": 1
+     },
+     {
+      "id": "item_ancient_scroll",
+      "n": "古代的卷軸",
+      "cnt": 1
+     }
+    ],
+    "outId": "amr_old_robe",
+    "out": "古老的長袍",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "item_forgotten_plate",
+      "n": "被遺忘的金屬盔甲",
+      "cnt": 1
+     },
+     {
+      "id": "item_ancient_scroll",
+      "n": "古代的卷軸",
+      "cnt": 1
+     }
+    ],
+    "outId": "amr_old_plate",
+    "out": "古老的金屬盔甲",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_ladal",
+  "town": "說話之島",
+  "n": "拉達爾",
+  "title": "製作",
+  "recipes": [
+   {
+    "req": [
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_179",
+      "n": "皮革",
+      "cnt": 5
+     }
+    ],
+    "outId": "arm_48",
+    "out": "皮帽子",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_179",
+      "n": "皮革",
+      "cnt": 7
+     }
+    ],
+    "outId": "arm_111",
+    "out": "皮盾牌",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 2
+     },
+     {
+      "id": "new_item_179",
+      "n": "皮革",
+      "cnt": 6
+     }
+    ],
+    "outId": "arm_91",
+    "out": "皮涼鞋",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_179",
+      "n": "皮革",
+      "cnt": 10
+     }
+    ],
+    "outId": "arm_75",
+    "out": "皮背心",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "arm_48",
+      "n": "皮帽子",
+      "cnt": 1
+     },
+     {
+      "id": "arm_42",
+      "n": "頭盔",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 5
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 5
+     }
+    ],
+    "outId": "arm_49",
+    "out": "皮頭盔",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "arm_77",
+      "n": "銀釘皮背心",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 15
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 15
+     }
+    ],
+    "outId": "arm_78",
+    "out": "硬皮背心",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 5
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 2
+     }
+    ],
+    "outId": "new_item_181",
+    "out": "皮帶",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "arm_75",
+      "n": "皮背心",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_181",
+      "n": "皮帶",
+      "cnt": 1
+     }
+    ],
+    "outId": "arm_76",
+    "out": "皮盔甲",
+    "yield": 1
+   },
+   {
+    "gold": 300,
+    "req": [
+     {
+      "id": "arm_92",
+      "n": "銀釘皮涼鞋",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 10
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 10
+     }
+    ],
+    "outId": "arm_93",
+    "out": "皮長靴",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_179",
+      "n": "皮革",
+      "cnt": 20
+     }
+    ],
+    "outId": "new_item_182",
+    "out": "高級皮革",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_kupu",
+  "town": "沉默洞穴",
+  "n": "庫普",
+  "title": "製作",
+  "recipes": [
+   {
+    "gold": 500,
+    "req": [
+     {
+      "id": "mat_silverore",
+      "n": "銀礦石",
+      "cnt": 10
+     }
+    ],
+    "outId": "mat_silver",
+    "out": "銀",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 10
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 10
+     },
+     {
+      "id": "mat_blackstone3",
+      "n": "三級黑魔石",
+      "cnt": 5
+     },
+     {
+      "id": "mat_blackstone2",
+      "n": "二級黑魔石",
+      "cnt": 100
+     }
+    ],
+    "outId": "wpn_claw_dark",
+    "out": "黑暗鋼爪",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "wpn_claw_dark",
+      "n": "黑暗鋼爪",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 10
+     },
+     {
+      "id": "mat_silver",
+      "n": "銀",
+      "cnt": 30
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 10
+     },
+     {
+      "id": "mat_blackstone4",
+      "n": "四級黑魔石",
+      "cnt": 1
+     },
+     {
+      "id": "mat_blackstone2",
+      "n": "二級黑魔石",
+      "cnt": 40
+     },
+     {
+      "id": "new_item_151",
+      "n": "鑽石",
+      "cnt": 1
+     }
+    ],
+    "outId": "wpn_claw_silver",
+    "out": "銀光鋼爪",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "wpn_claw_dark",
+      "n": "黑暗鋼爪",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 10
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 10
+     },
+     {
+      "id": "mat_blackstone4",
+      "n": "四級黑魔石",
+      "cnt": 10
+     },
+     {
+      "id": "mat_blackstone3",
+      "n": "三級黑魔石",
+      "cnt": 100
+     }
+    ],
+    "outId": "wpn_claw_gloom",
+    "out": "幽暗鋼爪",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 20
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 10
+     },
+     {
+      "id": "mat_blackstone2",
+      "n": "二級黑魔石",
+      "cnt": 100
+     }
+    ],
+    "outId": "wpn_dual_dark",
+    "out": "黑暗雙刀",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "wpn_dual_dark",
+      "n": "黑暗雙刀",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 20
+     },
+     {
+      "id": "mat_silver",
+      "n": "銀",
+      "cnt": 20
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 10
+     },
+     {
+      "id": "mat_blackstone4",
+      "n": "四級黑魔石",
+      "cnt": 1
+     },
+     {
+      "id": "mat_blackstone2",
+      "n": "二級黑魔石",
+      "cnt": 50
+     },
+     {
+      "id": "new_item_151",
+      "n": "鑽石",
+      "cnt": 1
+     }
+    ],
+    "outId": "wpn_dual_silver",
+    "out": "銀光雙刀",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "wpn_dual_dark",
+      "n": "黑暗雙刀",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 20
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 10
+     },
+     {
+      "id": "mat_blackstone4",
+      "n": "四級黑魔石",
+      "cnt": 5
+     },
+     {
+      "id": "mat_blackstone3",
+      "n": "三級黑魔石",
+      "cnt": 100
+     }
+    ],
+    "outId": "wpn_dual_gloom",
+    "out": "幽暗雙刀",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 30
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 10
+     },
+     {
+      "id": "mat_blackstone3",
+      "n": "三級黑魔石",
+      "cnt": 10
+     },
+     {
+      "id": "mat_blackstone2",
+      "n": "二級黑魔石",
+      "cnt": 100
+     }
+    ],
+    "outId": "wpn_xbow_dark",
+    "out": "黑暗十字弓",
+    "yield": 1
+   },
+   {
+    "req": [
+     {
+      "id": "wpn_xbow_dark",
+      "n": "黑暗十字弓",
+      "cnt": 1
+     },
+     {
+      "id": "new_item_182",
+      "n": "高級皮革",
+      "cnt": 30
+     },
+     {
+      "id": "new_item_180",
+      "n": "金屬塊",
+      "cnt": 10
+     },
+     {
+      "id": "mat_blackstone4",
+      "n": "四級黑魔石",
+      "cnt": 20
+     },
+     {
+      "id": "mat_blackstone3",
+      "n": "三級黑魔石",
+      "cnt": 100
+     }
+    ],
+    "outId": "wpn_xbow_gloom",
+    "out": "幽暗十字弓",
+    "yield": 1
+   }
+  ]
+ },
+ {
+  "id": "npc_bamut",
+  "town": "威頓村",
+  "n": "巴姆特",
+  "title": "製作",
+  "recipes": [
+   {
+    "gold": 500,
+    "req": [
+     {
+      "id": "mat_chimera_snake",
+      "n": "奇美拉之皮(蛇)",
+      "cnt": 5
+     }
+    ],
+    "outId": "mat_cursed_leather_earth",
+    "out": "詛咒的皮革(地)",
+    "yield": 1
+   },
+   {
+    "gold": 500,
+    "req": [
+     {
+      "id": "mat_chimera_dragon",
+      "n": "奇美拉之皮(龍)",
+      "cnt": 5
+     }
+    ],
+    "outId": "mat_cursed_leather_water",
+    "out": "詛咒的皮革(水)",
+    "yield": 1
+   },
+   {
+    "gold": 500,
+    "req": [
+     {
+      "id": "mat_chimera_goat",
+      "n": "奇美拉之皮(山羊)",
+      "cnt": 5
+     }
+    ],
+    "outId": "mat_cursed_leather_wind",
+    "out": "詛咒的皮革(風)",
+    "yield": 1
+   },
+   {
+    "gold": 500,
+    "req": [
+     {
+      "id": "mat_chimera_lion",
+      "n": "奇美拉之皮(獅子)",
+      "cnt": 5
+     }
+    ],
+    "outId": "mat_cursed_leather_fire",
+    "out": "詛咒的皮革(火)",
+    "yield": 1
+   },
+   {
+    "gold": 100000,
+    "req": [
+     {
+      "id": "mat_cursed_leather_earth",
+      "n": "詛咒的皮革(地)",
+      "cnt": 100
+     },
+     {
+      "id": "new_item_191",
+      "n": "地龍鱗",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_151",
+      "n": "鑽石",
+      "cnt": 30
+     },
+     {
+      "id": "new_item_174",
+      "n": "米索莉線",
+      "cnt": 50
+     }
+    ],
+    "outId": "clk_pride_earth",
+    "out": "地屬性斗篷",
+    "yield": 1
+   },
+   {
+    "gold": 100000,
+    "req": [
+     {
+      "id": "mat_cursed_leather_water",
+      "n": "詛咒的皮革(水)",
+      "cnt": 100
+     },
+     {
+      "id": "new_item_190",
+      "n": "水龍鱗",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_154",
+      "n": "綠寶石",
+      "cnt": 30
+     },
+     {
+      "id": "new_item_174",
+      "n": "米索莉線",
+      "cnt": 50
+     }
+    ],
+    "outId": "clk_pride_water",
+    "out": "水屬性斗篷",
+    "yield": 1
+   },
+   {
+    "gold": 100000,
+    "req": [
+     {
+      "id": "mat_cursed_leather_wind",
+      "n": "詛咒的皮革(風)",
+      "cnt": 100
+     },
+     {
+      "id": "new_item_193",
+      "n": "風龍鱗",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_160",
+      "n": "藍寶石",
+      "cnt": 30
+     },
+     {
+      "id": "new_item_174",
+      "n": "米索莉線",
+      "cnt": 50
+     }
+    ],
+    "outId": "clk_pride_wind",
+    "out": "風屬性斗篷",
+    "yield": 1
+   },
+   {
+    "gold": 100000,
+    "req": [
+     {
+      "id": "mat_cursed_leather_fire",
+      "n": "詛咒的皮革(火)",
+      "cnt": 100
+     },
+     {
+      "id": "new_item_192",
+      "n": "火龍鱗",
+      "cnt": 3
+     },
+     {
+      "id": "new_item_157",
+      "n": "紅寶石",
+      "cnt": 30
+     },
+     {
+      "id": "new_item_174",
+      "n": "米索莉線",
+      "cnt": 50
+     }
+    ],
+    "outId": "clk_pride_fire",
+    "out": "火屬性斗篷",
+    "yield": 1
+   }
+  ]
+ }
+]
