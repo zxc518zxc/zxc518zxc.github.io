@@ -676,12 +676,23 @@ const mobList = [...mobSeen.values()]
   .filter(m => m.drops.length > 0 || m.exp > 0)
   .filter(m => m.zones.length > 0 || wbSet.has(m.n));
 
+// 🚪 進場等級門檻:直接讀遊戲 afk/zonegate.go 的 ZoneMinLv(後端權威,不手抄)。
+//    2026-10-18 麥哥:黃昏山脈 55、遺忘之島 54 要寫清楚——原本只有「怪物等級」一欄,手機版看不到欄名,被當成進場等級。讀不到就停。
+const ZONE_MIN_LV = (() => {
+  const src = fs.readFileSync(path.join(__dirname, "../go端專案/engine/afk/zonegate.go"), "utf8");
+  const blk = (src.match(/var ZoneMinLv = map\[string\]int\{([\s\S]*?)\n\}/) || [])[1] || "";
+  const m = {};
+  for (const [, k, v] of blk.matchAll(/"(\w+)":\s*(\d+)/g)) m[k] = +v;
+  if (!m.twilight_mt || !m.oblivion_island) throw new Error("讀不到 zonegate.go 的 ZoneMinLv(黃昏山脈/遺忘之島),停止產生");
+  return m;
+})();
+
 // 🗺 獵場列表
 const zones = Object.entries(zoneMobs).map(([z, keys]) => {
   const ms = [...new Set(keys.map(k => GD.mobs?.[k]?.n).filter(Boolean))];
   const lvs = ms.map(n => (mobSeen.get(n) || {}).lv || 0).filter(x => x > 0);
   const acx = zoneAcCls[z] ? Object.entries(zoneAcCls[z]).reduce((m, [c, v]) => ((m[v] = m[v] || []).push(REQ_N[c] || c), m), {}) : null;
-  return { id: z, n: zoneName[z], cat: zoneCat[z] || "野外", mobs: ms, ac: zoneAc[z] || 0,
+  return { id: z, n: zoneName[z], cat: zoneCat[z] || "野外", mobs: ms, ac: zoneAc[z] || 0, minLv: ZONE_MIN_LV[z] || 0,
     acx: acx ? Object.entries(acx).map(([v, cs]) => cs.join("、") + " " + v + " 以下").join(";") : "",
     lvMin: lvs.length ? Math.min(...lvs) : 0, lvMax: lvs.length ? Math.max(...lvs) : 0 };
 }).filter(z => z.mobs.length > 0).sort((a, b) => a.lvMin - b.lvMin || a.n.localeCompare(b.n, "zh-Hant"));
@@ -1758,6 +1769,7 @@ ${EVENTS.map(evCard).join("")}`));
 
 fs.writeFileSync(path.join(OUT, "zones.html"), page("獵場列表", "zone", `
 ${chips([[zones.length, "獵場"], [zones.filter(z => z.cat === "野外").length, "野外"], [zones.filter(z => z.cat === "地監").length, "地監"], [zones.filter(z => z.ac).length, "有 AC 門檻"]])}
+<div class="hint">🚪 <b>進場等級</b>:獵場名稱下方標「角色 Lv N 以上才能進入」的,等級未達無法進入。「怪物等級」是該獵場出沒怪物的等級範圍,不是進場限制。</div>
 <div class="hint">🛡 <b>AC 門檻</b>:部分獵場對防禦有要求。你的<b>防禦 AC 沒達標</b>時,被怪<b>物理攻擊</b>會多吃傷害——<b>每差 1 點多吃 20%</b>(差 5 點=傷害兩倍)。進場前如果 AC 沒達標,遊戲會跳出提醒(仍可選擇進入)。<b>部分獵場依職業有不同門檻</b>(例如法師、黑暗妖精較寬),以表格為準。<br>※ 只影響怪物的物理攻擊;魔法、中毒、世界王房、玩家對戰都不受影響。AC 是<b>數字越低越強</b>(−60 比 −50 強)。</div>
 <div class="bar"><input id="q" placeholder="🔍 搜獵場名,或輸入「怪物名」找牠出沒的獵場"></div>
 <div class="chips" id="cchips"></div>
@@ -1771,7 +1783,7 @@ $("cchips").innerHTML=CS.map(t=>'<span class="chip'+(t==="全部"?" on":"")+'" d
 document.querySelectorAll("#cchips .chip").forEach(c=>c.onclick=()=>{document.querySelectorAll("#cchips .chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");cf=c.dataset.t;render();});
 function render(){const q=$("q").value.trim().toLowerCase();
 const list=WIKI.zones.filter(z=>(cf==="全部"||z.cat===cf)&&(!q||z.n.toLowerCase().includes(q)||z.mobs.some(m=>m.toLowerCase().includes(q))));
-$("tb").innerHTML=list.map(z=>"<tr><td class='nm'>"+esc(z.n)+(z.area?"<div style='font-weight:normal;color:#7bd14a;font-size:12px'>⛏ 採集:"+z.area.map(x=>esc(x)).join("、")+"</div>":"")+"</td><td class='num' data-l='類型'>"+z.cat+"</td><td class='num' data-l='怪物等級'>"+(z.lvMin?"Lv"+z.lvMin+"~"+z.lvMax:"—")+"</td><td class='num' data-l='AC門檻'>"+(z.ac?"<b style='color:#f5a97f'>"+z.ac+" 以下</b>"+(z.acx?"<div style='font-size:12px;color:#c9b88f;font-weight:normal'>"+z.acx+"</div>":""):"<span style='color:#6b5f4c'>無</span>")+"</td><td data-l='出沒怪'>"+z.mobs.map(m=>MOBSET[m]?"<a class='tag' href='monsters.html?q="+encodeURIComponent(m)+"' title='看「"+esc(m)+"」的掉落'>"+esc(m)+"</a>":"<span class='tag'>"+esc(m)+"</span>").join("")+"</td></tr>").join("")||"<tr><td colspan=5 style='color:#8f8067'>查無符合</td></tr>";}
+$("tb").innerHTML=list.map(z=>"<tr><td class='nm'>"+esc(z.n)+(z.minLv?"<div style='font-weight:normal;color:#f5c451;font-size:12px'>🚪 角色 Lv"+z.minLv+" 以上才能進入</div>":"")+(z.area?"<div style='font-weight:normal;color:#7bd14a;font-size:12px'>⛏ 採集:"+z.area.map(x=>esc(x)).join("、")+"</div>":"")+"</td><td class='num' data-l='類型'>"+z.cat+"</td><td class='num' data-l='怪物等級'>"+(z.lvMin?"怪物 Lv"+z.lvMin+"~"+z.lvMax:"—")+"</td><td class='num' data-l='AC門檻'>"+(z.ac?"<b style='color:#f5a97f'>"+z.ac+" 以下</b>"+(z.acx?"<div style='font-size:12px;color:#c9b88f;font-weight:normal'>"+z.acx+"</div>":""):"<span style='color:#6b5f4c'>無</span>")+"</td><td data-l='出沒怪'>"+z.mobs.map(m=>MOBSET[m]?"<a class='tag' href='monsters.html?q="+encodeURIComponent(m)+"' title='看「"+esc(m)+"」的掉落'>"+esc(m)+"</a>":"<span class='tag'>"+esc(m)+"</span>").join("")+"</td></tr>").join("")||"<tr><td colspan=5 style='color:#8f8067'>查無符合</td></tr>";}
 $("q").oninput=render;render();
 </script>`));
 
