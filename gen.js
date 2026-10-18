@@ -35,6 +35,7 @@ const DEPLOYED_1015 = true;   // 10/15 維護(推播改回一機多帳號+只接
 const DEPLOYED_1016 = true;   // 10/16 維護(中毒扣血標「中毒」+ 自動賣出下拉不列鎖定道具 + 玩家社群開放;第二台驗收後翻 true)
 const DEPLOYED_1017 = true;  // 10/17 維護(黑榜/排行榜兩排/多稱號/等級榜/擁擠/黑妖 PK;12:21 第二台驗收通過;藤甲已取消)
 const DEPLOYED_1018 = true;   // 🏅 10/18 維護:排行榜稱號 + 一人最多三個稱號 + 🏝 遺忘之島改從狩獵場清單前往 + 🧩 益智遊戲暫停開放(麥哥 10/17、10/18;第二台驗收後翻 true)
+const DEPLOYED_1019 = false;  // 🌙🎰 10/19 維護:沒月卡離線掛機自動停+確認框+離線結束不再扣費+35 級月卡提醒+新手信 + 肥特收進肥區(1,000~10 萬)(麥哥 10/18;第二台驗收後翻 true)
 // 💬 玩家社群首頁連結:麥哥 10/15 定 10/16 開放 ⇒ 跟 10/16 閘門一起翻(還沒開就放連結=玩家點進去只看到「尚未開放」)。
 // ⏸ 麥哥 10/16 14:4x:社群後台開關 off 期間先拿掉首頁連結(玩家點進去登入後用不了);`feature community on` 重開時改回 true。
 const COMMUNITY_OPEN = false;
@@ -81,7 +82,7 @@ const FEAT = {
   bm:      false, // 黑市商人
   push:    false, // 推筒子
   dice:    true,  // 肥區・骰子比大小(10/18 麥哥開放;原名園區)
-  slot:    false, // 肥特
+  slot:    true,  // 肥特(10/19 麥哥開放,收進肥區)
   glory:   false, // 榮光進化(精通)
   potion:  false, // 嗑藥大師(精通)
   codex:   true, // 📖 圖鑑登錄(2026-09-14 改版;麥哥:官網只寫 Lv1~39 規則與效果,Lv40+/世界王/加成表不上;feature codex 開放後改 true 生成 codex.html)
@@ -2248,7 +2249,7 @@ try { STATS = JSON.parse(fs.readFileSync(path.join(OUT, "stats.json"), "utf8"));
   const today = new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD(本地時區)
   const future = CHANGES.filter(d => d.date > today);
   if (future.length) console.log(`⏳ 跳過未來日期的更新日誌 ${future.length} 區塊:${future.map(d => d.date).join(", ")}(到當天才會發布)`);
-  CHANGES = CHANGES.filter(d => d.date <= today && !(d.date === "2026-09-27" && !DEPLOYED_0927) && !(d.gate === "MOON_OVER" && !MOON_OVER) && !(d.gate === "DEPLOYED_MKT" && !DEPLOYED_MKT) && !(d.gate === "DEPLOYED_0929" && !DEPLOYED_0929) && !(d.gate === "MCARD_RESET" && !FEAT.mcardreset) && !(d.gate === "RASTABAD" && !FEAT.rastabad) && !(d.gate === "DEPLOYED_BK" && !DEPLOYED_BK) && !(d.gate === "DEPLOYED_1001" && !DEPLOYED_1001) && !(d.gate === "DEPLOYED_1002" && !DEPLOYED_1002) && !(d.gate === "DEPLOYED_1003" && !DEPLOYED_1003) && !(d.gate === "DEPLOYED_1004" && !DEPLOYED_1004) && !(d.gate === "DEPLOYED_1005" && !DEPLOYED_1005) && !(d.gate === "DEPLOYED_1006" && !DEPLOYED_1006) && !(d.gate === "DEPLOYED_1007" && !DEPLOYED_1007) && !(d.gate === "DEPLOYED_1008" && !DEPLOYED_1008) && !(d.gate === "DEPLOYED_1009" && !DEPLOYED_1009) && !(d.gate === "DEPLOYED_1010" && !DEPLOYED_1010) && !(d.gate === "DEPLOYED_1011" && !DEPLOYED_1011) && !(d.gate === "DEPLOYED_1012" && !DEPLOYED_1012) && !(d.gate === "DEPLOYED_1013" && !DEPLOYED_1013) && !(d.gate === "DEPLOYED_1014" && !DEPLOYED_1014) && !(d.gate === "DEPLOYED_1015" && !DEPLOYED_1015) && !(d.gate === "DEPLOYED_1016" && !DEPLOYED_1016) && !(d.gate === "DEPLOYED_1017" && !DEPLOYED_1017) && !(d.gate === "DEPLOYED_1018" && !DEPLOYED_1018)); // 9/27 區塊另受 DEPLOYED_0927 旗標(部署後才印);10/3 區塊受 MOON_OVER(回收跑完才印);精通洗鍊卡那條受 FEAT.mcardreset(跟商城實際可買同步,避免公告先出、卡還買不到)
+  CHANGES = CHANGES.filter(d => d.date <= today && !(d.date === "2026-09-27" && !DEPLOYED_0927) && !(d.gate === "MOON_OVER" && !MOON_OVER) && !(d.gate === "DEPLOYED_MKT" && !DEPLOYED_MKT) && !(d.gate === "DEPLOYED_0929" && !DEPLOYED_0929) && !(d.gate === "MCARD_RESET" && !FEAT.mcardreset) && !(d.gate === "RASTABAD" && !FEAT.rastabad) && !(d.gate === "DEPLOYED_BK" && !DEPLOYED_BK) && !(d.gate === "DEPLOYED_1001" && !DEPLOYED_1001) && !(d.gate === "DEPLOYED_1002" && !DEPLOYED_1002) && !(d.gate === "DEPLOYED_1003" && !DEPLOYED_1003) && !(d.gate === "DEPLOYED_1004" && !DEPLOYED_1004) && !(d.gate === "DEPLOYED_1005" && !DEPLOYED_1005) && !(d.gate === "DEPLOYED_1006" && !DEPLOYED_1006) && !(d.gate === "DEPLOYED_1007" && !DEPLOYED_1007) && !(d.gate === "DEPLOYED_1008" && !DEPLOYED_1008) && !(d.gate === "DEPLOYED_1009" && !DEPLOYED_1009) && !(d.gate === "DEPLOYED_1010" && !DEPLOYED_1010) && !(d.gate === "DEPLOYED_1011" && !DEPLOYED_1011) && !(d.gate === "DEPLOYED_1012" && !DEPLOYED_1012) && !(d.gate === "DEPLOYED_1013" && !DEPLOYED_1013) && !(d.gate === "DEPLOYED_1014" && !DEPLOYED_1014) && !(d.gate === "DEPLOYED_1015" && !DEPLOYED_1015) && !(d.gate === "DEPLOYED_1016" && !DEPLOYED_1016) && !(d.gate === "DEPLOYED_1017" && !DEPLOYED_1017) && !(d.gate === "DEPLOYED_1018" && !DEPLOYED_1018) && !(d.gate === "DEPLOYED_1019" && !DEPLOYED_1019)); // 9/27 區塊另受 DEPLOYED_0927 旗標(部署後才印);10/3 區塊受 MOON_OVER(回收跑完才印);精通洗鍊卡那條受 FEAT.mcardreset(跟商城實際可買同步,避免公告先出、卡還買不到)
 }
 {
   const TCOL = { "新增": "#7bd14a", "調整": "#5b9bff", "修復": "#f5c451", "活動": "#f5a97f" };
