@@ -2182,6 +2182,35 @@ if (MASTERY.length) {
   // 2026-09-17:darkpot(暗夜秘藥)的「(未實裝9/17修正)」已隨當日維護上線修好 ⇒ 移除。
   const MASTERY_NOTE = {};
 
+  // 💠 魂體共鳴(妖精;10/19 維護開放,麥哥 10/18「明天魂體共鳴 一起上 官網也上」)。
+  //    mastery.json 是 wikidump 產物、**不可重跑**(強化機率暗改)⇒ 直接讀 engine/afk/mastery.go 的
+  //    soulReqTbl / SoulCap / SoulCutMs / MasteryAuraCost 與 autoConvCd 的下限,讀不到或格式不對就中止產生(不印錯的數字)。
+  if (DEPLOYED_1019 && !MASTERY.some(m => m.key === "soulres")) {
+    const src = fs.readFileSync(path.join(__dirname, "../go端專案/engine/afk/mastery.go"), "utf8");
+    const i = src.indexOf("var soulReqTbl = [][]ReqMat{");
+    if (i < 0) throw new Error("mastery.go 讀不到 soulReqTbl");
+    const rows = src.slice(i, src.indexOf("\n}", i)).split("\n").filter(l => l.trim().startsWith("{{"));
+    const levels = rows.map((l, k) => {
+      const mats = []; let gold = 0;
+      for (const m of l.matchAll(/\{(?:"([a-z0-9_]+)"|(GoldMatId)), (-?\d+), ([0-9_]+)\}/g)) {
+        const n = +m[4].replace(/_/g, "");
+        if (m[2]) gold += n; else mats.push({ item: m[1], en: +m[3], n });
+      }
+      return { from: k, to: k + 1, mats, gold };
+    });
+    const num = re => { const m = src.match(re); if (!m) throw new Error("mastery.go 讀不到 " + re); return +m[1].replace(/_/g, ""); };
+    const cap = num(/const SoulCap = (\d+)/), cutMs = num(/const SoulCutMs = (\d+)/), auraCost = num(/MasteryAuraCost\s*=\s*([0-9_]+)/);
+    const floor = num(/ccd -= c\.soulCdCutSec\(now\); ccd < ([0-9.]+)/);
+    if (levels.length !== cap || levels.some(l => !l.gold || l.mats.length < 1 || l.mats.some(m => !GD.items?.[m.item]))) throw new Error("魂體共鳴材料表解析異常:" + JSON.stringify(levels));
+    const mh = MASTERY.find(m => m.key === "mhit");   // 光環規則句沿用精準打擊(同一套 MasteryAuraStep/Max、突破歸零)
+    const soul = { key: "soulres", name: "魂體共鳴", cls: "妖精", cap,
+      desc: `純材料突破(精靈水晶(魂體轉換)、風/火/水/地龍鱗、金幣);啟用光環後,獵場「**自動魂體轉換**」的冷卻每級縮短 ${cutMs / 1000} 秒(最低 ${floor} 秒),心靈轉換不受影響。`,
+      auraCost: `等級 ×${(auraCost / 10000).toLocaleString()} 萬金幣/小時`, auraNote: mh ? mh.auraNote : "",
+      levels, effects: [{ name: "自動魂體轉換冷卻縮短", sign: "−", unit: " 秒", values: Array.from({ length: cap + 1 }, (_, lv) => +(lv * cutMs / 1000).toFixed(1)) }] };
+    const at = MASTERY.findIndex(m => m.key === "firewill");
+    MASTERY.splice(at >= 0 ? at + 1 : MASTERY.length, 0, soul);
+  }
+
   const secs = MASTERY.map(ms => {
     const rows = ms.levels.map(l => {
       const need = [];
@@ -2200,7 +2229,7 @@ if (MASTERY.length) {
     const eff = (ms.effects && ms.effects.length) ? `
       <div style="color:#f5c451;font-size:14px;margin:12px 0 4px">能力效果<span style="color:#8f8067;font-size:12px;font-weight:normal">(光環生效才有效)</span></div>
       <div class="wrap"><table><thead><tr><th>效果</th>${lvCols(ms.cap).map(i => `<th>Lv${i}</th>`).join("")}</tr></thead><tbody>
-      ${ms.effects.map(e => `<tr><td class="nm">${e.name}</td>${lvCols(ms.cap).map(i => `<td class="num">+${e.values[i] ?? 0}${e.unit || ""}</td>`).join("")}</tr>`).join("")}
+      ${ms.effects.map(e => `<tr><td class="nm">${e.name}</td>${lvCols(ms.cap).map(i => `<td class="num">${e.sign ?? "+"}${e.values[i] ?? 0}${e.unit || ""}</td>`).join("")}</tr>`).join("")}
       </tbody></table></div>` : "";
 
     // 三選一能力(武器大師/妖精三系)
