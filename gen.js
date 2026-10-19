@@ -2281,7 +2281,7 @@ ${chips([[MASTERY.length, "種精通"]])}
 <div id="list">${secs}</div>`,
   `<script>
 const $=id=>document.getElementById(id);
-const cards=[...document.querySelectorAll(".mcard")];
+const cards=[...document.querySelectorAll(".mcard[data-n]")];   // 🐛 10/19 玩家回報搜尋沒反應:10/11 加的兩張騎士說明卡沒有 data-n,c.dataset.n 是 undefined ⇒ 第一張就出錯、整個搜尋停擺;只篩有名稱的精通卡(說明卡固定顯示)
 $("q").oninput=()=>{const q=$("q").value.trim().toLowerCase();
 cards.forEach(c=>{const hit=!q||c.dataset.n.toLowerCase().includes(q)||c.dataset.cls.toLowerCase().includes(q);c.style.display=hit?"":"none";});};
 </script>`));
