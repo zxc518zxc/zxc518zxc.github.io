@@ -2307,17 +2307,41 @@ try { STATS = JSON.parse(fs.readFileSync(path.join(OUT, "stats.json"), "utf8"));
   // **粗體** → <b>(內容用 Markdown 寫,HTML 不會自己渲染)
   const md = t => String(t || "").replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
   const cnt = its => ["新增", "調整", "修復"].map(t => [its.filter(i => i.t === t).length, t]).filter(([n]) => n > 0);
-  const body = CHANGES.map(d => `<div class="mcard">
+  // 🔍 2026-10-19 麥哥:新來的客服對歷次更新不熟、日誌太長查太慢 ⇒ 加關鍵字搜尋(class chg-day/chg-it 給下方腳本用)
+  const body = CHANGES.map(d => `<div class="mcard chg-day">
     <div class="ttl">${d.date}${d.title ? " ・ " + d.title : ""}</div>
     ${d.note ? `<div class="sub" style="margin:2px 0 8px">${md(d.note)}</div>` : ""}
     <div class="stats" style="margin:6px 0 10px;justify-content:flex-start">${cnt(d.items).map(([n, t]) => `<div class="stat-chip" style="padding:5px 12px;font-size:13px"><b style="color:${TCOL[t]}">${n}</b>${t}</div>`).join("")}</div>
-    ${d.items.map(i => `<div style="padding:9px 0;border-bottom:1px solid #2a2014">
+    ${d.items.map(i => `<div class="chg-it" style="padding:9px 0;border-bottom:1px solid #2a2014">
       <span class="tag" style="color:${TCOL[i.t] || "#cbbb9b"}">${i.t}</span> <b style="color:#e8dcc8">${i.n}</b>
       ${i.d ? `<div class="sub" style="margin-top:4px">${md(i.d)}</div>` : ""}</div>`).join("")}
   </div>`).join("") || '<div class="hint">尚無更新紀錄。</div>';
   fs.writeFileSync(path.join(OUT, "changelog.html"), page("版本更新", "log", `
 <div class="hint">遊戲的新增、調整與修復紀錄(由新到舊)。</div>
-${body}`));
+<div class="bar"><input id="q" placeholder="🔍 搜關鍵字(例:月卡、肥特、強化、10/19;空白隔開=同時包含)"></div>
+<div id="qn" class="hint" style="display:none"></div>
+${body}`,
+  `<script>
+const $=id=>document.getElementById(id);
+const days=[...document.querySelectorAll(".chg-day")];
+// 每張日期卡:日期命中=整天都列;其他關鍵字只比對條目內容(區塊標題不算,否則搜「魂體共鳴」會把 10/19 整天十條都列出來)。多個關鍵字用空白隔開=全部都要有。
+// 日期支援「10/19」「10-19」寫法(卡片標題是 2026-10-19)。
+const norm=s=>s.toLowerCase().replace(/(\\d{1,2})\\/(\\d{1,2})/g,(m,a,b)=>a.padStart(2,"0")+"-"+b.padStart(2,"0"));
+days.forEach(d=>{d._t=norm(d.querySelector(".ttl").textContent.slice(0,10));d._its=[...d.querySelectorAll(".chg-it")].map(e=>({e,t:norm(e.textContent)}));});
+$("q").oninput=()=>{
+  const ks=norm($("q").value.trim()).split(/\\s+/).filter(Boolean);
+  let hit=0;
+  days.forEach(d=>{
+    const titleHit=ks.length&&ks.every(k=>d._t.includes(k));
+    let n=0;
+    d._its.forEach(o=>{const ok=!ks.length||titleHit||ks.every(k=>o.t.includes(k)||d._t.includes(k));o.e.style.display=ok?"":"none";if(ok)n++;});
+    d.style.display=n?"":"none";hit+=ks.length?n:0;
+    const st=d.querySelector(".stats");if(st)st.style.display=ks.length?"none":"";   // 搜尋時藏「N 新增/N 調整」,免得跟篩選後條數對不上
+  });
+  $("qn").style.display=ks.length?"":"none";
+  $("qn").textContent=ks.length?(hit?"找到 "+hit+" 條相關更新":"找不到符合的更新,換個關鍵字試試(例:只打「強化」)"):"";
+};
+</script>`));
 }
 
 // ================= 📊 能力值加成表 =================
