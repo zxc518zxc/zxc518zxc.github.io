@@ -1020,7 +1020,7 @@ ${NAV_GROUPS.map(([gname, gicon, links]) => {
  });
 })();
 </script>
-<footer>資料自動同步自遊戲檔 · 產生於 ${new Date().toISOString().slice(0, 10)}<br>本站資料僅供參考,阿肥放置天地官方保留最終解釋權。<br>一切贊助皆為玩家自願,款項全數用於伺服器維護與研究開發。<br>📧 官方信箱:<a href="mailto:zxc518999427@gmail.com">zxc518999427@gmail.com</a></footer>
+<footer>資料自動同步自遊戲檔 · 產生於 ${new Date().toISOString().slice(0, 10)}<br>本站資料僅供參考,阿肥放置天地官方保留最終解釋權。<br>一切贊助皆為玩家自願,款項全數用於伺服器維護與研究開發。<br><span style="font-size:13px;color:#e8dcc8">📧 官方信箱:<a href="mailto:zxc518999427@gmail.com" style="color:#f5c451;text-decoration:none">zxc518999427@gmail.com</a></span></footer>
 ${extra.split("data.js").join("data.js?v=" + DATA_V)}</body></html>`;
 
 
