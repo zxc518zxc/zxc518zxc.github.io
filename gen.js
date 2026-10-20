@@ -1020,7 +1020,7 @@ ${NAV_GROUPS.map(([gname, gicon, links]) => {
  });
 })();
 </script>
-<footer>資料自動同步自遊戲檔 · 產生於 ${new Date().toISOString().slice(0, 10)}<br>本站資料僅供參考,阿肥放置天地官方保留最終解釋權。<br>一切贊助皆為玩家自願,款項全數用於伺服器維護與研究開發。<br><span style="font-size:13px;color:#e8dcc8">📧 官方信箱:<a href="mailto:zxc518999427@gmail.com" style="color:#f5c451;text-decoration:none">zxc518999427@gmail.com</a></span></footer>
+<footer>資料自動同步自遊戲檔 · 產生於 ${new Date().toISOString().slice(0, 10)}<br>本站資料僅供參考,阿肥放置天地官方保留最終解釋權。<br>一切贊助皆為玩家自願,款項全數用於伺服器維護與研究開發。</footer>
 ${extra.split("data.js").join("data.js?v=" + DATA_V)}</body></html>`;
 
 
@@ -1463,7 +1463,7 @@ const DT_FORMS_TABLE = {
 const DT2_EVENT = {
   title: "🎌 國慶新活動加碼",
   when: "2026/10/11(日) 中午維護後 至 2026/10/16(五) 中午維護",
-  over: false,
+  over: true,  // 10/21 麥哥:「國慶活動也變暗」(10/16 已結束)
   intro: `這次雙十活動的五種紫色變身卷軸，收到很多冒險者的喜愛與回饋，謝謝大家！為了讓更多人都能體驗這些變身，國慶使者<b>加碼再開一週</b>。<br><b>${DT.minLv} 級以上</b>的冒險者到<b>說話之島</b>找「<b>國慶使者</b>」挑戰，每次都不會空手：大多數會拿到「<b>📦 變身卷軸指定箱</b>」，自己挑一張喜歡的紫色變身卷軸；運氣好的話，會獲得「<b>💎 ${GD.items[DT.prizeId].n}</b>」（全服跑馬燈恭喜）。<br><b>每個帳號每天可以挑戰 ${DT.daily} 次</b>（同帳號所有角色合計），每天中午 12:30 刷新。`,
   rewardTitle: "⚔️ 六種挑戰（每次另收 " + DT.gold / 10000 + " 萬金幣）",
   rewardHead: "挑戰",
