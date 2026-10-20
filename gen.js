@@ -76,7 +76,7 @@ for (const n of EXCHANGE) {
 // ---- 🎚 內容開關(必須與遊戲裡的 `feature` 指令狀態一致)----
 // 遊戲裡下 `feature xxx on` 開放某內容後,**把這裡也改成 true 再重跑 gen.js**,資料站就會自動補上。
 // 對照:go端專案/.ai/systems/內容開關.md 的狀態表。
-const DEPLOYED_1020 = false;  // 🎰🎯🐌 10/20 維護:肥特獎池按一轉金額分(go端 jpshare 03d92ad3)+ 爆擊/重擊分開顯示(critshow 82caa8f4)+ 蝸牛賽跑暫停(`feature snail off`);麥哥 10/19「B」=明天 12:30 一起上 ⇒ 第二台驗收後翻 true:日誌出現、FEAT.snail 自動變 false、系統說明出現「暫停開放」
+const DEPLOYED_1020 = true;  // 🎰🎯🐌 10/20 維護:肥特獎池按一轉金額分(go端 jpshare 03d92ad3)+ 爆擊/重擊分開顯示(critshow 82caa8f4)+ 蝸牛賽跑暫停(`feature snail off`);麥哥 10/19「B」=明天 12:30 一起上 ⇒ 第二台驗收後翻 true:日誌出現、FEAT.snail 自動變 false、系統說明出現「暫停開放」
 const FEAT = {
   tianfa: false, // 天罰之地 / 傲慢之塔(19 個頻道 + 奇美拉之皮/傳送符等道具)
   castle:  false, // 城堡爭奪戰
