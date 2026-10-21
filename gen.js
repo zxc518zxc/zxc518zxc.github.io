@@ -78,6 +78,7 @@ for (const n of EXCHANGE) {
 // 對照:go端專案/.ai/systems/內容開關.md 的狀態表。
 const DEPLOYED_1020 = true;  // 🎰🎯🐌 10/20 維護:肥特獎池按一轉金額分(go端 jpshare 03d92ad3)+ 爆擊/重擊分開顯示(critshow 82caa8f4)+ 蝸牛賽跑暫停(`feature snail off`);麥哥 10/19「B」=明天 12:30 一起上 ⇒ 第二台驗收後翻 true:日誌出現、FEAT.snail 自動變 false、系統說明出現「暫停開放」
 const DEPLOYED_1022 = true;   // 🧭 10/22 維護:回到遊戲時狩獵場清單切到所在分頁(go端 zonecat b056369c;麥哥 10/21「排明天 12:30」)⇒ 第二台驗收後翻 true
+const DEPLOYED_PROMO5 = false;  // 🎬 錄影推廣大作戰 V(10/23 12:30 ~ 10/30;go端 promo5)⇒ 禮包V 上線、第二台驗收後翻 true:活動頁 + 10/23 日誌才出現
 const FEAT = {
   tianfa: false, // 天罰之地 / 傲慢之塔(19 個頻道 + 奇美拉之皮/傳送符等道具)
   castle:  false, // 城堡爭奪戰
@@ -1671,7 +1672,79 @@ const PROMO4_EVENT = {
     "官方保留活動修改與最終判定之權利。",
   ],
 };
+// 🎬 第五波錄影推廣(2026-10-22 麥哥):10/23 12:30 ~ 10/30;獎勵「錄影推廣禮包V」(內容同禮包III:娃娃盲盒3+勳章1+金幣20萬)。
+//    規則同 IV(每次回報 2 篇公開貼文、每日一次);新文案範本。勳章與未開封禮包V 10/31(六)中午維護回收。
+//    禮包內容與勳章數值一律從 gamedata 讀(pack_promo_video5,go端還沒併進來前先讀 pack_promo_video3),不手抄。
+//    gate:DEPLOYED_PROMO5(禮包V 上線、第二台驗收後翻 true);PREVIEW_PROMO5=1 環境變數只給本機預覽用,不要帶著它 gen+push。
+const PREVIEW_PROMO5 = process.env.PREVIEW_PROMO5 === "1";
+const PROMO5_PACK = (GD.items || {}).pack_promo_video5 || (GD.items || {}).pack_promo_video3 || {};
+const PROMO5_CONTENT = (() => {
+  const p = PROMO5_PACK.pack || {};
+  const icon = { doll_blindbox: "📦", badge_promo_video: "🎖" };
+  const parts = (p.fixed || []).map(f => `${icon[f.id] || ""} ${(GD.items[f.id] || {}).n || f.id} ×${f.n}`.trim());
+  if (p.gold) parts.push(`💰 金幣 ${(+p.gold).toLocaleString()}`);
+  return parts.join("、");
+})();
+const PROMO5_EVENT = {
+  title: "🎬 錄影推廣大作戰 V",
+  rewardHead: "項目",
+  when: "2026/10/23(五) 12:30 至 2026/10/30(五)　每日可領一次",
+  over: false,
+  intro: "第五波開跑!錄一段有音效的遊戲影片、用官方文案發 <b>2 篇公開貼文</b>,回報 2 個連結就能領 🎖 錄影推廣勳章與娃娃盲盒。",
+  rewards: [
+    ["每次回報成功(2 篇貼文)", "🎁 錄影推廣禮包V ×1"],
+    ["禮包內容", PROMO5_CONTENT],
+    ["🎖 勳章效果(配戴 10 小時)", `狩獵經驗 +${PROMO4_BADGE.expPct || 0}%、擊殺金幣 +${PROMO4_BADGE.goldPct || 0}%、額外命中 +${PROMO4_BADGE.extraHit || 0}、傷害減免 +${PROMO4_BADGE.dr || 0}`],
+  ],
+  steps: [
+    "準備影片:<b>自己錄的遊戲畫面,而且要有音效</b>(不接受截圖)。",
+    "貼文文案<b>必須使用下面的官方範本</b>,整段複製,第一行填上你的<b>領獎 ID</b>與<b>當天日期</b>。",
+    "發布 <b>2 篇公開貼文</b>到 <b>抖音 / 臉書 / Instagram / Threads(脆)</b>,或<b>臉書天堂私服社團的公開貼文</b>;兩篇必須是<b>不同的貼文</b>。",
+    "用回報範本私訊官方 LINE @068ivpaq:<br>領取獎勵帳號:<br>領取獎勵 ID:<br>推廣網址 1:<br>推廣網址 2:",
+    "審核通過後,禮包寄到遊戲內<b>交易所 →「領取」</b>頁(離線也收得到);在背包點「錄影推廣禮包V」→「使用」。",
+  ],
+  tpl: {
+    head: "📝 官方文案範本(必須使用)",
+    note: "整段複製貼上,第一行換成你的<b>領獎 ID</b>與發文的<b>當天日期</b>。自行改寫或日期不對,該次不計入。",
+    lines: [
+      "(領獎 ID: ***** 日期 10/**)",
+      "",
+      "⚔️ 江湖還在，兄弟們還在嗎？",
+      "",
+      "當年一起衝等、打寶、集合血盟的兄弟",
+      "",
+      "有人當爸了、有人當老闆了，也有人消失在江湖。",
+      "",
+      "但那份熱血，你還記得嗎？",
+      "",
+      "《阿肥放置天地》帶你重溫熟悉的：",
+      "",
+      "⚔️ 強化　🛡️ 血盟　💰 交易",
+      "👑 世界王　✨ 46 種變身",
+      "",
+      "不用再熬夜爆肝，也能持續練功、打寶。",
+      "",
+      "兄弟，不一定要回到當年。",
+      "",
+      "但我們可以，再一起玩一次。",
+      "",
+      "🎮 https://afei.gg/",
+    ],
+  },
+  rules: [
+    "<b>每次回報需要 2 篇公開貼文、2 個連結,才能領 1 次獎勵</b>;<b>每人每天最多領 1 次</b>(以每日 00:00 到 23:59 計算);<b>每篇貼文只能回報一次</b>。",
+    "<b>影片需有音效、貼文必須公開</b>,不接受截圖回報。",
+    "🔴 同一人使用<b>多個 LINE 帳號</b>參加或領取、或用<b>不同 LINE 帳號回報同一篇貼文</b>,經查證將<b>取消該次獎勵</b>,並<b>永久停止參加所有推廣活動的資格</b>。",
+    "貼文需<b>保留至少 24 小時</b>,提前刪除或改為私人將取消該次資格,並取消之後參加推廣活動的資格。",
+    "🎖 勳章是<b>時效裝備</b>:<b>配戴的那一刻</b>才開始倒數 10 小時(放在背包不會計時);<b>卸下會暫停計時</b>、剩餘時間記在那面勳章上,再戴上就繼續倒數;戴著時時間到<b>自動消失</b>,而且<b>無法強化、無法交易</b>。",
+    "🎖 <b>同時只能配戴一面</b>錄影推廣勳章(固定放在「徽章①」格);再戴第二面會把原本那面換下來、原本那面<b>暫停計時</b>回到背包,不會兩面一起生效。",
+    "🔴 <b>回收公告:錄影推廣活動於 10/30(五)結束,錄影推廣勳章將於 10/31(六)中午伺服器重啟時全面回收</b> —— 不論戴在身上或放在背包都會一併收回,<b>屆時不另行補償,請勿囤貨</b>。<b>尚未打開的「錄影推廣禮包V」也會整包一併回收</b>,請在回收前打開使用。",
+    "影片內容不得含有不雅、攻擊他人或與本遊戲無關的內容;查證造假者取消資格。",
+    "官方保留活動修改與最終判定之權利。",
+  ],
+};
 const EVENTS = [
+  ...(DEPLOYED_PROMO5 || PREVIEW_PROMO5 ? [PROMO5_EVENT] : []),
   ...(DEPLOYED_1013 || PREVIEW_1013 ? [PROMO4_EVENT] : []),
   ...(DEPLOYED_1011 ? [DT2_EVENT] : []),
   ...(DEPLOYED_1010 || PREVIEW_1010 ? [DT_EVENT] : []),
@@ -2393,7 +2466,7 @@ try { STATS = JSON.parse(fs.readFileSync(path.join(OUT, "stats.json"), "utf8"));
   const today = new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD(本地時區)
   const future = CHANGES.filter(d => d.date > today);
   if (future.length) console.log(`⏳ 跳過未來日期的更新日誌 ${future.length} 區塊:${future.map(d => d.date).join(", ")}(到當天才會發布)`);
-  CHANGES = CHANGES.filter(d => d.date <= today && !(d.date === "2026-09-27" && !DEPLOYED_0927) && !(d.gate === "MOON_OVER" && !MOON_OVER) && !(d.gate === "DEPLOYED_MKT" && !DEPLOYED_MKT) && !(d.gate === "DEPLOYED_0929" && !DEPLOYED_0929) && !(d.gate === "MCARD_RESET" && !FEAT.mcardreset) && !(d.gate === "RASTABAD" && !FEAT.rastabad) && !(d.gate === "DEPLOYED_BK" && !DEPLOYED_BK) && !(d.gate === "DEPLOYED_1001" && !DEPLOYED_1001) && !(d.gate === "DEPLOYED_1002" && !DEPLOYED_1002) && !(d.gate === "DEPLOYED_1003" && !DEPLOYED_1003) && !(d.gate === "DEPLOYED_1004" && !DEPLOYED_1004) && !(d.gate === "DEPLOYED_1005" && !DEPLOYED_1005) && !(d.gate === "DEPLOYED_1006" && !DEPLOYED_1006) && !(d.gate === "DEPLOYED_1007" && !DEPLOYED_1007) && !(d.gate === "DEPLOYED_1008" && !DEPLOYED_1008) && !(d.gate === "DEPLOYED_1009" && !DEPLOYED_1009) && !(d.gate === "DEPLOYED_1010" && !DEPLOYED_1010) && !(d.gate === "DEPLOYED_1011" && !DEPLOYED_1011) && !(d.gate === "DEPLOYED_1012" && !DEPLOYED_1012) && !(d.gate === "DEPLOYED_1013" && !DEPLOYED_1013) && !(d.gate === "DEPLOYED_1014" && !DEPLOYED_1014) && !(d.gate === "DEPLOYED_1015" && !DEPLOYED_1015) && !(d.gate === "DEPLOYED_1016" && !DEPLOYED_1016) && !(d.gate === "DEPLOYED_1017" && !DEPLOYED_1017) && !(d.gate === "DEPLOYED_1018" && !DEPLOYED_1018) && !(d.gate === "DEPLOYED_1019" && !DEPLOYED_1019) && !(d.gate === "DEPLOYED_1020" && !DEPLOYED_1020) && !(d.gate === "DEPLOYED_1022" && !DEPLOYED_1022) && !(d.gate === "DEPLOYED_CHARORDER" && !DEPLOYED_CHARORDER)); // 9/27 區塊另受 DEPLOYED_0927 旗標(部署後才印);10/3 區塊受 MOON_OVER(回收跑完才印);精通洗鍊卡那條受 FEAT.mcardreset(跟商城實際可買同步,避免公告先出、卡還買不到)
+  CHANGES = CHANGES.filter(d => d.date <= today && !(d.date === "2026-09-27" && !DEPLOYED_0927) && !(d.gate === "MOON_OVER" && !MOON_OVER) && !(d.gate === "DEPLOYED_MKT" && !DEPLOYED_MKT) && !(d.gate === "DEPLOYED_0929" && !DEPLOYED_0929) && !(d.gate === "MCARD_RESET" && !FEAT.mcardreset) && !(d.gate === "RASTABAD" && !FEAT.rastabad) && !(d.gate === "DEPLOYED_BK" && !DEPLOYED_BK) && !(d.gate === "DEPLOYED_1001" && !DEPLOYED_1001) && !(d.gate === "DEPLOYED_1002" && !DEPLOYED_1002) && !(d.gate === "DEPLOYED_1003" && !DEPLOYED_1003) && !(d.gate === "DEPLOYED_1004" && !DEPLOYED_1004) && !(d.gate === "DEPLOYED_1005" && !DEPLOYED_1005) && !(d.gate === "DEPLOYED_1006" && !DEPLOYED_1006) && !(d.gate === "DEPLOYED_1007" && !DEPLOYED_1007) && !(d.gate === "DEPLOYED_1008" && !DEPLOYED_1008) && !(d.gate === "DEPLOYED_1009" && !DEPLOYED_1009) && !(d.gate === "DEPLOYED_1010" && !DEPLOYED_1010) && !(d.gate === "DEPLOYED_1011" && !DEPLOYED_1011) && !(d.gate === "DEPLOYED_1012" && !DEPLOYED_1012) && !(d.gate === "DEPLOYED_1013" && !DEPLOYED_1013) && !(d.gate === "DEPLOYED_1014" && !DEPLOYED_1014) && !(d.gate === "DEPLOYED_1015" && !DEPLOYED_1015) && !(d.gate === "DEPLOYED_1016" && !DEPLOYED_1016) && !(d.gate === "DEPLOYED_1017" && !DEPLOYED_1017) && !(d.gate === "DEPLOYED_1018" && !DEPLOYED_1018) && !(d.gate === "DEPLOYED_1019" && !DEPLOYED_1019) && !(d.gate === "DEPLOYED_1020" && !DEPLOYED_1020) && !(d.gate === "DEPLOYED_1022" && !DEPLOYED_1022) && !(d.gate === "DEPLOYED_PROMO5" && !DEPLOYED_PROMO5) && !(d.gate === "DEPLOYED_CHARORDER" && !DEPLOYED_CHARORDER)); // 9/27 區塊另受 DEPLOYED_0927 旗標(部署後才印);10/3 區塊受 MOON_OVER(回收跑完才印);精通洗鍊卡那條受 FEAT.mcardreset(跟商城實際可買同步,避免公告先出、卡還買不到)
 }
 {
   const TCOL = { "新增": "#7bd14a", "調整": "#5b9bff", "修復": "#f5c451", "活動": "#f5a97f" };
