@@ -218,11 +218,16 @@ th{background:linear-gradient(180deg,#2e2314,#241b0f)}
 footer{color:#7a6c55;padding:30px 16px 40px;margin-top:30px;position:relative}
 footer::before{content:"";display:block;width:220px;max-width:70%;height:1px;margin:0 auto 18px;
   background:linear-gradient(90deg,transparent,#b98d3e,transparent)}
-/* 首頁主視覺(只有 index 用) */
-.hero{position:relative;overflow:hidden;margin:-16px -16px 6px;padding:54px 16px 92px;text-align:center;
-  background:radial-gradient(ellipse 70% 80% at 50% 0%,rgba(230,180,90,.22),transparent 70%),linear-gradient(180deg,#22190c,#140f08)}
-.hero svg.skyline{position:absolute;left:0;right:0;bottom:0;width:100%;height:110px;color:#0b0804}
-.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46px;background:linear-gradient(rgba(20,15,8,0),#140f08)}
+/* 首頁主視覺(只有 index 用)。背景圖=麥哥 10/22 用 GPT 生的城堡夕陽(img/hero.webp 電腦橫版、img/hero-m.webp 手機直版)。
+   整寬滿版:用 100vw + 負邊距撐出 main 的 1000px;body overflow-x:clip 防止 Windows 捲軸寬度造成橫捲。 */
+body{overflow-x:clip}
+.hero{position:relative;overflow:hidden;width:100vw;margin:-16px calc(50% - 50vw) 10px;
+  min-height:clamp(440px,64vh,620px);display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:60px 16px 110px;text-align:center;background:#140f08 url(img/hero.webp) center 62%/cover no-repeat}
+.hero::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(ellipse 55% 50% at 50% 42%,rgba(12,9,5,.5),transparent 75%),
+  linear-gradient(180deg,rgba(12,9,5,.55) 0%,rgba(12,9,5,0) 30%,rgba(12,9,5,0) 62%,#140f08 100%)}
+.hero>*{position:relative}
 nav{align-items:flex-start}
 .hero-tag{display:inline-block;font-size:12.5px;letter-spacing:4px;color:#d9ad55;border:1px solid rgba(217,173,85,.45);
   border-radius:999px;padding:3px 16px;margin-bottom:16px;background:rgba(20,15,8,.5)}
@@ -237,11 +242,12 @@ nav{align-items:flex-start}
 .hero-cta .ghost{color:#f0cf86;border:1px solid rgba(217,173,85,.5);background:rgba(20,15,8,.55)}
 .hero-cta .ghost:hover{border-color:#f0cf86}
 @media(max-width:640px){
-  .hero{padding:40px 12px 76px}
-  .hero svg.skyline{height:72px}
+  .hero{min-height:600px;justify-content:flex-start;padding:56px 14px 120px;
+    background-image:url(img/hero-m.webp);background-position:center 80%}
   .hero-tt{letter-spacing:4px}
   .hero-sub{font-size:14px;letter-spacing:2px}
-  .hero-cta a{flex:1 1 40%;justify-content:center;padding:12px 10px}
+  .hero-cta{width:100%;max-width:340px}
+  .hero-cta a{flex:1 1 0;justify-content:center;padding:12px 8px;letter-spacing:1px;white-space:nowrap}
   .sechd{font-size:19px;gap:10px}
 }
 @media(prefers-reduced-motion:reduce){.tile,.link,.hero-cta a{transition:none}}
