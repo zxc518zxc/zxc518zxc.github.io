@@ -935,6 +935,83 @@ a.tag:hover{border-color:#f5c451;color:#f5c451}
 .evcopy{position:absolute;top:8px;right:8px;background:#3a2f1c;color:#f5c451;border:1px solid #5a4a26;
   border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;font-family:inherit}
 .evcopy:hover{background:#4a3c24}
+
+/* ✨ 2026-10-22 視覺改版(麥哥:「我很喜歡 阿肥的官網 能不能也優化一下」)
+   全部寫成「蓋在上面」的覆寫,不改上面原本的規則 ⇒ 要退回整段刪掉即可。
+   只動顏色/字體/邊框/陰影,不動版面寬度與手機卡片式表格(#tb-wrap)的排法。 */
+body{font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;
+  background:#140f08 radial-gradient(ellipse 120% 60% at 50% -10%,rgba(201,150,60,.16),transparent 60%) no-repeat;
+  background-attachment:fixed;line-height:1.6}
+header{background:linear-gradient(180deg,rgba(38,28,15,.97),rgba(22,16,9,.97));backdrop-filter:blur(6px);
+  border-bottom:0;box-shadow:0 6px 22px rgba(0,0,0,.55)}
+header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
+  background:linear-gradient(90deg,transparent,#b98d3e 20%,#f0cf86 50%,#b98d3e 80%,transparent)}
+header h1{font-family:"Noto Serif TC",serif;font-weight:900;letter-spacing:2px;
+  background:linear-gradient(180deg,#fbe7b0,#d6a548);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none}
+nav a.on,nav details.ng.here>summary{background:linear-gradient(180deg,#f6dc9c 0%,#d9ad55 50%,#b5873a 100%);
+  box-shadow:0 0 0 1px #8c6526 inset,0 2px 12px rgba(214,168,80,.3)}
+nav details.ng .ngm{background:#1d160c;border-color:#6b5628;box-shadow:0 12px 28px rgba(0,0,0,.6)}
+.sechd{font-family:"Noto Serif TC",serif;font-weight:900;font-size:21px;letter-spacing:3px;
+  display:flex;align-items:center;justify-content:center;gap:16px;margin:46px 0 6px;color:#f0cf86}
+.sechd::before,.sechd::after{content:"";flex:0 1 140px;height:1px}
+.sechd::before{background:linear-gradient(90deg,transparent,#b98d3e)}
+.sechd::after{background:linear-gradient(270deg,transparent,#b98d3e)}
+.sechd+.sub{margin-bottom:18px}
+.tile{position:relative;background:linear-gradient(180deg,#221a0e,#18120a);border:1px solid rgba(185,141,62,.32);border-radius:6px;
+  padding:26px 22px;transition:border-color .2s,transform .2s,box-shadow .2s}
+.tile::before,.tile::after{content:"";position:absolute;width:14px;height:14px;border:2px solid #b98d3e;transition:border-color .2s}
+.tile::before{top:-1px;left:-1px;border-right:0;border-bottom:0;border-top-left-radius:6px}
+.tile::after{bottom:-1px;right:-1px;border-left:0;border-top:0;border-bottom-right-radius:6px}
+.tile:hover{border-color:rgba(240,207,134,.7);transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,.5),0 0 22px rgba(214,168,80,.1)}
+.tile:hover::before,.tile:hover::after{border-color:#f0cf86}
+.tile .tt{font-family:"Noto Serif TC",serif;letter-spacing:1px;color:#f0cf86}
+.link{border-radius:6px;border-color:rgba(185,141,62,.32);background:linear-gradient(180deg,#221a0e,#18120a);
+  transition:border-color .2s,transform .2s,box-shadow .2s}
+.link:hover{border-color:#f0cf86;transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,.5)}
+.link .em{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-size:24px;
+  background:#2c2213;box-shadow:0 0 0 1px rgba(185,141,62,.45)}
+.link.play{background:linear-gradient(180deg,#3a2a11,#1f170c);border-color:#d9ad55}
+.link.play .em{background:linear-gradient(180deg,#f6dc9c,#b5873a);box-shadow:none}
+.link.dc .em{background:#5865f2;box-shadow:none}
+.link.lg .em,.link.oa .em{background:#06c755;box-shadow:none}
+.link .tt{font-family:"Noto Serif TC",serif;letter-spacing:1px}
+.stat-chip{background:linear-gradient(180deg,#221a0e,#18120a);border-color:rgba(185,141,62,.32);border-radius:6px}
+.stat-chip b{font-family:"Noto Serif TC",serif;color:#f0cf86}
+.ask a{background:rgba(34,26,14,.85);border-color:rgba(185,141,62,.38);transition:border-color .2s,color .2s,background .2s}
+.ask a:hover{background:#2c2213}
+.mcard,.card{border-color:rgba(185,141,62,.24)}
+.mcard .ttl,.card .ttl{font-family:"Noto Serif TC",serif;letter-spacing:.5px}
+th{background:linear-gradient(180deg,#2e2314,#241b0f)}
+footer{color:#7a6c55;padding:30px 16px 40px;margin-top:30px;position:relative}
+footer::before{content:"";display:block;width:220px;max-width:70%;height:1px;margin:0 auto 18px;
+  background:linear-gradient(90deg,transparent,#b98d3e,transparent)}
+/* 首頁主視覺(只有 index 用) */
+.hero{position:relative;overflow:hidden;margin:-16px -16px 6px;padding:54px 16px 92px;text-align:center;
+  background:radial-gradient(ellipse 70% 80% at 50% 0%,rgba(230,180,90,.22),transparent 70%),linear-gradient(180deg,#22190c,#140f08)}
+.hero svg.skyline{position:absolute;left:0;right:0;bottom:0;width:100%;height:110px;color:#0b0804}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46px;background:linear-gradient(rgba(20,15,8,0),#140f08)}
+nav{align-items:flex-start}
+.hero-tag{display:inline-block;font-size:12.5px;letter-spacing:4px;color:#d9ad55;border:1px solid rgba(217,173,85,.45);
+  border-radius:999px;padding:3px 16px;margin-bottom:16px;background:rgba(20,15,8,.5)}
+.hero-tt{font-family:"Noto Serif TC",serif;font-weight:900;font-size:clamp(38px,8vw,64px);letter-spacing:8px;margin:0 0 8px;line-height:1.2;
+  background:linear-gradient(180deg,#fff2c8 10%,#e6bb62 55%,#a8782e 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 4px 18px rgba(0,0,0,.6))}
+.hero-sub{color:#cbb995;font-size:16px;letter-spacing:4px;margin:0 0 26px}
+.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+.hero-cta a{display:inline-flex;align-items:center;gap:6px;padding:12px 30px;border-radius:4px;font-weight:700;letter-spacing:3px;text-decoration:none;font-size:15px;transition:transform .15s,box-shadow .2s,border-color .2s}
+.hero-cta .gold{color:#1d1407;background:linear-gradient(180deg,#f6dc9c 0%,#d9ad55 48%,#b5873a 100%);box-shadow:0 0 0 1px #8c6526 inset,0 6px 22px rgba(214,168,80,.3)}
+.hero-cta .gold:hover{transform:translateY(-2px);box-shadow:0 0 0 1px #8c6526 inset,0 10px 30px rgba(214,168,80,.45)}
+.hero-cta .ghost{color:#f0cf86;border:1px solid rgba(217,173,85,.5);background:rgba(20,15,8,.55)}
+.hero-cta .ghost:hover{border-color:#f0cf86}
+@media(max-width:640px){
+  .hero{padding:40px 12px 76px}
+  .hero svg.skyline{height:72px}
+  .hero-tt{letter-spacing:4px}
+  .hero-sub{font-size:14px;letter-spacing:2px}
+  .hero-cta a{flex:1 1 40%;justify-content:center;padding:12px 10px}
+  .sechd{font-size:19px;gap:10px}
+}
+@media(prefers-reduced-motion:reduce){.tile,.link,.hero-cta a{transition:none}}
 `;
 // 🗂 導覽分組(2026-09-18 麥哥:「資訊有點多有點雜,幫他們歸類、設置引導」)。
 // 分法刻意照「玩家當下想做什麼」,不是照資料類型——玩家不會想「這是道具資料還是怪物資料」,
@@ -990,7 +1067,10 @@ const ASK = [
 
 const page = (title, active, body, extra = "") => `<!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${title} - 阿肥放置天地 資料站</title><style>${CSS}</style></head><body>
+<title>${title} - 阿肥放置天地 資料站</title><meta name="theme-color" content="#140f08">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+<style>${CSS}</style></head><body>
 <header>
 <div class="brand"><h1>🏰 阿肥放置天地</h1><span class="sub">玩家資料站</span></div>
 <nav><a href="index.html" class="${active === "index" ? "on" : ""}"><span class="i">🏠</span>首頁</a>
@@ -1137,7 +1217,20 @@ const HOME_NOTICE = `<div class="mcard" style="border-color:#8a6d2e;background:#
 
 // ---- 首頁 ----
 fs.writeFileSync(path.join(OUT, "index.html"), page("首頁", "index", `
-<div style="text-align:center;padding:10px 0 4px"><div style="font-size:15px;color:#b6a684">掛機練功・打寶強化・世界王討伐</div></div>
+<section class="hero">
+<div class="hero-tag">官方資料站</div>
+<h2 class="hero-tt">阿肥放置天地</h2>
+<p class="hero-sub">掛機練功・打寶強化・世界王討伐</p>
+<div class="hero-cta"><a class="gold" href="${LINKS.game}" target="_blank" rel="noopener">▶ 進入遊戲</a><a class="ghost" href="guide.html">新手指南</a></div>
+<svg class="skyline" viewBox="0 0 1200 110" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><g fill="currentColor">
+<path d="M0 110V92C120 80 260 74 400 76L400 110zM800 76C940 74 1080 80 1200 92V110H800z"/>
+<path d="M398 110V52h6v-6h6v6h6v-6h6v58zM778 110V52h6v-6h6v6h6v-6h6v58z"/>
+<path d="M420 110V64h8v-6h8v6h8v-6h8v6h8v-6h8v6h8v-6h8v6h8v-6h8v46zM700 110V64h8v-6h8v6h8v-6h8v6h8v-6h8v6h8v-6h8v6h8v-6h8v46z"/>
+<path d="M538 110V42h10v-8h10v8h10v-8h10v8h10v-8h10v8h10v-8h10v8h10v-8h10v8h10v68z"/>
+<path d="M498 110V26h40v84zM494 28l24-28 24 28zM662 110V26h40v84zM658 28l24-28 24 28z"/>
+<path d="M592 110V82a8 8 0 0 1 16 0v28z" fill="#5a3f16"/>
+</g></svg>
+</section>
 ${HOME_NOTICE}
 ${chips([[mobList.length, "怪物"], [items.length, "道具"], [skills.length, "技能"], [zones.length, "獵場"], [worldbosses.length, "世界王"], [towns.reduce((s, t) => s + t.npcs.length, 0), "NPC"], [sets.length, "套裝"]])}
 <div class="asktt">❓ 想知道什麼,直接點:</div>
@@ -1151,9 +1244,9 @@ ${NAV_GROUPS.map(([gname, gicon, links]) => `<div class="sechd">${gicon} ${gname
 <div class="links">
 <a class="link play" href="${LINKS.game}" target="_blank" rel="noopener"><div class="em">🎮</div><div><div class="tt">進入遊戲</div><div class="dd">${LINKS.gameLabel}</div></div></a>
 ${COMMUNITY_OPEN ? `<a class="link" href="${LINKS.community}" target="_blank" rel="noopener"><div class="em">🗣</div><div><div class="tt">玩家社群</div><div class="dd">聊天・交易・私訊(用遊戲帳號登入)</div></div></a>` : ""}
-<a class="link" href="${LINKS.discord}" target="_blank" rel="noopener"><div class="em">💬</div><div><div class="tt">Discord</div><div class="dd">公告・討論・找隊友</div></div></a>
-<a class="link" href="${LINKS.lineGroup}" target="_blank" rel="noopener"><div class="em">👥</div><div><div class="tt">LINE 社群</div><div class="dd">玩家交流・活動通知</div></div></a>
-<a class="link" href="https://line.me/R/ti/p/${encodeURIComponent(LINKS.lineId)}" target="_blank" rel="noopener"><div class="em">📮</div><div><div class="tt">LINE 官方帳號</div><div class="dd">客服私訊 <span class="lineid">${LINKS.lineId}</span></div></div></a>
+<a class="link dc" href="${LINKS.discord}" target="_blank" rel="noopener"><div class="em">💬</div><div><div class="tt">Discord</div><div class="dd">公告・討論・找隊友</div></div></a>
+<a class="link lg" href="${LINKS.lineGroup}" target="_blank" rel="noopener"><div class="em">👥</div><div><div class="tt">LINE 社群</div><div class="dd">玩家交流・活動通知</div></div></a>
+<a class="link oa" href="https://line.me/R/ti/p/${encodeURIComponent(LINKS.lineId)}" target="_blank" rel="noopener"><div class="em">📮</div><div><div class="tt">LINE 官方帳號</div><div class="dd">客服私訊 <span class="lineid">${LINKS.lineId}</span></div></div></a>
 </div>
 <div class="card" style="display:block;margin-top:16px;font-size:12px;color:#8f8067;line-height:1.8"><b style="color:#b6a684;font-size:13px">免責聲明</b><br>
 一、本遊戲為個人研究與技術學習專案。<br>
