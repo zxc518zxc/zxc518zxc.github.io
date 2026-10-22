@@ -1743,6 +1743,14 @@ const PROMO5_EVENT = {
     "官方保留活動修改與最終判定之權利。",
   ],
 };
+// 🏰 城堡爭奪戰(系統說明頁卡片;FEAT.castle 開才印)與血盟搜索狀上限:數字一律從遊戲讀,不手抄。
+//    2026-10-23 麥哥「準備重新開放」選 B(費用 3000→1000)、C(守護者不動);同日發現血盟卡寫死「上限 300 張」(9/20 起 999、10/21 起 3000)→ 改讀 PledgeStockCap。
+const _afkSrc = f => fs.readFileSync(path.join(__dirname, "../go端專案/engine/afk/" + f), "utf8");
+const _goConst = (f, name) => { const m = new RegExp(name + "\\s*=\\s*(\\d+)").exec(_afkSrc(f)); if (!m) throw new Error("讀不到 " + f + " 的 " + name + ",停止產生"); return +m[1]; };
+const PLEDGE_STOCK_CAP = _goConst("pledgetbl.go", "PledgeStockCap");
+const PRAY_FREE_CAP = _goConst("pray.go", "PrayFreeCap");
+const CASTLE_CFG = GD.castle || {};
+const CASTLE_BOSS = (((GD.worldBosses || {}).wb_castle) || {}).name || "城堡守護者";
 const EVENTS = [
   ...(DEPLOYED_PROMO5 || PREVIEW_PROMO5 ? [PROMO5_EVENT] : []),
   ...(DEPLOYED_1013 || PREVIEW_1013 ? [PROMO4_EVENT] : []),
@@ -2263,14 +2271,26 @@ ${CROWD_ROWS.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>
 <tr><td>建盟</td><td>20 萬金幣,沒有等級限制;盟名 1~12 字不可重複</td></tr>
 <tr><td>加入</td><td>申請制,盟主審核;人數上限依血盟等級 Lv1~5 = 5 / 7 / 10 / 12 / 15 人(含盟主),完成擴充任務每個 +1,最多 18 人</td></tr>
 <tr><td>血盟等級</td><td>靠「金幣投資」升:每 1 萬金幣 = 血盟經驗 +1;Lv2 需 500、Lv3 2,500、Lv4 5,000、Lv5 10,000(滿級)。Lv5 之後投資改累積「積分」,用來開擴充任務</td></tr>
-<tr><td>三種捐獻</td><td><b>金幣</b>:升血盟等級,貢獻榜永久累計(0 會顯示紅字「未貢獻」)<br><b>搜索狀</b>:進血盟庫存(上限 300 張),是<b>祝福光環的燃料</b><br><b>擴充任務道具</b>:繳交任務需求,完成後人數上限 +1</td></tr>
+<tr><td>三種捐獻</td><td><b>金幣</b>:升血盟等級,貢獻榜永久累計(0 會顯示紅字「未貢獻」)<br><b>搜索狀</b>:進血盟庫存(上限 ${PLEDGE_STOCK_CAP.toLocaleString()} 張),是<b>祝福光環的燃料</b><br><b>擴充任務道具</b>:繳交任務需求,完成後人數上限 +1</td></tr>
 <tr><td>祝福光環</td><td>只有盟主能開關。開著時每小時從血盟庫存扣搜索狀、跑 1 小時自動續扣,庫存不夠就自動關。四種舊祝福(精準目標／灼熱靈氣／勇敢靈氣／援護盟友)各 1 張/小時,同時能開的數量 Lv1~5 = 0 / 1 / 2 / 3 / 4 個</td></tr>
 <tr><td>大威天龍</td><td>不佔上面的名額,Lv1 就能開;每小時消耗 Lv1~3 = 1 張、Lv4 = 2 張、Lv5 = 3 張。<b>只有它開著時</b>全盟才有加成:狩獵經驗 Lv1~5 = +5% / +7% / +10% / +12% / +15%;金幣 Lv3~4 +5%、Lv5 +10%</td></tr>
 <tr><td>擴充任務</td><td>盟主、Lv5 才能開,消耗積分(已完成數+1)×1 萬;抽出需求由全盟繳交(例:衝擊之暈 500、召喚術／萬能藥各 50、+9 純白武器各 10、三重矢 100),完成 +1 人,最多 3 次</td></tr>
 <tr><td>其他</td><td>貢獻榜全盟看得到;被踢或退盟會清掉貢獻紀錄;盟主不能退盟,只能解散或轉讓</td></tr>
 </tbody></table></div></div>
 
-<div class="mcard"><div class="ttl">👥 組隊</div>
+${FEAT.castle ? `<div class="mcard"><div class="ttl">🏰 城堡爭奪戰(奇岩城)</div>
+<div class="sub">血盟一起挑戰「${CASTLE_BOSS}」,在限時內比<b>全盟總傷害</b>;打破紀錄就佔領城堡,全盟獲得城堡光環。入口:<b>設定 → 🏰 城堡爭奪戰</b>。</div>
+<div class="wrap" style="margin-top:8px"><table><thead><tr><th>項目</th><th>規則</th></tr></thead><tbody>
+<tr><td>誰能開</td><td><b>Lv5 血盟</b>的盟主或副盟主;每個血盟每天 <b>${CASTLE_CFG.dailyN || 1} 次</b>(每天 ${String(CASTLE_CFG.resetHour ?? 5).padStart(2, "0")}:00 重置)</td></tr>
+<tr><td>費用</td><td><b>${(+CASTLE_CFG.cost || 0).toLocaleString()} 血盟積分</b>(Lv5 之後投資金幣累積,每 1 萬金幣 = 1 積分)</td></tr>
+<tr><td>集合</td><td>開啟後集合 <b>${Math.round((CASTLE_CFG.prepMs || 0) / 60000)} 分鐘</b>;只有<b>開啟當下</b>在血盟名單上的成員能入場,每人每輪限進一次</td></tr>
+<tr><td>開戰</td><td>${CASTLE_BOSS}現身就關門,在場成員每人獲得<b>免費祈福 ×1</b>(最多囤 ${PRAY_FREE_CAP} 次)。它<b>打不死</b>,攻擊時間 <b>${Math.round((CASTLE_CFG.fightMs || 0) / 1000)} 秒</b>,比的是全盟總傷害(補血、聖結界不算傷害)</td></tr>
+<tr><td>出局</td><td>死亡、離場、斷線就出局,本輪不能再進,<b>已打出的傷害照算</b>;全員出局就提前結算</td></tr>
+<tr><td>奪城</td><td>總傷害<b>超過目前紀錄</b>就換你們佔領(同分由原佔領者守住);紀錄不會重置,強盟隨時能打回來;佔領的血盟解散,城堡就空出來、紀錄歸零</td></tr>
+<tr><td>城堡光環</td><td>佔領血盟<b>全員</b>(離線掛機也算):命中 +${CASTLE_CFG.hit || 0}、傷害 +${CASTLE_CFG.dmg || 0}、魔法傷害 +${CASTLE_CFG.mgd || 0}、狩獵經驗 +${CASTLE_CFG.expPct || 0}%、擊殺金幣 +${CASTLE_CFG.goldPct || 0}%</td></tr>
+</tbody></table></div></div>
+
+` : ""}<div class="mcard"><div class="ttl">👥 組隊</div>
 <div class="wrap"><table><thead><tr><th>項目</th><th>規則</th></tr></thead><tbody>
 <tr><td>人數</td><td>一隊 <b>3 人</b>;申請後隊長審核,或隊長開「自動加入」;隊長不能退出,只能解散。伺服器重啟後隊伍會清空,要重組</td></tr>
 <tr><td>隊伍能力</td><td>每人<b>自選一項、只有自己吃</b>:<b>10 萬金幣 / 1 小時</b>,到期時隊伍滿編且金幣夠就自動續扣。換能力=重扣重跑;手動停止=立即失效、剩餘時間不退</td></tr>
