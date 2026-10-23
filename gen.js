@@ -82,6 +82,7 @@ const DEPLOYED_PROMO5 = true;  // 🎬🗑 10/23 維護:錄影推廣大作戰 V(
 const FEAT = {
   tianfa: false, // 天罰之地 / 傲慢之塔(19 個頻道 + 奇美拉之皮/傳送符等道具)
   castle:  true, // 城堡爭奪戰
+  pray:    true, // 🙏 祈福女神 阿克婭(10/23 14:28 遊戲 `feature pray on`;false=官網 NPC 一覽不列她)
   doll:    true,  // 娃娃卡片(2026-09-26 12:30 隨中秋活動開放;遊戲 `feature doll on`)
   bm:      false, // 黑市商人
   push:    false, // 推筒子
