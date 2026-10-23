@@ -2290,7 +2290,7 @@ ${FEAT.castle ? `<div class="mcard"><div class="ttl">🏰 城堡爭奪戰(奇岩
 <tr><td>出局</td><td>死亡、離場、斷線就出局,本輪不能再進,<b>已打出的傷害照算</b>;全員出局就提前結算</td></tr>
 ${DEPLOYED_1024 ? `<tr><td>寵物</td><td>攻城時<b>寵物(項圈狗)不會出手</b>,不算傷害;法師、妖精的<b>召喚獸照常參戰</b>。出了城堡寵物就恢復正常</td></tr>
 ` : ""}<tr><td>奪城</td><td>總傷害<b>超過目前紀錄</b>就換你們佔領(同分由原佔領者守住);紀錄不會重置,強盟隨時能打回來;佔領的血盟解散,城堡就空出來、紀錄歸零</td></tr>
-<tr><td>城堡光環</td><td>佔領血盟<b>全員</b>(離線掛機也算):命中 +${CASTLE_CFG.hit || 0}、傷害 +${CASTLE_CFG.dmg || 0}、魔法傷害 +${CASTLE_CFG.mgd || 0}、狩獵經驗 +${CASTLE_CFG.expPct || 0}%、擊殺金幣 +${CASTLE_CFG.goldPct || 0}%</td></tr>
+<tr><td>城堡光環</td><td>佔領血盟<b>全員</b>(離線掛機也算):命中 +${CASTLE_CFG.hit || 0}、傷害 +${CASTLE_CFG.dmg || 0}、魔法傷害 +${CASTLE_CFG.mgd || 0}${DEPLOYED_1024 && CASTLE_CFG.petHit ? "、寵物/召喚獸命中 +" + CASTLE_CFG.petHit : ""}${DEPLOYED_1024 && CASTLE_CFG.pveDr ? "、對怪減傷 +" + CASTLE_CFG.pveDr + "(被怪物打每下少 " + CASTLE_CFG.pveDr + ")" : ""}、狩獵經驗 +${CASTLE_CFG.expPct || 0}%、擊殺金幣 +${CASTLE_CFG.goldPct || 0}%</td></tr>
 </tbody></table></div></div>
 
 ` : ""}<div class="mcard"><div class="ttl">👥 組隊</div>
