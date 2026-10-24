@@ -78,7 +78,7 @@ for (const n of EXCHANGE) {
 // 對照:go端專案/.ai/systems/內容開關.md 的狀態表。
 const DEPLOYED_1020 = true;  // 🎰🎯🐌 10/20 維護:肥特獎池按一轉金額分(go端 jpshare 03d92ad3)+ 爆擊/重擊分開顯示(critshow 82caa8f4)+ 蝸牛賽跑暫停(`feature snail off`);麥哥 10/19「B」=明天 12:30 一起上 ⇒ 第二台驗收後翻 true:日誌出現、FEAT.snail 自動變 false、系統說明出現「暫停開放」
 const DEPLOYED_1022 = true;   // 🧭 10/22 維護:回到遊戲時狩獵場清單切到所在分頁(go端 zonecat b056369c;麥哥 10/21「排明天 12:30」)⇒ 第二台驗收後翻 true
-const DEPLOYED_1024 = false;  // 🏰 10/24 維護:攻城寵物(項圈狗)不出手(go端 castlenopet;麥哥 10/23「明天官網也一起上」)⇒ 第二台驗收後翻 true:系統說明城堡卡「寵物」列 + 10/24 日誌
+const DEPLOYED_1024 = true;  // 🏰 10/24 維護:攻城寵物(項圈狗)不出手(go端 castlenopet;麥哥 10/23「明天官網也一起上」)⇒ 第二台驗收後翻 true:系統說明城堡卡「寵物」列 + 10/24 日誌
 const DEPLOYED_PROMO5 = true;  // 🎬🗑 10/23 維護:錄影推廣大作戰 V(go端 promo5)+ 刪除角色 48 小時倒數(go端 delpend 4e435915)⇒ 第二台驗收後翻 true:活動頁 + 10/23 日誌(兩條)才出現
 const FEAT = {
   tianfa: false, // 天罰之地 / 傲慢之塔(19 個頻道 + 奇美拉之皮/傳送符等道具)
